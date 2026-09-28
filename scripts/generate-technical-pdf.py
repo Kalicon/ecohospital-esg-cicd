@@ -55,7 +55,7 @@ story = [Spacer(1, 72), p("EcoHospital Smart", "CoverTitle"),
          p("Ciclo CI/CD com Java Spring Boot", "SectionTitle"),
          p("Kalicon Amorim da Cruz Souza — RM 563172"), p("FIAP | Atividade acadêmica | 28/09/2026"),
          Spacer(1, 25), p("Código, testes, containerização e configuração de staging/produção."),
-         p("Build Java, testes, imagem Docker e publicação GHCR verificados no GitHub. Deploy dos dois containers no PC aguarda reinicialização do Windows para concluir WSL.", "Evidence"),
+         p("CI/CD completo verificado: 25 testes JUnit, imagem GHCR, staging e produção Docker no PC com aprovação obrigatória e mesmo digest. Evidências reais anexadas.", "Evidence"),
          p("Documento gerado a partir de docs/documentacao-tecnica.md. Outros integrantes: preencher se houver.", "SmallESG")]
 lines = (ROOT / "docs/documentacao-tecnica.md").read_text(encoding="utf-8").splitlines()
 paragraph = []
@@ -101,9 +101,9 @@ for env in ("staging", "production"):
 smoke = ROOT / "docs/evidence/local/http-smoke.log"
 if smoke.exists():
     story.append(p(smoke.read_text(encoding="utf-8-sig").strip()))
-story.append(p("Os resultados anexados são locais. Não representam evidência de Docker ou deploy remoto.", "Evidence"))
+story.append(p("Os resultados acima são da primeira demonstração Java local. As próximas capturas mostram o GitHub Actions e os containers Docker reais no PC.", "Evidence"))
 github_dir = ROOT / "docs/evidence/github"
-for name, caption in [("03-updated-ci-success.png", "GitHub Actions: verify e image aprovados; deploys ainda desabilitados."),
+for name, caption in [("03-updated-ci-success.png", "Run inicial: verify e image aprovados; naquele momento os deploys ainda estavam desabilitados."),
                       ("02-test-gate-failure.png", "PR descartável: verify falhou; image e deploys bloqueados. PR fechado sem merge.")]:
     screenshot = github_dir / name
     if screenshot.exists():
@@ -114,6 +114,20 @@ for name, caption in [("03-updated-ci-success.png", "GitHub Actions: verify e im
         picture.drawHeight = picture.imageHeight * scale
         story.append(picture)
         story.append(p(f"Origem: docs/evidence/github/{name}. Captura da página real, sem montagem de status.", "SmallESG"))
+pc_dir = ROOT / "docs/evidence/pc"
+for name, caption in [("github-two-deploys-approved.png", "Run final aprovado: verify, image, staging-pc e production-pc."),
+                      ("github-production-approval.png", "Histórico real: Kalicon aprovou production antes do deploy."),
+                      ("staging-dashboard.png", "Dashboard real de staging no container Docker deste PC, porta 8081."),
+                      ("production-dashboard.png", "Dashboard real de produção no container Docker deste PC, porta 8082.")]:
+    screenshot = pc_dir / name
+    if screenshot.exists():
+        story.extend([PageBreak(), p("Anexo — ambiente Docker no PC", "SectionTitle"), p(caption)])
+        picture = Image(str(screenshot))
+        scale = min(490 / picture.imageWidth, 590 / picture.imageHeight)
+        picture.drawWidth = picture.imageWidth * scale
+        picture.drawHeight = picture.imageHeight * scale
+        story.append(picture)
+        story.append(p(f"Origem: docs/evidence/pc/{name}. Captura real; URLs localhost não são servidores públicos.", "SmallESG"))
 OUT.parent.mkdir(parents=True, exist_ok=True)
 SimpleDocTemplate(str(OUT), pagesize=A4, rightMargin=42, leftMargin=42, topMargin=45, bottomMargin=52,
                   title="EcoHospital Smart — CI/CD", author="Kalicon Amorim da Cruz Souza").build(story, onFirstPage=footer, onLaterPages=footer)

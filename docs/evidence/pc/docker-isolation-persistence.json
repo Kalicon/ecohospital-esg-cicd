@@ -1,0 +1,39 @@
+{
+  "verifiedAt": "2026-09-28T14:52:54.4047726+00:00",
+  "version": "461ffa3eea37b904018856681c4fbea1cdc2c8b8",
+  "containers": [
+    {
+      "environment": "staging",
+      "id": "4dd22f80a221",
+      "image": "ghcr.io/kalicon/ecohospital-esg-cicd@sha256:6a170c3d0f26560afa548a895a67f0f8b8e32481d4a7dc016cc57a7b32b94086",
+      "imageId": "sha256:6a170c3d0f26560afa548a895a67f0f8b8e32481d4a7dc016cc57a7b32b94086",
+      "uid": "10001",
+      "health": "healthy",
+      "volume": "ecohospital-staging_esg-data",
+      "networks": [
+        "ecohospital-staging_esg-network"
+      ],
+      "port": 8081
+    },
+    {
+      "environment": "production",
+      "id": "0ac32a701ac3",
+      "image": "ghcr.io/kalicon/ecohospital-esg-cicd@sha256:6a170c3d0f26560afa548a895a67f0f8b8e32481d4a7dc016cc57a7b32b94086",
+      "imageId": "sha256:6a170c3d0f26560afa548a895a67f0f8b8e32481d4a7dc016cc57a7b32b94086",
+      "uid": "10001",
+      "health": "healthy",
+      "volume": "ecohospital-production_esg-data",
+      "networks": [
+        "ecohospital-production_esg-network"
+      ],
+      "port": 8082
+    }
+  ],
+  "stagingBefore": 10,
+  "stagingAfter": 11,
+  "stagingAfterRestart": 11,
+  "productionBefore": 10,
+  "productionAfter": 10,
+  "isolationVerified": true,
+  "persistenceVerified": true
+}

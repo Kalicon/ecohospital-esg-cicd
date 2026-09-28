@@ -12,7 +12,7 @@ Em 28/09/2026, foram executados o build Maven, **25 testes JUnit aprovados** e o
 
 O repositório público [Kalicon/ecohospital-esg-cicd](https://github.com/Kalicon/ecohospital-esg-cicd) foi criado com autorização. O [CI atualizado aprovado](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36433415005) executou testes, construiu e iniciou a imagem Docker em Ubuntu, verificou UID 10001, health e persistência após reinício, e publicou no GHCR. O [PR de demonstração](https://github.com/Kalicon/ecohospital-esg-cicd/pull/1) foi encerrado sem merge: seu [run com falha proposital](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36433472858) bloqueou a imagem e todos os deploys. Logs e capturas reais estão em `docs/evidence/github`.
 
-**Deploy neste PC ainda pendente:** Docker Desktop foi instalado e WSL 2.7.14 habilitado, mas o Docker informou que a reinicialização do Windows é necessária. Nenhum container de staging/produção foi iniciado neste PC. O usuário escolheu dois ambientes locais, não servidores externos. Os Environments GitHub existem, restritos à `main`, com revisão obrigatória em produção. Os deploys permanecem desabilitados até o engine Linux funcionar.
+**Dois ambientes Docker concluídos no PC:** após reiniciar o Windows, Docker Desktop iniciou em modo Linux 29.8.1 / Compose 5.5.1. O [run completo de CI/CD](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36438015592) aprovou verify, image, staging-pc e production-pc. Kalicon aprovou o Environment production no GitHub antes do segundo deploy. Staging serve `http://localhost:8081`; produção, `http://localhost:8082`. Ambos retornam health `UP`, mesma versão `461ffa3eea37b904018856681c4fbea1cdc2c8b8` e mesma imagem `ghcr.io/kalicon/ecohospital-esg-cicd@sha256:6a170c3d0f26560afa548a895a67f0f8b8e32481d4a7dc016cc57a7b32b94086`. A verificação cruzada comprovou UID 10001, redes/volumes separados, isolamento e persistência após reinício de staging. JSON e capturas reais em `docs/evidence/pc`. São dois ambientes no mesmo PC, não servidores ou URLs públicos.
 
 Imagem publicada do commit `5b00e1eff60e82993258fdec04263a57fb462e49`: `ghcr.io/kalicon/ecohospital-esg-cicd@sha256:443ba973654cfd1cf9b0992f6f746d0c24eb1ef9b4d4a4562f2580c4eba03a3d`. Este digest identifica a imagem construída naquele run, não futuras revisões do código.
 
@@ -40,7 +40,7 @@ Google Fonts é usado pelo frontend; sua indisponibilidade afeta a fonte visual,
 
 ## Execução local com Docker
 
-Pré-requisitos: Docker Engine/Desktop em modo Linux e Docker Compose v2 com suporte a `up --wait` (2.20+). Não é necessário Java instalado para usar Docker. A imagem já foi executada no CI; a execução Docker neste computador aguarda reinicialização do Windows.
+Pré-requisitos: Docker Engine/Desktop em modo Linux e Docker Compose v2 com suporte a `up --wait` (2.20+). Não é necessário Java instalado para usar Docker. A imagem foi executada no CI e o Compose de staging foi executado neste PC.
 
 PowerShell, na raiz extraída do ZIP:
 
@@ -144,13 +144,13 @@ Não há `continue-on-error` em etapas críticas nem `always()` em deploy. `alwa
 
 ### Deploy no PC escolhido para a atividade
 
-1. Reinicie manualmente o Windows para concluir WSL; abra Docker Desktop, leia/aceite os termos se concordar e espere o engine Linux. Confirme `docker info --format '{{.OSType}}'` retornando `linux`.
+1. Recurso WSL concluído e Docker Desktop iniciado: `docker info --format '{{.OSType}}'` retornou `linux` nesta execução.
 2. Use um runner GitHub Actions Windows x64 com a label `ecohospital-lab`, na conta Windows que executa Docker Desktop. **Repositório público: use runner efêmero somente durante deploys confiáveis da main; nunca execute PRs externos nesse PC.** O CI de PR roda em runners GitHub. O workflow local também exige repository/actor `Kalicon` e branch `main`. A aprovação de todos os PRs externos foi habilitada no repositório. Esses filtros reduzem risco, mas não tornam seguro executar código de terceiros no PC.
-3. Habilite as variables `LOCAL_DEPLOY_ENABLED=true` e `LOCAL_PRODUCTION_DEPLOY_ENABLED=true` somente depois do Docker/runner preparados. As duas estão `false` nesta entrega; nenhum runner local foi registrado ainda.
-4. Execute CI/CD na main. `staging-pc` faz pull do digest, executa Compose e verifica página/health. `production-pc` depende de staging aprovado, aguarda revisão no Environment production e usa a mesma imagem. Se usar runner `--ephemeral`, registre outro para o segundo job. Não remova a aprovação obrigatória para contornar a espera.
+3. Variables `LOCAL_DEPLOY_ENABLED=true` e `LOCAL_PRODUCTION_DEPLOY_ENABLED=true` foram habilitadas após o Docker funcionar. Runners efêmeros separados executaram um job cada e se removeram do GitHub.
+4. O CI/CD executado na main promoveu o digest para `staging-pc`, aguardou a revisão no Environment production e promoveu a mesma imagem para `production-pc`. Para repetir, registre dois novos runners efêmeros com `scripts/lab-runner.ps1 -Mode Start -EnvironmentName staging` e `production`, depois dispare o workflow. Não remova a aprovação obrigatória.
 5. `scripts/deploy-local.ps1` mantém Compose/configurações fora do checkout, em `%LOCALAPPDATA%\EcoHospital\deploy\<ambiente>`. Projetos, volumes e redes ficam separados. URLs planejadas: `http://localhost:8081` e `http://localhost:8082`; não são serviços públicos nem deploys concluídos.
 
-O pull usa `GITHUB_TOKEN` temporário do job, com `packages: read`, por stdin; não requer PAT permanente nem secrets SSH para este modo. O deploy remoto opcional abaixo usa secrets por Environment. Não versionar credenciais ou a configuração do runner. Uma aprovação de produção pode ser feita pelo próprio integrante para esta demonstração individual; separação de responsabilidades exigiria outro revisor.
+O pacote GHCR é público; o deploy local faz pull anônimo pelo digest, sem PAT, senha ou login persistente. O `GITHUB_TOKEN` é usado apenas pelas actions normais de checkout/publicação. O deploy remoto opcional abaixo usa secrets por Environment. Não versionar credenciais ou configuração do runner. Uma aprovação de produção pode ser feita pelo próprio integrante nesta demonstração individual; separação de responsabilidades exigiria outro revisor.
 
 ### Alternativa: o que configurar para deploy remoto por SSH
 
@@ -207,9 +207,10 @@ Registro das evidências:
 |---|---|
 | Run GitHub Actions com build/testes aprovados | [Run aprovado](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36433415005), logs e `03-updated-ci-success.png` |
 | Imagem no GHCR e digest | Digest acima; log `updated-actions-run.log` |
-| Container e volume em execução | Verificados no job image do CI; health/KPIs reais em `github/container-first-run`. Compose neste PC ainda pendente |
-| Staging Docker no PC | **PENDENTE** — reiniciar Windows, iniciar engine, executar job e capturar página/health |
-| Aprovação e produção Docker no PC | **PENDENTE** — runner, aprovação e execução real após staging |
+| Container e volume em execução | Verificados no job image do CI e staging Compose neste PC; `pc/staging-health.json`, `pc/staging-dashboard.png` |
+| Staging Docker no PC | [Job staging-pc aprovado](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36438015592), porta 8081, health e captura real |
+| Aprovação e produção Docker no PC | [Mesmo run aprovado](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36438015592); `pc/production-dashboard.png`, `pc/production-health.json`, `github/production-approval.json` |
+| Isolamento e persistência | `pc/docker-isolation-persistence.json`: staging 10→11→11 após reinício; produção 10→10 |
 | Falha de teste bloqueando deploy | [Run falho](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36433472858), `test-gate-run.json/.log` e `02-test-gate-failure.png` |
 
 Não reutilizar os prints MongoDB anteriores como prova do pipeline. Os JSON locais são resultados HTTP reais, mas não screenshots de servidores remotos.
@@ -220,7 +221,7 @@ Execute `.\scripts\package-delivery.ps1` no PowerShell. Ele inclui Java/testes, 
 
 O ZIP é criado em `delivery/EcoHospital_CICD.zip`, com manifesto de arquivos e SHA256. Não sobrescreve um ZIP anterior silenciosamente: mova/renomeie a versão antiga antes de regenerar. Após novos prints ou revisão de integrantes, regenere o PDF e o pacote. O PDF pode ser regenerado com Python + `reportlab` 4.x: `python scripts/generate-technical-pdf.py`.
 
-Esta revisão com CI real usa `delivery/EcoHospital_CICD-executado.zip`. Reproduzir: `.\scripts\package-delivery.ps1 -OutputName EcoHospital_CICD-executado.zip`, seguido de `python scripts/verify-delivery.py delivery/EcoHospital_CICD-executado.zip`. Para continuar após reiniciar Windows, consulte [docs/RETOMADA.md](docs/RETOMADA.md).
+Esta revisão final com os dois deploys usa `delivery/EcoHospital_CICD-final.zip`. Reproduzir: `.\scripts\package-delivery.ps1 -OutputName EcoHospital_CICD-final.zip`, seguido de `python scripts/verify-delivery.py delivery/EcoHospital_CICD-final.zip`. O pacote anterior `EcoHospital_CICD-executado.zip` foi preservado. [docs/RETOMADA.md](docs/RETOMADA.md) explica como repetir a demonstração em outro momento.
 
 ## Checklist do enunciado
 
@@ -230,14 +231,14 @@ Esta revisão com CI real usa `delivery/EcoHospital_CICD-executado.zip`. Reprodu
 - [x] Dockerfile e `.dockerignore` preparados, com comandos e explicação da imagem.
 - [x] Imagem Docker construída e container executado com evidência real no GitHub Actions.
 - [x] Compose, rede, volume e exemplos de variáveis preparados; isolamento local Java verificado.
-- [ ] Compose, rede e volumes validados em Docker real.
+- [x] Compose, redes e volumes dos dois ambientes validados em Docker real.
 - [x] Workflows CI/CD preparados e validados estaticamente, com dependências e secrets por Environment.
 - [x] Pipeline executado no GitHub, imagem publicada e falha de teste demonstrada bloqueando deploy.
-- [ ] Deploy staging Docker no PC concluído com evidências reais.
-- [ ] Deploy produção Docker no PC aprovado e concluído com evidências reais.
+- [x] Deploy staging Docker no PC concluído com evidências reais.
+- [x] Deploy produção Docker no PC aprovado e concluído com evidências reais.
 - [x] README e conteúdo da documentação técnica preparados com espaços para evidências.
 - [x] Prints reais de Actions aprovado e falha proposital registrados; build Docker comprovado pelos logs.
-- [ ] Prints reais de staging e produção Docker no PC inseridos.
+- [x] Prints reais de staging e produção Docker no PC inseridos.
 - [x] PDF gerado e pacote ZIP conferido com CRC e manifesto SHA256.
 
 ## Referências oficiais

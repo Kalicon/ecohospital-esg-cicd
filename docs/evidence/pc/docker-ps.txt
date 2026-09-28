@@ -1,0 +1,2 @@
+ecohospital-production-app-1 | 6a170c3d0f26 | Up About a minute (healthy) | 127.0.0.1:8082->8080/tcp
+ecohospital-staging-app-1 | 6a170c3d0f26 | Up 8 seconds (health: starting) | 127.0.0.1:8081->8080/tcp

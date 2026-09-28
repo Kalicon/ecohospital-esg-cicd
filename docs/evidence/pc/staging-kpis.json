@@ -1,0 +1,13 @@
+{
+  "totalHospitais": 10,
+  "totalLeitos": 2620,
+  "totalFontes": 10,
+  "totalLeiturasIot": 10,
+  "mediaCo2": "710.9",
+  "totalArvores": 143,
+  "alertasIot": 2,
+  "licencasCriticas": 3,
+  "incidentesCriticos": 2,
+  "dbName": "esg_hospital_db",
+  "uptimeSeconds": 102
+}

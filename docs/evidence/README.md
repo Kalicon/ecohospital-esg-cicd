@@ -1,12 +1,14 @@
 # Evidências reais
 
+Run final [36438015592](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36438015592): verify, image, staging-pc e production-pc aprovados. Kalicon aprovou production antes do segundo job. `pc/staging-dashboard.png`, `pc/production-dashboard.png`, health JSON, `pc/docker-isolation-persistence.json`, `pc/github-two-deploys-approved.png` e `pc/github-production-approval.png` são evidências reais. `github/final-two-environments-run.json/.log` e `github/production-approval.json` documentam jobs/aprovação. `github/pc-staging-failed-run.*` registra a primeira tentativa falha de login GHCR; uma segunda falha no plugin Compose foi corrigida. Nenhuma falha foi promovida a production.
+
 ## Execução posterior comprovada no GitHub
 
 - [Primeiro CI aprovado](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36432825881): Docker build/run, UID, health, persistência e GHCR. `github/container-first-run` contém JSON reais baixados.
 - [CI atualizado aprovado](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36433415005): logs/JSON e `github/03-updated-ci-success.png`.
 - [Falha bloqueando imagem e deploys](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36433472858): logs/JSON e `github/02-test-gate-failure.png`. PR 1 encerrado sem merge.
 
-O roteiro abaixo foi preparado na primeira entrega. Os passos GitHub/build/falha já foram executados. **Continuam pendentes os dois deploys Docker no PC escolhido pelo usuário:** Docker exige reinicialização do Windows para concluir WSL. Seguir docs/RETOMADA.md; usar runner efêmero confiável, variables locais e revisão production. URLs planejadas localhost:8081/8082, não servidores remotos. Guardar as próximas capturas em `docs/evidence/pc`, atualizar checklist e regenerar PDF/ZIP.
+O roteiro abaixo foi preparado na primeira entrega. Todos os passos aplicáveis ao modo PC foram executados. `docs/RETOMADA.md` explica como repetir com novos runners efêmeros. As URLs localhost:8081/8082 são locais, não servidores remotos.
 
 `local/` contém logs/relatórios obtidos no computador de preparação. São evidências Java/Node e HTTP local; não comprovam Docker ou deploy remoto.
 

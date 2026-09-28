@@ -1,5 +1,7 @@
 # Registro real de verificação — 28/09/2026
 
+**Estado final após retomada:** [run 36438015592](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36438015592) aprovado com verify, image, staging-pc e production-pc. Kalicon aprovou o Environment production antes do job. Docker Linux 29.8.1/Compose 5.5.1 neste PC, ambos os containers healthy em localhost:8081/8082, mesma versão `461ffa3eea37b904018856681c4fbea1cdc2c8b8` e digest `6a170c3d0f26560afa548a895a67f0f8b8e32481d4a7dc016cc57a7b32b94086`. Script `scripts/verify-docker-environments.ps1` passou: UID 10001, rootfs read-only, redes/volumes distintos, staging 10→11→11 após reinício, produção 10→10. JSON/capturas em docs/evidence/pc. As seções seguintes mantêm o histórico cronológico da preparação e de falhas corrigidas; afirmações nelas de “pendente” referem-se àquela etapa, não ao estado final.
+
 ## Ambiente
 
 Windows / PowerShell. Node 22.17.0, npm 10.9.2. Java padrão 25; JDK 17.0.16 existente em `C:\Program Files\Java\jdk-17`, selecionado via `JAVA_HOME` para build/testes. Maven não estava no PATH; Maven 3.9.16 baixado do Maven Central, checksum SHA512 confirmado, Wrapper oficial gerado (3.3.4) e distribuição fixada com SHA256.
@@ -60,6 +62,10 @@ Instalar/usar Docker Linux e Compose, construir imagem, verificar health/volume 
 Estes artefatos documentam o trabalho realizado, mas não são evidência de deploy.
 
 ## Execução real posterior no GitHub e instalação no PC
+
+Atualização pós-reinício: `docker info --format '{{.OSType}} {{.ServerVersion}}'` retornou `linux 29.8.1`; `docker compose version` retornou `v5.5.1`. Runner oficial Windows 2.337.0 baixado da release `actions/runner`, SHA256 `1150692afa94e71f872017e254ea55b6eece1eece3fe7e3a6d4c93d0a1b85cfc` confirmado. Runners staging/production registrados com `--ephemeral`, label ecohospital-lab. Variables locais habilitadas apenas após engine funcionar.
+
+Runs 36436893693 e 36437304151: verify/image passaram; staging-pc falhou respectivamente no login GHCR e na descoberta do Compose por DOCKER_CONFIG temporário; production-pc ficou skipped. Correções documentadas no Git. Run 36438015592: verify, image e staging-pc aprovados; produção aguardava revisão obrigatória. Health real staging: UP, ambiente staging, versão `461ffa3eea37b904018856681c4fbea1cdc2c8b8`. Imagem por digest `6a170c3d0f26560afa548a895a67f0f8b8e32481d4a7dc016cc57a7b32b94086`, container healthy, porta 127.0.0.1:8081 e volume `ecohospital-staging_esg-data`. JSON e screenshot em docs/evidence/pc. Nenhum container de production executado neste registro.
 
 O usuário autorizou executar tudo, escolheu repositório público e este PC para staging/produção.
 
