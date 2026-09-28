@@ -4,7 +4,7 @@
 
 Integrante: Kalicon Amorim da Cruz Souza — RM 563172. Instituição identificada no projeto original: FIAP. Outros integrantes: não informados; preencher se houver. Data da preparação: 28/09/2026.
 
-Objetivo: demonstrar build automático, execução de testes existentes, containerização e promoção da mesma versão em staging e produção. A entrega contém código e infraestrutura como configuração; a execução remota permanece pendente de conta, servidor e credenciais.
+Objetivo: demonstrar build automático, execução de testes existentes, containerização e promoção da mesma versão em staging e produção. CI, testes, build Docker, execução de container e publicação GHCR foram executados no GitHub. O usuário escolheu este PC para os dois ambientes; o deploy local aguarda reinicialização do Windows para concluir WSL.
 
 ## 2. Diagnóstico e decisão técnica
 
@@ -28,7 +28,7 @@ Dockerfile de dois estágios. Build: maven:3.9-eclipse-temurin-17 executa mvn ve
 
 O .dockerignore permite apenas pom, Java/testes, frontend e dataset necessário. Compose configura root filesystem somente leitura, tmpfs /tmp, volume de dados gravável, memória de 512 MB, no-new-privileges e capabilities removidas.
 
-Comandos: docker build --build-arg APP_VERSION=academic-local -t ecohospital:local .; docker compose up -d --build --wait --wait-timeout 180. Health esperado: status UP, environment configurado, version da imagem. Esses comandos ainda precisam ser executados em Docker real.
+Comandos: docker build --build-arg APP_VERSION=academic-local -t ecohospital:local .; docker compose up -d --build --wait --wait-timeout 180. Health esperado: status UP, environment configurado, version da imagem. O CI construiu e executou a imagem; esses comandos locais ainda aguardam o engine Docker deste PC.
 
 ## 5. Etapas e lógica do pipeline
 
@@ -37,6 +37,8 @@ Gatilhos: pull request, push na main ou execução manual. verify executa checag
 image depende de verify aprovado. Constrói a imagem, executa container, confere usuário, health, versão e persistência após reinício. Na main, publica a imagem testada no GHCR usando GITHUB_TOKEN; o digest real é passado aos dois deploys. Pull requests não publicam nem fazem deploy.
 
 staging depende da imagem e de DEPLOY_ENABLED=true. production depende de imagem e staging e exige PRODUCTION_DEPLOY_ENABLED=true. O Environment production deve ter aprovação configurada no GitHub. Falha em teste, container ou health de staging bloqueia produção pelas dependências needs e pelo código de saída das etapas.
+
+Modo escolhido: staging-pc e production-pc usam deploy-pc.yml, Docker Desktop Linux e runner Windows com label ecohospital-lab. Variables LOCAL_DEPLOY_ENABLED e LOCAL_PRODUCTION_DEPLOY_ENABLED ficam false até o PC estar pronto. O runner local não executa PRs: exige main e actor Kalicon. Para repositório público, usar runner efêmero somente para jobs confiáveis, nunca código externo. Production tem revisão obrigatória e ambos os Environments estão restritos à main. O pull local usa GITHUB_TOKEN temporário com packages:read, sem PAT permanente.
 
 Cada deploy usa secrets do seu Environment: SSH_HOST, SSH_USER, SSH_PORT, SSH_PRIVATE_KEY, SSH_KNOWN_HOSTS, GHCR_USER e GHCR_TOKEN. Variables: APP_PORT, BIND_ADDRESS e APP_URL. A verificação SSH do host é estrita; senha/token não são argumentos de linha de comando.
 
@@ -48,19 +50,19 @@ Build Maven: aprovado com JDK 17.0.16. JUnit: 25 casos, zero falhas, zero erros 
 
 HTTP local: dois processos Java com a mesma versão SHA256 do JAR responderam 200 na página e health. Staging recebeu uma leitura IoT e ficou com 11 leituras; produção permaneceu com 10. Após reinício, staging manteve 11. Esses resultados são reais, porém locais e sem containers.
 
-Actionlint 1.7.12 aprovou os dois workflows; Git Bash aprovou sintaxe dos dois scripts de deploy. Isso é análise estática, não execução de GitHub Actions ou SSH. Não houve deploy remoto ou publicação de imagem.
+Actionlint 1.7.12 aprovou os workflows; Git Bash aprovou sintaxe dos dois scripts de deploy SSH. Isso é análise estática. A execução real posterior do Actions também foi aprovada, incluindo build e smoke test Docker; não houve deploy SSH nem deploy Docker local ainda.
 
 Compose standalone 5.5.1 aprovou config dos ambientes sem daemon. As configurações expandidas confirmam portas 8081/8082, redes e volumes com nomes distintos. Esses recursos ainda não foram criados em Docker. A configuração remota foi validada com imagem/digest de exemplo, sem publicação.
 
-EVIDÊNCIA PENDENTE: print do run GitHub Actions com build/testes, URL real e SHA. Inserir após executar o pipeline.
+CI atualizado aprovado: https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36433415005 . Commit 5b00e1eff60e82993258fdec04263a57fb462e49. Verify e image aprovados; deploys skipped porque ainda desabilitados. Logs, JSON de jobs e captura real em docs/evidence/github.
 
-EVIDÊNCIA PENDENTE: imagem Docker/GHCR, digest e containers/redes/volumes em execução. Inserir após construir/executar Docker.
+Imagem GHCR publicada: ghcr.io/kalicon/ecohospital-esg-cicd@sha256:443ba973654cfd1cf9b0992f6f746d0c24eb1ef9b4d4a4562f2580c4eba03a3d . O job image executou container com UID 10001, health UP e ambiente ci; após uma simulação IoT e reinício, preservou 11 leituras no volume. Esses testes ocorreram no runner Ubuntu, não no PC Windows.
 
-EVIDÊNCIA PENDENTE: página e health de staging remoto, URL real, ambiente, versão e data. Inserir após deploy real.
+EVIDÊNCIA PENDENTE: página e health do container staging neste PC, porta 8081, ambiente, versão e data. Não foi contratado servidor; localhost não é uma URL pública de hospedagem.
 
-EVIDÊNCIA PENDENTE: aprovação de produção, página e health remoto, versão/digest iguais a staging. Inserir após execução e aprovação real.
+EVIDÊNCIA PENDENTE: aprovação de produção, página e health do container no PC, porta 8082, versão/digest iguais a staging. A regra de revisão existe, mas ainda não ocorreu aprovação nem deploy.
 
-EVIDÊNCIA PENDENTE: teste propositalmente falho em PR e jobs posteriores bloqueados. Inserir somente o run real.
+Falha proposital comprovada: https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36433472858 . PR 1 / branch demo/test-gate: uma asserção JUnit falhou; image e todos os deploys ficaram skipped. PR encerrado sem merge, preservando a main com testes aprovados. Captura 02-test-gate-failure.png e logs reais arquivados.
 
 ## 7. Desafios e soluções
 
@@ -68,7 +70,9 @@ Linguagem incompatível com o pedido: backend portado para Spring Boot, mantendo
 
 Primeiro teste da página falhou porque MockMvc retorna forward sem renderizar o destino. Corrigido para verificar forward e index.html; também executado HTTP real. A execução final dos 25 testes passou.
 
-Ferramentas indisponíveis: Maven resolvido com Wrapper e checksum; JDK 17 existente selecionado. Ausência de Docker e infraestrutura remota: configuração preparada e pendências documentadas. Nenhuma evidência foi criada para representar execução não realizada.
+Ferramentas indisponíveis: Maven resolvido com Wrapper e checksum; JDK 17 existente selecionado. Actions atualizadas após avisos do primeiro run. Docker Desktop oficial instalado com assinatura Authenticode verificada; WSL 2.7.14 instalado e recursos Windows habilitados após aprovação UAC. Docker registrou WSL_E_WSL_OPTIONAL_COMPONENT_REQUIRED e solicitou reinicialização do PC. Nenhuma reinicialização automática foi feita; deploys não foram declarados concluídos.
+
+Interface melhorada: identificação do ambiente e da versão no painel; requisições HTTP com erro não são mais apresentadas como sucesso; contadores não substituem zero por um valor fictício. Funcionalidades ESG e dataset original permanecem preservados.
 
 ## 8. Operação, limitações e entrega
 
@@ -76,7 +80,7 @@ Sem autenticação nas rotas didáticas de mutação/reset; acesso deve ficar li
 
 Rollback manual preserva volume e usa previous-image.txt do ambiente. Falha de deploy exige diagnóstico; não há rollback automático, zero downtime ou backup remoto automatizado. Dados devem ser copiados antes de mudanças de formato.
 
-Para concluir: criar repo GitHub, Docker Linux, servidor Linux/Compose, conectividade e URLs, secrets, revisão production e habilitação de deploy. Depois executar pipeline, inserir prints reais e marcar apenas itens comprovados. O README contém comandos, tabelas de configuração e checklist.
+Para concluir: reiniciar Windows manualmente, abrir Docker Desktop e concluir os termos se concordar, verificar engine Linux, preparar runner efêmero, habilitar as variables locais, executar staging, revisar produção e executar production. Inserir capturas reais e atualizar checklist. Não é necessário servidor pago ou SSH para o modo PC; localhost só funciona enquanto este computador e os containers estiverem ligados.
 
 ZIP inclui código Java/Node, dados, frontend, Docker/Compose, workflows, Wrapper, scripts, exemplos e documentação/evidências disponíveis; exclui segredos, ferramentas e estados runtime. O manifesto SHA256 permite conferir conteúdo.
 

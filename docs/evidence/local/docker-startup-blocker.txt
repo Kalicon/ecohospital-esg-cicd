@@ -1,0 +1,10 @@
+Data: 28/09/2026
+Docker Desktop instalado para o usuário; instalador oficial com assinatura Authenticode válida.
+WSL 2.7.14.0 instalado. Recursos WSL e VirtualMachinePlatform habilitados via DISM após aprovação UAC; sem reinicialização automática.
+Comando real: docker info --format '{{.OSType}}'
+Resultado: Error response from daemon: Docker Desktop is unable to start
+Diagnóstico real do log com.docker.backend.exe.log:
+WSL_E_WSL_OPTIONAL_COMPONENT_REQUIRED
+A reboot is required to complete the WSL installation. Please restart your computer and try again.
+Consequência: staging/production Docker neste PC ainda não executados.
+Transcrição sanitizada de comandos/logs reais; não é captura de tela.

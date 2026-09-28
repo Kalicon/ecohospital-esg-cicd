@@ -1,5 +1,13 @@
 # Evidências reais
 
+## Execução posterior comprovada no GitHub
+
+- [Primeiro CI aprovado](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36432825881): Docker build/run, UID, health, persistência e GHCR. `github/container-first-run` contém JSON reais baixados.
+- [CI atualizado aprovado](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36433415005): logs/JSON e `github/03-updated-ci-success.png`.
+- [Falha bloqueando imagem e deploys](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36433472858): logs/JSON e `github/02-test-gate-failure.png`. PR 1 encerrado sem merge.
+
+O roteiro abaixo foi preparado na primeira entrega. Os passos GitHub/build/falha já foram executados. **Continuam pendentes os dois deploys Docker no PC escolhido pelo usuário:** Docker exige reinicialização do Windows para concluir WSL. Seguir docs/RETOMADA.md; usar runner efêmero confiável, variables locais e revisão production. URLs planejadas localhost:8081/8082, não servidores remotos. Guardar as próximas capturas em `docs/evidence/pc`, atualizar checklist e regenerar PDF/ZIP.
+
 `local/` contém logs/relatórios obtidos no computador de preparação. São evidências Java/Node e HTTP local; não comprovam Docker ou deploy remoto.
 
 Para concluir as evidências acadêmicas:

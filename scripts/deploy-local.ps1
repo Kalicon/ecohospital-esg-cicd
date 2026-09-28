@@ -14,8 +14,8 @@ $dockerBin = if ($dockerCommand) { $dockerCommand.Source } else {
     if (-not (Test-Path -LiteralPath $candidate)) { throw 'Docker Desktop não está instalado ou não está no PATH.' }
     $candidate
 }
-& $dockerBin info --format '{{.OSType}}'
-if ($LASTEXITCODE -ne 0) { throw 'Inicie Docker Desktop e aguarde o engine Linux.' }
+$engineType = & $dockerBin info --format '{{.OSType}}'
+if ($LASTEXITCODE -ne 0 -or $engineType -ne 'linux') { throw 'Inicie Docker Desktop e aguarde o engine Linux.' }
 $port = if ($EnvironmentName -eq 'staging') { 8081 } else { 8082 }
 # Keep deploy files outside the runner checkout so subsequent jobs cannot erase them.
 $deployDir = Join-Path $env:LOCALAPPDATA "EcoHospital/deploy/$EnvironmentName"

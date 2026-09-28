@@ -4,7 +4,7 @@
 
 Windows / PowerShell. Node 22.17.0, npm 10.9.2. Java padrão 25; JDK 17.0.16 existente em `C:\Program Files\Java\jdk-17`, selecionado via `JAVA_HOME` para build/testes. Maven não estava no PATH; Maven 3.9.16 baixado do Maven Central, checksum SHA512 confirmado, Wrapper oficial gerado (3.3.4) e distribuição fixada com SHA256.
 
-Não havia `.git`, Docker, `mongosh` ou .NET na pasta/ambiente. Nenhuma conta GitHub, URL remota ou credencial foi fornecida. Não houve criação de servidor, publicação, push Git ou deploy externo.
+No diagnóstico inicial não havia `.git`, Docker, `mongosh` ou .NET. As seções de preparação abaixo descrevem aquela etapa; a execução posterior autorizada está registrada ao final.
 
 ## Diagnóstico e baseline
 
@@ -58,3 +58,19 @@ Instalar/usar Docker Linux e Compose, construir imagem, verificar health/volume 
 `scripts/package-delivery.ps1` gerou um pacote de revisão, validado com `python scripts/verify-delivery.py`: CRC sem erros, manifesto SHA256 cobrindo os 65 arquivos, entradas obrigatórias presentes, sem .env reais, target, .runtime, chaves ou arquivos de ferramentas. Depois foi preparado o pacote final `delivery/EcoHospital_CICD.zip` com README e evidências atualizados; a mesma verificação é usada no fechamento. Arquivo SHA256 externo e manifesto estão em delivery. O ZIP não contém o JAR de target: ele é reconstruído com Maven/ Docker a partir do código incluído.
 
 Estes artefatos documentam o trabalho realizado, mas não são evidência de deploy.
+
+## Execução real posterior no GitHub e instalação no PC
+
+O usuário autorizou executar tudo, escolheu repositório público e este PC para staging/produção.
+
+- Repositório criado e código publicado: https://github.com/Kalicon/ecohospital-esg-cicd .
+- Primeiro run 36432825881 aprovado: testes, Docker build/run, UID 10001, health, persistência após restart e publicação GHCR.
+- Actions atualizadas; run 36433415005 aprovado, commit `5b00e1eff60e82993258fdec04263a57fb462e49`. Imagem `ghcr.io/kalicon/ecohospital-esg-cicd@sha256:443ba973654cfd1cf9b0992f6f746d0c24eb1ef9b4d4a4562f2580c4eba03a3d`. Build/runtime no runner Ubuntu, não neste PC. JSON/logs/capturas reais em docs/evidence/github.
+- PR 1 / branch isolada demo/test-gate: falha proposital JUnit; run 36433472858 verify=failure, image e todos os deploys=skipped. PR fechado sem merge; main preservada com testes aprovados.
+- Environments staging e production restritos à main, production com revisão obrigatória de Kalicon. Autoaprovação permitida na demonstração individual; outro revisor seria necessário para separação de responsabilidades. Aprovação de todos os PRs externos exigida. Variables locais de deploy=false; sem runner registrado.
+- Melhorias: identificação ambiente/versão no painel, tratamento de erros HTTP e contadores zero corretos; 25 JUnit e runner Node aprovados novamente.
+- Docker Desktop oficial instalado por usuário, assinatura Docker válida. SHA256 do instalador: `C139124C9CF71477DC565C3C0EA5A18F90B93D68EBE9AAA848A065960416C0BC`. Não foi automatizado aceite de termos.
+- Após aprovação UAC, DISM habilitou WSL e VirtualMachinePlatform, sem reiniciar. WSL 2.7.14.0 / kernel 6.18.33.2 disponíveis.
+- `docker info --format '{{.OSType}}'` falhou: “Docker Desktop is unable to start”. Backend registrou `WSL_E_WSL_OPTIONAL_COMPONENT_REQUIRED` e “A reboot is required to complete the WSL installation”. Reinicialização manual indispensável; transcrição sanitizada em docs/evidence/local/docker-startup-blocker.txt.
+
+**Pendente:** Compose, staging/production Docker neste PC, runner efêmero, aprovação/deploy production e capturas dos dois ambientes em containers. Não existe URL pública de hospedagem. A instalação não comprova engine operacional nem deploy. Retomada em docs/RETOMADA.md.

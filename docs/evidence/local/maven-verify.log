@@ -26,8 +26,8 @@
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running br.com.ecohospital.EsgApiTest
-10:55:11.190 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [br.com.ecohospital.EsgApiTest]: EsgApiTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-10:55:11.478 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration br.com.ecohospital.EsgApplication for test class br.com.ecohospital.EsgApiTest
+11:00:32.564 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [br.com.ecohospital.EsgApiTest]: EsgApiTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+11:00:32.912 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration br.com.ecohospital.EsgApplication for test class br.com.ecohospital.EsgApiTest
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -38,19 +38,19 @@
 
  :: Spring Boot ::               (v3.5.16)
 
-2026-09-28T10:55:12.371-03:00  INFO 18880 --- [ecohospital-esg] [           main] br.com.ecohospital.EsgApiTest            : Starting EsgApiTest using Java 17.0.16 with PID 18880 (started by kalicon in C:\Users\kalicon\Documents\Kalicon Programa��o\ESG FInal)
-2026-09-28T10:55:12.374-03:00  INFO 18880 --- [ecohospital-esg] [           main] br.com.ecohospital.EsgApiTest            : No active profile set, falling back to 1 default profile: "default"
-2026-09-28T10:55:14.379-03:00  INFO 18880 --- [ecohospital-esg] [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
-2026-09-28T10:55:15.180-03:00  INFO 18880 --- [ecohospital-esg] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-09-28T10:55:15.180-03:00  INFO 18880 --- [ecohospital-esg] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-09-28T10:55:15.192-03:00  INFO 18880 --- [ecohospital-esg] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
-2026-09-28T10:55:15.207-03:00  INFO 18880 --- [ecohospital-esg] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 24 ms
-2026-09-28T10:55:15.318-03:00  INFO 18880 --- [ecohospital-esg] [           main] br.com.ecohospital.EsgApiTest            : Started EsgApiTest in 3.613 seconds (process running for 5.165)
+2026-09-28T11:00:34.081-03:00  INFO 2800 --- [ecohospital-esg] [           main] br.com.ecohospital.EsgApiTest            : Starting EsgApiTest using Java 17.0.16 with PID 2800 (started by kalicon in C:\Users\kalicon\Documents\Kalicon Programa��o\ESG FInal)
+2026-09-28T11:00:34.085-03:00  INFO 2800 --- [ecohospital-esg] [           main] br.com.ecohospital.EsgApiTest            : No active profile set, falling back to 1 default profile: "default"
+2026-09-28T11:00:36.791-03:00  INFO 2800 --- [ecohospital-esg] [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2026-09-28T11:00:38.195-03:00  INFO 2800 --- [ecohospital-esg] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-09-28T11:00:38.196-03:00  INFO 2800 --- [ecohospital-esg] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-09-28T11:00:38.214-03:00  INFO 2800 --- [ecohospital-esg] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-09-28T11:00:38.231-03:00  INFO 2800 --- [ecohospital-esg] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 32 ms
+2026-09-28T11:00:38.374-03:00  INFO 2800 --- [ecohospital-esg] [           main] br.com.ecohospital.EsgApiTest            : Started EsgApiTest in 5.12 seconds (process running for 7.319)
 Java HotSpot(TM) 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-2026-09-28T10:55:17.687-03:00  WARN 18880 --- [ecohospital-esg] [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Unexpected character ('b' (code 98)): was expecting double-quote to start field name]
-[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.977 s -- in br.com.ecohospital.EsgApiTest
+2026-09-28T11:00:40.923-03:00  WARN 2800 --- [ecohospital-esg] [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Unexpected character ('b' (code 98)): was expecting double-quote to start field name]
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.104 s -- in br.com.ecohospital.EsgApiTest
 [INFO] Running br.com.ecohospital.EsgStoreTest
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.310 s -- in br.com.ecohospital.EsgStoreTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.436 s -- in br.com.ecohospital.EsgStoreTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -66,6 +66,6 @@ Java HotSpot(TM) 64-Bit Server VM warning: Sharing is only supported for boot lo
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  12.153 s
-[INFO] Finished at: 2026-09-28T10:55:19-03:00
+[INFO] Total time:  16.378 s
+[INFO] Finished at: 2026-09-28T11:00:43-03:00
 [INFO] ------------------------------------------------------------------------

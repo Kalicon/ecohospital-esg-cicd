@@ -30,4 +30,6 @@
 
 ## Decisão de escopo
 
+Execução posterior autorizada: repositório público criado, CI/GHCR e demonstração de falha realizados com logs/capturas reais. Acrescentados `.github/workflows/deploy-pc.yml`, `.github/actionlint.yaml`, `scripts/setup-host.ps1`, `scripts/deploy-local.ps1` e `docs/RETOMADA.md`. Actions atualizadas e filtros de documentação adicionados. Frontend agora identifica ambiente/versão e trata HTTP não-2xx como erro. PDF passou a incluir duas capturas reais do GitHub. Instalação Docker/WSL concluída, mas deploy local aguarda reinicialização obrigatória do Windows; nenhum runner foi registrado nem deploy local declarado concluído.
+
 A linguagem original divergia do enunciado. Após a autorização para adotar a solução mais adequada, o backend foi portado para Spring Boot. Não foi criado banco MongoDB sem integração: o sistema recebido já simulava suas operações sobre JSON. O volume agora conserva o estado por ambiente. A atividade anterior de NoSQL continua disponível como material separado.

@@ -28,6 +28,7 @@ if ($Mode -eq 'EnableWsl') {
         if ($LASTEXITCODE -notin @(0,3010)) { throw "Falha ao habilitar $feature, código $LASTEXITCODE" }
     }
     & wsl.exe --install --no-distribution --web-download 2>&1 | Tee-Object -FilePath $log -Append
+    if ($LASTEXITCODE -notin @(0,3010)) { throw "WSL retornou código $LASTEXITCODE. Consulte o log e reinicie manualmente se necessário." }
     Write-Output "Recursos preparados. Consulte $log. Se solicitado pelo Windows, reinicie manualmente antes de iniciar Docker."
     exit 0
 }

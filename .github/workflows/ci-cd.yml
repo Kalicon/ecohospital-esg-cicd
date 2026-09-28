@@ -1,8 +1,10 @@
 name: EcoHospital CI/CD
 on:
   pull_request:
+    paths-ignore: ['docs/**', 'README.md']
   push:
     branches: [main]
+    paths-ignore: ['docs/**', 'README.md']
   workflow_dispatch:
 permissions:
   contents: read

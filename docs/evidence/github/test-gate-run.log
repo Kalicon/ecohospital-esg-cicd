@@ -1,0 +1,469 @@
+verify	Set up job	﻿2026-09-28T14:06:34.6673591Z Current runner version: '2.337.0'
+verify	Set up job	2026-09-28T14:06:34.6694563Z ##[group]Runner Image Provisioner
+verify	Set up job	2026-09-28T14:06:34.6695368Z Hosted Compute Agent
+verify	Set up job	2026-09-28T14:06:34.6695875Z Version: 20260828.587
+verify	Set up job	2026-09-28T14:06:34.6696403Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+verify	Set up job	2026-09-28T14:06:34.6697092Z Build Date: 2026-08-28T16:44:25Z
+verify	Set up job	2026-09-28T14:06:34.6697662Z Worker ID: {5d8a9ddc-fd86-40f8-ae9a-a9a967d9fd0c}
+verify	Set up job	2026-09-28T14:06:34.6698264Z Azure Region: westus3
+verify	Set up job	2026-09-28T14:06:34.6698743Z ##[endgroup]
+verify	Set up job	2026-09-28T14:06:34.6700020Z ##[group]Operating System
+verify	Set up job	2026-09-28T14:06:34.6700670Z Ubuntu
+verify	Set up job	2026-09-28T14:06:34.6701110Z 24.04.5
+verify	Set up job	2026-09-28T14:06:34.6701590Z LTS
+verify	Set up job	2026-09-28T14:06:34.6702052Z ##[endgroup]
+verify	Set up job	2026-09-28T14:06:34.6702510Z ##[group]Runner Image
+verify	Set up job	2026-09-28T14:06:34.6703072Z Image: ubuntu-24.04
+verify	Set up job	2026-09-28T14:06:34.6703546Z Version: 20260920.314.1
+verify	Set up job	2026-09-28T14:06:34.6704385Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260920.314/images/ubuntu/Ubuntu2404-Readme.md
+verify	Set up job	2026-09-28T14:06:34.6705842Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260920.314
+verify	Set up job	2026-09-28T14:06:34.6706691Z ##[endgroup]
+verify	Set up job	2026-09-28T14:06:34.6707569Z ##[group]GITHUB_TOKEN Permissions
+verify	Set up job	2026-09-28T14:06:34.6709205Z Contents: read
+verify	Set up job	2026-09-28T14:06:34.6709726Z Metadata: read
+verify	Set up job	2026-09-28T14:06:34.6710421Z ##[endgroup]
+verify	Set up job	2026-09-28T14:06:34.6712166Z Secret source: Actions
+verify	Set up job	2026-09-28T14:06:34.6712940Z Cache mode: write
+verify	Set up job	2026-09-28T14:06:34.6713573Z Prepare workflow directory
+verify	Set up job	2026-09-28T14:06:34.7192809Z Prepare all required actions
+verify	Set up job	2026-09-28T14:06:34.7230734Z Getting action download info
+verify	Set up job	2026-09-28T14:06:35.0511858Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+verify	Set up job	2026-09-28T14:06:35.4199370Z Download action repository 'actions/setup-java@v6' (SHA:de7274f081f381c8f8158605e0321c36c376e2e6)
+verify	Set up job	2026-09-28T14:06:36.5655573Z Download action repository 'actions/setup-node@v7' (SHA:820762786026740c76f36085b0efc47a31fe5020)
+verify	Set up job	2026-09-28T14:06:36.6662365Z Download action repository 'actions/upload-artifact@v7' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+verify	Set up job	2026-09-28T14:06:36.8768991Z Complete job name: verify
+verify	Run actions/checkout@v7	﻿2026-09-28T14:06:36.9477603Z ##[group]Run actions/checkout@v7
+verify	Run actions/checkout@v7	2026-09-28T14:06:36.9478664Z with:
+verify	Run actions/checkout@v7	2026-09-28T14:06:36.9479337Z   repository: Kalicon/ecohospital-esg-cicd
+verify	Run actions/checkout@v7	2026-09-28T14:06:36.9485688Z   token: ***
+verify	Run actions/checkout@v7	2026-09-28T14:06:36.9486322Z   ssh-strict: true
+verify	Run actions/checkout@v7	2026-09-28T14:06:36.9486964Z   ssh-user: git
+verify	Run actions/checkout@v7	2026-09-28T14:06:36.9487612Z   persist-credentials: true
+verify	Run actions/checkout@v7	2026-09-28T14:06:36.9488318Z   clean: true
+verify	Run actions/checkout@v7	2026-09-28T14:06:36.9488964Z   sparse-checkout-cone-mode: true
+verify	Run actions/checkout@v7	2026-09-28T14:06:36.9489717Z   fetch-depth: 1
+verify	Run actions/checkout@v7	2026-09-28T14:06:36.9490453Z   fetch-tags: false
+verify	Run actions/checkout@v7	2026-09-28T14:06:36.9491108Z   show-progress: true
+verify	Run actions/checkout@v7	2026-09-28T14:06:36.9491784Z   lfs: false
+verify	Run actions/checkout@v7	2026-09-28T14:06:36.9492385Z   submodules: false
+verify	Run actions/checkout@v7	2026-09-28T14:06:36.9493044Z   set-safe-directory: true
+verify	Run actions/checkout@v7	2026-09-28T14:06:36.9493779Z   allow-unsafe-pr-checkout: false
+verify	Run actions/checkout@v7	2026-09-28T14:06:36.9494753Z ##[endgroup]
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0329013Z Syncing repository: Kalicon/ecohospital-esg-cicd
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0331727Z ##[group]Getting Git version info
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0332964Z Working directory is '/home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd'
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0334818Z [command]/usr/bin/git version
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0422143Z git version 2.55.0
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0430333Z ##[endgroup]
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0438900Z Temporarily overriding HOME='/home/runner/work/_temp/53085f2c-3faf-4c36-b648-ed32a04a3ff1' before making global git config changes
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0442458Z Adding repository directory to the temporary git global config as a safe directory
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0445312Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0491794Z Deleting the contents of '/home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd'
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0500274Z ##[group]Determining repository object format
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0503667Z ##[endgroup]
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0505443Z ##[group]Initializing the repository
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0507659Z [command]/usr/bin/git init /home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0611656Z hint: Using 'master' as the name for the initial branch. This default branch name
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0614184Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0616273Z hint: to use in all of your new repositories, which will suppress this warning,
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0617957Z hint: call:
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0618782Z hint:
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0619968Z hint: 	git config --global init.defaultBranch <name>
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0621322Z hint:
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0622569Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0624668Z hint: 'development'. The just-created branch can be renamed via this command:
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0626262Z hint:
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0627734Z hint: 	git branch -m <name>
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0706229Z hint:
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0708325Z hint: Disable this message with "git config set advice.defaultBranchName false"
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0710921Z Initialized empty Git repository in /home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd/.git/
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0717262Z [command]/usr/bin/git remote add origin https://github.com/Kalicon/ecohospital-esg-cicd
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0721074Z ##[endgroup]
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0722572Z ##[group]Disabling automatic garbage collection
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0724126Z [command]/usr/bin/git config --local gc.auto 0
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0761553Z ##[endgroup]
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0763167Z ##[group]Setting up auth
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0764232Z Removing SSH command configuration
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0767102Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.0799697Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.1155871Z Removing HTTP extra header
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.1160545Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.1192193Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.1378068Z Removing includeIf entries pointing to credentials config files
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.1381947Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.1420078Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.1614092Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-fa518530-548e-4466-8046-e0636c520364.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.1649521Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd/.git.path /home/runner/work/_temp/git-credentials-fa518530-548e-4466-8046-e0636c520364.config
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.1680922Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-fa518530-548e-4466-8046-e0636c520364.config
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.1713512Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-fa518530-548e-4466-8046-e0636c520364.config
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.1745868Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-fa518530-548e-4466-8046-e0636c520364.config
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.1773912Z ##[endgroup]
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.1775000Z ##[group]Fetching the repository
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.1779636Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +fd577ac041eebc8b3cc383b680d26cf189492d1c:refs/remotes/pull/1/merge
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7622431Z From https://github.com/Kalicon/ecohospital-esg-cicd
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7623228Z  * [new ref]         fd577ac041eebc8b3cc383b680d26cf189492d1c -> pull/1/merge
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7627331Z ##[endgroup]
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7627926Z ##[group]Determining the checkout info
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7628538Z ##[endgroup]
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7633089Z [command]/usr/bin/git sparse-checkout disable
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7684287Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7715368Z ##[group]Checking out the ref
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7719006Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/1/merge
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7816833Z Note: switching to 'refs/remotes/pull/1/merge'.
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7817252Z 
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7817553Z You are in 'detached HEAD' state. You can look around, make experimental
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7818011Z changes and commit them, and you can discard any commits you make in this
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7818563Z state without impacting any branches by switching back to a branch.
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7818805Z 
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7818989Z If you want to create a new branch to retain commits you create, you may
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7819387Z do so (now or later) by using -c with the switch command. Example:
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7819642Z 
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7819751Z   git switch -c <new-branch-name>
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7820130Z 
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7820236Z Or undo this operation with:
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7820395Z 
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7820493Z   git switch -
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7820627Z 
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7820825Z Turn off this advice by setting config variable advice.detachedHead to false
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7821075Z 
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7821378Z HEAD is now at fd577ac Merge 8d2cd0f2ceca83107691ee13ec252330fd2f7516 into 5b00e1eff60e82993258fdec04263a57fb462e49
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7826752Z ##[endgroup]
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7867224Z [command]/usr/bin/git log -1 --format=%H
+verify	Run actions/checkout@v7	2026-09-28T14:06:37.7891725Z fd577ac041eebc8b3cc383b680d26cf189492d1c
+verify	Run actions/setup-java@v6	﻿2026-09-28T14:06:37.8170789Z ##[group]Run actions/setup-java@v6
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8171104Z with:
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8171313Z   distribution: temurin
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8171540Z   java-version: 17
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8171744Z   cache: maven
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8171948Z   java-package: jdk
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8172155Z   check-latest: false
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8172372Z   force-download: false
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8172585Z   set-default: true
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8172790Z   server-id: github
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8173018Z   mvn-repositories-include-central: true
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8173320Z   mvn-repositories-prioritize-central: true
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8173600Z   overwrite-settings: true
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8173833Z   cache-read-only: false
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8174055Z   job-status: success
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8175948Z   token: ***
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8176165Z   show-download-progress: false
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8176422Z   problem-matcher: true
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8176649Z ##[endgroup]
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.8777824Z ##[group]Installed distributions
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.9174793Z Resolved Java 17.0.20+1 from tool-cache
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.9175519Z Setting Java 17.0.20+1 as the default
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.9207839Z 
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.9210432Z Java configuration:
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.9212638Z   Distribution: temurin
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.9213339Z   Version: 17.0.20+1
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.9213941Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.9214346Z 
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.9226879Z ##[endgroup]
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.9274550Z Creating settings.xml with server-id: github
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.9276925Z Creating toolchains.xml for JDK version 17 from temurin
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.9287074Z Writing to /home/runner/.m2/settings.xml
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.9291308Z Writing to /home/runner/.m2/toolchains.xml
+verify	Run actions/setup-java@v6	2026-09-28T14:06:37.9297664Z Configured MAVEN_ARGS to include -ntp to suppress Maven transfer progress logs. Set 'show-download-progress: true' to keep the download progress output.
+verify	Run actions/setup-java@v6	2026-09-28T14:06:38.1958302Z maven cache is not found
+verify	Run actions/setup-java@v6	2026-09-28T14:06:38.1977652Z maven-wrapper cache is not found
+verify	Run actions/setup-node@v7	﻿2026-09-28T14:06:38.2134999Z ##[group]Run actions/setup-node@v7
+verify	Run actions/setup-node@v7	2026-09-28T14:06:38.2135279Z with:
+verify	Run actions/setup-node@v7	2026-09-28T14:06:38.2135479Z   node-version: 22
+verify	Run actions/setup-node@v7	2026-09-28T14:06:38.2135699Z   check-latest: false
+verify	Run actions/setup-node@v7	2026-09-28T14:06:38.2137583Z   token: ***
+verify	Run actions/setup-node@v7	2026-09-28T14:06:38.2137811Z   package-manager-cache: true
+verify	Run actions/setup-node@v7	2026-09-28T14:06:38.2138049Z env:
+verify	Run actions/setup-node@v7	2026-09-28T14:06:38.2138325Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+verify	Run actions/setup-node@v7	2026-09-28T14:06:38.2138749Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+verify	Run actions/setup-node@v7	2026-09-28T14:06:38.2139105Z   MAVEN_ARGS: -ntp
+verify	Run actions/setup-node@v7	2026-09-28T14:06:38.2139317Z ##[endgroup]
+verify	Run actions/setup-node@v7	2026-09-28T14:06:38.3203086Z Found in cache @ /opt/hostedtoolcache/node/22.23.2/x64
+verify	Run actions/setup-node@v7	2026-09-28T14:06:38.3204827Z ##[group]Environment details
+verify	Run actions/setup-node@v7	2026-09-28T14:06:38.6514028Z node: v22.23.2
+verify	Run actions/setup-node@v7	2026-09-28T14:06:38.6514728Z npm: 10.9.8
+verify	Run actions/setup-node@v7	2026-09-28T14:06:38.6515138Z yarn: 1.22.22
+verify	Run actions/setup-node@v7	2026-09-28T14:06:38.6515934Z ##[endgroup]
+verify	Testes existentes e sintaxe do frontend	﻿2026-09-28T14:06:38.6626232Z ##[group]Run node --check public/app.js
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.6626616Z ^[[36;1mnode --check public/app.js^[[0m
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.6626891Z ^[[36;1mnode --check src/server.js^[[0m
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.6627151Z ^[[36;1mnode src/test_mongodb_runner.js^[[0m
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.6855563Z shell: /usr/bin/bash -e {0}
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.6855869Z env:
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.6856177Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.6856620Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.6856966Z   MAVEN_ARGS: -ntp
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.6857178Z ##[endgroup]
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7556995Z ================================================================================
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7558120Z >>> [MONGODB TEST RUNNER] Inicializando Simulação e Validação NoSQL ESG...
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7558644Z >>> Data/Hora da Execução: 2026-09-28T14:06:38.755Z
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7559175Z >>> Conexão simulada com: mongodb://localhost:27017/esg_hospital_db
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7559717Z ================================================================================
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7560239Z 
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7561327Z >>> [1. CREATE / INSERÇÃO INICIAL]
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7562102Z - unidades_hospitalares: 10 documentos inseridos.
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7562948Z - fontes_emissao:        10 documentos inseridos (Esquema Polimórfico).
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7564016Z - leituras_carbono_iot:  10 documentos de telemetria inseridos.
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7564804Z - licencas_ambientais:   10 documentos com condicionantes inseridos.
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7565659Z - logs_auditoria_esg:    10 logs de governança inseridos.
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7566738Z Status: TODOS OS 50 DOCUMENTOS INSERIDOS COM SUCESSO!
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7567125Z 
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7567467Z ================================================================================
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7568210Z >>> [2. OPERAÇÕES DE CONSULTA - READ / FIND]
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7568854Z ================================================================================
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7569242Z 
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7570014Z --- [2.1] db.unidades_hospitalares.find({ certificacoes_esg: "ISO 14001", leitos_ativos: { $gt: 200 } }) ---
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7570899Z Resultados encontrados: 5
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7571785Z   * [UNID-HOSP-001] Hospital Central de Clínicas Sustentáveis | Leitos: 420 | Cidade: São Paulo
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7572900Z   * [UNID-HOSP-003] Complexo Hospitalar do Vale do Paraíba | Leitos: 310 | Cidade: São José dos Campos
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7573939Z   * [UNID-HOSP-004] Hospital Universitário BioSaúde Campinas | Leitos: 500 | Cidade: Campinas
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7575077Z   * [UNID-HOSP-006] Hospital Geral de Santos e Litoral Sustentável | Leitos: 260 | Cidade: Santos
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7576532Z   * [UNID-HOSP-008] Hospital Metropolitano Zona Leste Verde | Leitos: 380 | Cidade: São Paulo
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7577035Z 
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7577489Z --- [2.2] db.fontes_emissao.find({ limite_max_co2_kg_hora: { $gte: 500 } }) ---
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7578143Z Resultados encontrados: 4
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7578915Z   * [FONTE-CALD-01] Caldeira Aquotubular Principal - Ala Norte | Tipo: CALDEIRA_VAPOR | Limite CO2: 1500 kg/h
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7580331Z   * [FONTE-CALD-02] Caldeira Flamotubular de Alta Eficiência - Bloco Cirúrgico | Tipo: CALDEIRA_VAPOR | Limite CO2: 1200 kg/h
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7581551Z   * [FONTE-GER-02] Gerador Backup Subestação Leste | Tipo: GRUPO_GERADOR_DIESEL | Limite CO2: 900 kg/h
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7582839Z   * [FONTE-GER-01] Grupo Gerador de Emergência UTI / Centros Cirúrgicos | Tipo: GRUPO_GERADOR_DIESEL | Limite CO2: 850 kg/h
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7583465Z 
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7583918Z --- [2.3] db.fontes_emissao.find({ tipo_fonte: "FROTA_AMBULANCIA_HIBRIDA" }) ---
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7585110Z Resultados encontrados: 2 (Demonstração de atributos polimórficos de bateria e autonomia)
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7586199Z   * [FONTE-FROT-01] Placa: ESG-2026 | Propulsão: 100% Elétrica Plug-in (BEV) | Autonomia: 260km
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7587629Z   * [FONTE-FROT-02] Placa: BIO-9E26 | Propulsão: Híbrida Flex (Etanol / Elétrico) | Autonomia: 120km
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7588128Z 
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7588792Z --- [2.4] db.leituras_carbono_iot.find({ status_conformidade: { $in: ["ALERTA_PREVENTIVO", "VIOLACAO_BLOQUEANTE"] } }) ---
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7589555Z Leituras críticas encontradas: 2
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7590824Z   * [LEIT-2026-0002] Fonte: FONTE-CALD-01 | CO2: 1450 kg/h (Limite: 1500) | Status: ALERTA_PREVENTIVO | Árvores: 29
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7592115Z   * [LEIT-2026-0003] Fonte: FONTE-CALD-01 | CO2: 1620 kg/h (Limite: 1500) | Status: VIOLACAO_BLOQUEANTE | Árvores: 32
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7592639Z 
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7593448Z --- [2.5] db.leituras_carbono_iot.aggregate([ { $group: { _id: "$codigo_fonte", total_arvores: { $sum: "$compensacao_ambiental.arvores_sugeridas" } } } ]) ---
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7594425Z Agregação de Emissões e Compensação por Fonte:
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7594926Z   * Fonte: FONTE-CALD-01   | Média CO2: 1423.33 kg/h | Total Árvores para Plantio: 85
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7595477Z   * Fonte: FONTE-CALD-02   | Média CO2:  780.00 kg/h | Total Árvores para Plantio: 16
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7596035Z   * Fonte: FONTE-GER-01    | Média CO2:  620.00 kg/h | Total Árvores para Plantio: 12
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7596534Z   * Fonte: FONTE-GER-02    | Média CO2:  710.00 kg/h | Total Árvores para Plantio: 14
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7597030Z   * Fonte: FONTE-INC-01    | Média CO2:  380.00 kg/h | Total Árvores para Plantio: 8
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7616168Z   * Fonte: FONTE-INC-02    | Média CO2:  150.00 kg/h | Total Árvores para Plantio: 3
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7617235Z   * Fonte: FONTE-FROT-01   | Média CO2:    8.50 kg/h | Total Árvores para Plantio: 1
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7617923Z   * Fonte: FONTE-CHILL-01  | Média CO2:  190.00 kg/h | Total Árvores para Plantio: 4
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7618205Z 
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7618540Z --- [2.6] db.licencas_ambientais.find({ status: { $in: ["EXPIRA_EM_BREVE", "VENCIDA"] } }) ---
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7619051Z Licenças em situação crítica encontradas: 3
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7619627Z   * Processo: CETESB-2024-SP-098234 | Órgão: CETESB | Vencimento: 2026-04-15T00:00:00Z | Status: EXPIRA_EM_BREVE
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7620781Z   * Processo: CETESB-2023-SJC-04421 | Órgão: CETESB | Vencimento: 2026-05-10T00:00:00Z | Status: EXPIRA_EM_BREVE
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7621834Z   * Processo: CETESB-2023-STS-07812 | Órgão: CETESB | Vencimento: 2025-11-20T00:00:00Z | Status: VENCIDA
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7622235Z 
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7622555Z --- [2.7] db.logs_auditoria_esg.find({ nivel_severidade: { $in: ["CRITICAL", "AUDIT"] } }) ---
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7623006Z Logs de Auditoria Críticos: 4
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7623704Z   * [LOG-ESG-2026-0003] VIOLACAO_LIMITE_CO2 [CRITICAL]: INCIDENTE BLOQUEANTE: Emissão de 1620kg/h ultrapassou o limite de 1500kg/h na fonte FONTE-CALD-01.
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7624875Z   * [LOG-ESG-2026-0004] SEGURANCA_PARAMETROS [AUDIT]: SEGURANÇA: Tentativa de alteração de parâmetro regulamentar da fonte FONTE-CALD-01 auditada e validada.
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7625811Z   * [LOG-ESG-2026-0006] ALERTA_VENCIMENTO_LICENCA [CRITICAL]: GRAVE: A Licença Ambiental CETESB-2023-STS-07812 está VENCIDA.
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7626728Z   * [LOG-ESG-2026-0010] AUDITORIA_INTEGRIDADE_DADOS [AUDIT]: Auditoria externa periódica de rastreabilidade de dados ESG concluída sem inconformidades.
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7627177Z 
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7627384Z ================================================================================
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7627781Z >>> [3. OPERAÇÕES DE ATUALIZAÇÃO - UPDATE]
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7628160Z ================================================================================
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7629068Z >>> [3.1] db.unidades_hospitalares.updateOne({ codigo_unidade: "UNID-HOSP-001" }, { $set: { "metas_esg_anuais.meta_reducao_carbono_pct": 22.0 }, $push: { certificacoes_esg: "Certificado Net Zero Carbon Healthcare 2026" } })
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7630070Z   -> Unidade atualizada com sucesso! Novas certificações: [
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7630543Z   'ISO 14001',
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7630847Z   'ONA Nível 3 - Acreditado com Excelência',
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7631120Z   'LEED Gold',
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7631362Z   'Hospital Amigo do Clima',
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7631710Z   'Certificado Net Zero Carbon Healthcare 2026'
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7631997Z ]
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7632114Z 
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7632557Z >>> [3.2] db.fontes_emissao.updateOne({ codigo_fonte: "FONTE-CALD-01" }, { $set: { status_operacional: "OPERANDO_OTIMIZADO" } })
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7633069Z   -> Fonte atualizada: Status = OPERANDO_OTIMIZADO
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7633270Z 
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7633721Z >>> [3.3] db.leituras_carbono_iot.updateMany({ status_conformidade: "CONFORME" }, { $set: { auditoria_qualidade_validada: true } })
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7634368Z   -> 8 documentos de leitura atualizados com a flag auditoria_qualidade_validada = true.
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7634667Z 
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7635230Z >>> [3.4] db.licencas_ambientais.updateOne({ numero_processo: "CETESB-2024-SP-098234" }, { $push: { condicionantes_ambientais: { item: 4, status: "CUMPRIDA" } } })
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7635872Z   -> Nova condicionante adicionada. Total de condicionantes: 4
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7636100Z 
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7636515Z >>> [3.5] db.logs_auditoria_esg.updateOne({ codigo_log: "LOG-ESG-2026-0003" }, { $set: { status_resolucao: "RESOLVIDO" } })
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7637108Z   -> Incidente crítico marcado como RESOLVIDO no log de governança.
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7637345Z 
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7637556Z ================================================================================
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7637938Z >>> [4. OPERAÇÕES DE EXCLUSÃO - DELETE]
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7638313Z ================================================================================
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7638781Z >>> [4.1] db.unidades_hospitalares.deleteOne({ codigo_unidade: "UNID-TEMP-999" })
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7639301Z   -> 1 documento temporário removido. Contagem anterior: 11, Atual: 10
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7639550Z 
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7640039Z >>> [4.2] db.leituras_carbono_iot.deleteMany({ status_conformidade: "TESTE_CORROMPIDO" })
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7640575Z   -> 2 leituras temporárias removidas em lote. Contagem atual: 10
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7640795Z 
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7641014Z ================================================================================
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7641394Z >>> [5. ESTATÍSTICAS FINAIS DE VALIDAÇÃO]
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7641755Z ================================================================================
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7642096Z - unidades_hospitalares: 10 documentos
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7642412Z - fontes_emissao:        10 documentos
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7642715Z - leituras_carbono_iot:  10 documentos
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7643145Z - licencas_ambientais:   10 documentos
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7643445Z - logs_auditoria_esg:    10 documentos
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7643803Z ================================================================================
+verify	Testes existentes e sintaxe do frontend	2026-09-28T14:06:38.7644340Z >>> [SUCESSO] Asserções de consultas e CRUD simulados aprovadas para 50 documentos.
+verify	Build, JUnit e empacotamento Spring Boot	﻿2026-09-28T14:06:38.8309694Z ##[group]Run bash mvnw -B -ntp verify
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:38.8310310Z ^[[36;1mbash mvnw -B -ntp verify^[[0m
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:38.8366599Z shell: /usr/bin/bash -e {0}
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:38.8366862Z env:
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:38.8367162Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:38.8367590Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:38.8367930Z   MAVEN_ARGS: -ntp
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:38.8368141Z ##[endgroup]
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:40.7641233Z [INFO] Scanning for projects...
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:45.7834936Z [INFO] 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:45.7835962Z [INFO] ---------------------< br.com.ecohospital:esg-app >---------------------
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:45.7861084Z [INFO] Building EcoHospital Smart - ESG CI/CD 1.0.0
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:45.7863326Z [INFO]   from pom.xml
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:45.7863844Z [INFO] --------------------------------[ jar ]---------------------------------
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:56.0022929Z [INFO] 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:56.0023973Z [INFO] --- resources:3.3.1:resources (default-resources) @ esg-app ---
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:57.6798322Z [INFO] Copying 1 resource from src/main/resources to target/classes
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:57.6819071Z [INFO] Copying 3 resources from public to target/classes/static
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:57.6824848Z [INFO] Copying 1 resource from data to target/classes/seed
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:57.6833441Z [INFO] 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:57.6834276Z [INFO] --- compiler:3.14.1:compile (default-compile) @ esg-app ---
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:59.2624736Z [INFO] Recompiling the module because of changed source code.
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:06:59.2692190Z [INFO] Compiling 4 source files with javac [debug parameters release 17] to target/classes
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:00.1382715Z [INFO] 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:00.1400453Z [INFO] --- resources:3.3.1:testResources (default-testResources) @ esg-app ---
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:00.1422039Z [INFO] skip non existing resourceDirectory /home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd/src/test/resources
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:00.1423365Z [INFO] 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:00.1428981Z [INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ esg-app ---
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:00.1475169Z [INFO] Recompiling the module because of changed dependency.
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:00.1498591Z [INFO] Compiling 3 source files with javac [debug parameters release 17] to target/test-classes
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:00.4520141Z [INFO] 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:00.4540991Z [INFO] --- surefire:3.5.6:test (default-test) @ esg-app ---
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:02.0602197Z [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:02.5318386Z [INFO] 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:02.5319057Z [INFO] -------------------------------------------------------
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:02.5320316Z [INFO]  T E S T S
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:02.5320764Z [INFO] -------------------------------------------------------
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:03.0732045Z [INFO] Running br.com.ecohospital.EsgApiTest
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:03.1870594Z 14:07:03.171 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [br.com.ecohospital.EsgApiTest]: EsgApiTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:03.2852365Z 14:07:03.261 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration br.com.ecohospital.EsgApplication for test class br.com.ecohospital.EsgApiTest
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:03.6839707Z 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:03.6865938Z   .   ____          _            __ _ _
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:03.6897005Z  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:03.6903208Z ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:03.6912428Z  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:03.6913099Z   '  |____| .__|_| |_|_| |_\__, | / / / /
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:03.6913729Z  =========|_|==============|___/=/_/_/_/
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:03.6913940Z 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:03.6914235Z  :: Spring Boot ::               (v3.5.16)
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:03.6914721Z 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:03.7868129Z 2026-09-28T14:07:03.695Z  INFO 2314 --- [ecohospital-esg] [           main] br.com.ecohospital.EsgApiTest            : Starting EsgApiTest using Java 17.0.20.1 with PID 2314 (started by runner in /home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd)
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:03.7891465Z 2026-09-28T14:07:03.697Z  INFO 2314 --- [ecohospital-esg] [           main] br.com.ecohospital.EsgApiTest            : No active profile set, falling back to 1 default profile: "default"
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:04.5874295Z 2026-09-28T14:07:04.560Z  INFO 2314 --- [ecohospital-esg] [           main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:04.9892953Z 2026-09-28T14:07:04.926Z  INFO 2314 --- [ecohospital-esg] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:04.9910394Z 2026-09-28T14:07:04.926Z  INFO 2314 --- [ecohospital-esg] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:04.9912211Z 2026-09-28T14:07:04.933Z  INFO 2314 --- [ecohospital-esg] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:04.9913914Z 2026-09-28T14:07:04.939Z  INFO 2314 --- [ecohospital-esg] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 12 ms
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:05.0583938Z 2026-09-28T14:07:04.991Z  INFO 2314 --- [ecohospital-esg] [           main] br.com.ecohospital.EsgApiTest            : Started EsgApiTest in 1.619 seconds (process running for 2.359)
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:05.4508272Z OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.1128391Z 2026-09-28T14:07:06.108Z  WARN 2314 --- [ecohospital-esg] [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Unexpected character ('b' (code 98)): was expecting double-quote to start field name]
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.2361856Z [INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.135 s -- in br.com.ecohospital.EsgApiTest
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.2400636Z [INFO] Running br.com.ecohospital.QualityGateDemoTest
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.2491406Z [ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.009 s <<< FAILURE! -- in br.com.ecohospital.QualityGateDemoTest
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.2511479Z [ERROR] br.com.ecohospital.QualityGateDemoTest.demonstratesThatFailedTestsBlockImageAndDeploy -- Time elapsed: 0.007 s <<< FAILURE!
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.2541803Z org.opentest4j.AssertionFailedError: Falha proposital para evidenciar bloqueio de imagem e deploy pelo CI. Não promover à main.
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.2550770Z 	at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:38)
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.2588859Z 	at org.junit.jupiter.api.Assertions.fail(Assertions.java:138)
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.2603077Z 	at br.com.ecohospital.QualityGateDemoTest.demonstratesThatFailedTestsBlockImageAndDeploy(QualityGateDemoTest.java:9)
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.2630673Z 	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.2680621Z 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.2681391Z 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.2681689Z 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.2682269Z [INFO] Running br.com.ecohospital.EsgStoreTest
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3319670Z [INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.106 s -- in br.com.ecohospital.EsgStoreTest
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3615381Z [INFO] 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3615652Z [INFO] Results:
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3615846Z [INFO] 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3618717Z [ERROR] Failures: 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3620670Z [ERROR]   QualityGateDemoTest.demonstratesThatFailedTestsBlockImageAndDeploy:9 Falha proposital para evidenciar bloqueio de imagem e deploy pelo CI. Não promover à main.
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3622083Z [INFO] 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3622535Z [ERROR] Tests run: 26, Failures: 1, Errors: 0, Skipped: 0
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3622953Z [INFO] 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3645115Z [INFO] ------------------------------------------------------------------------
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3645597Z [INFO] BUILD FAILURE
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3646090Z [INFO] ------------------------------------------------------------------------
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3654450Z [INFO] Total time:  25.627 s
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3655716Z [INFO] Finished at: 2026-09-28T14:07:06Z
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3656428Z [INFO] ------------------------------------------------------------------------
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3661833Z [ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project esg-app: There are test failures.
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3662630Z [ERROR] 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3663573Z [ERROR] See /home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd/target/surefire-reports for the individual test results.
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3664722Z [ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3670649Z [ERROR] -> [Help 1]
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3671197Z [ERROR] 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3671729Z [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3672243Z [ERROR] Re-run Maven using the -X switch to enable full debug logging.
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3672541Z [ERROR] 
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3672979Z [ERROR] For more information about the errors and possible solutions, please read the following articles:
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3673594Z [ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+verify	Build, JUnit e empacotamento Spring Boot	2026-09-28T14:07:06.3838177Z ##[error]Process completed with exit code 1.
+verify	Preservar relatórios e JAR	﻿2026-09-28T14:07:06.3925430Z ##[group]Run actions/upload-artifact@v7
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.3925675Z with:
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.3925912Z   name: build-and-tests-fd577ac041eebc8b3cc383b680d26cf189492d1c
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.3926364Z   path: target/surefire-reports/
+verify	Preservar relatórios e JAR	target/esg-app.jar
+verify	Preservar relatórios e JAR	
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.3926618Z   if-no-files-found: warn
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.3926809Z   compression-level: 6
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.3926988Z   overwrite: false
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.3927162Z   include-hidden-files: false
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.3927360Z   archive: true
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.3927519Z env:
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.3927758Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.3928140Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.20-1/x64
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.3928444Z   MAVEN_ARGS: -ntp
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.3928611Z ##[endgroup]
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.5060597Z Multiple search paths detected. Calculating the least common ancestor of all paths
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.5071731Z The least common ancestor is /home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd/target. This will be the root directory of the artifact
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.5072923Z With the provided path, there will be 6 files uploaded
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.5073636Z Artifact name is valid!
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.5074056Z Root directory input is valid!
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.8263943Z Uploading artifact: build-and-tests-fd577ac041eebc8b3cc383b680d26cf189492d1c.zip
+verify	Preservar relatórios e JAR	2026-09-28T14:07:06.8296283Z Beginning upload of artifact content to blob storage
+verify	Preservar relatórios e JAR	2026-09-28T14:07:07.0828959Z Uploaded bytes 11001
+verify	Preservar relatórios e JAR	2026-09-28T14:07:07.1440732Z Finished uploading artifact content to blob storage!
+verify	Preservar relatórios e JAR	2026-09-28T14:07:07.1441656Z SHA256 digest of uploaded artifact is f32ea24fb46125f93d86440fc4c03214e2d9dffc6eeb769a8f288850f17970a7
+verify	Preservar relatórios e JAR	2026-09-28T14:07:07.1442722Z Finalizing artifact upload
+verify	Preservar relatórios e JAR	2026-09-28T14:07:07.5149218Z Artifact build-and-tests-fd577ac041eebc8b3cc383b680d26cf189492d1c successfully finalized. Artifact ID 10974910879
+verify	Preservar relatórios e JAR	2026-09-28T14:07:07.5150815Z Artifact build-and-tests-fd577ac041eebc8b3cc383b680d26cf189492d1c has been successfully uploaded! Final size is 11001 bytes. Artifact ID is 10974910879
+verify	Preservar relatórios e JAR	2026-09-28T14:07:07.5152640Z Artifact download URL: https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/36433472858/artifacts/10974910879
+verify	Post Run actions/setup-java@v6	﻿2026-09-28T14:07:07.5320818Z Post job cleanup.
+verify	Post Run actions/checkout@v7	﻿2026-09-28T14:07:07.6029638Z Post job cleanup.
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.6736687Z [command]/usr/bin/git version
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.6782560Z git version 2.55.0
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.6809602Z Temporarily overriding HOME='/home/runner/work/_temp/9ccad46a-5ec5-4f74-998a-39a393203602' before making global git config changes
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.6810921Z Adding repository directory to the temporary git global config as a safe directory
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.6814154Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.6841767Z Removing SSH command configuration
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.6846942Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.6875251Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7076091Z Removing HTTP extra header
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7080427Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7110030Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7346764Z Removing includeIf entries pointing to credentials config files
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7361041Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7391660Z includeif.gitdir:/home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd/.git.path
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7393003Z includeif.gitdir:/home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd/.git/worktrees/*.path
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7393800Z includeif.gitdir:/github/workspace/.git.path
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7394372Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7403481Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd/.git.path
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7447451Z /home/runner/work/_temp/git-credentials-fa518530-548e-4466-8046-e0636c520364.config
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7452085Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-fa518530\-548e\-4466\-8046\-e0636c520364\.config
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7527784Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd/.git/worktrees/*.path
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7550964Z /home/runner/work/_temp/git-credentials-fa518530-548e-4466-8046-e0636c520364.config
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7582157Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/ecohospital-esg-cicd/ecohospital-esg-cicd/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-fa518530\-548e\-4466\-8046\-e0636c520364\.config
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7610071Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7635721Z /github/runner_temp/git-credentials-fa518530-548e-4466-8046-e0636c520364.config
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7644750Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-fa518530\-548e\-4466\-8046\-e0636c520364\.config
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7676957Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7699239Z /github/runner_temp/git-credentials-fa518530-548e-4466-8046-e0636c520364.config
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7706277Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-fa518530\-548e\-4466\-8046\-e0636c520364\.config
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7740055Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+verify	Post Run actions/checkout@v7	2026-09-28T14:07:07.7946127Z Removing credentials config '/home/runner/work/_temp/git-credentials-fa518530-548e-4466-8046-e0636c520364.config'
+verify	Complete job	﻿2026-09-28T14:07:07.8102658Z Cleaning up orphan processes
