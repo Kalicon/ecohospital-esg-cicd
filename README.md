@@ -6,6 +6,8 @@ Integrante identificado nos arquivos originais: **Kalicon Amorim da Cruz Souza �
 
 ## Estado comprovado desta entrega
 
+**Revisão operacional e rastreabilidade:** central de atenção por unidade, plano de ação com histórico, inventário parcial de GEE por escopo e método, lotes de resíduos e exportação JSON. Build Maven e Docker: **39 testes aprovados**. Smoke PostgreSQL-demo comprovou HTTP 401 sem token, 400 para duplicata, cálculo sintético identificado, anulações persistentes e preservação das 12 leituras após reinício. Registros sintéticos foram anulados e não entram nos totais. Evidências em `docs/evidence/v3`. Abra `http://localhost:8083` e escolha **Inventário GEE**, **Rastrear resíduos** ou **Plano de ação**. Staging/produção abaixo continuam da versão anterior.
+
 O projeto recebido era Node.js sem framework, com frontend estático e cinco coleções JSON em memória. Para atender à linguagem da atividade, foi acrescentado um backend Java 17 / Spring Boot 3.5.16. O frontend, o dataset e as funções ESG foram preservados. O servidor Node original permanece em `src/server.js` como referência; o backend padrão de entrega é Java.
 
 **Evolução adicional (branch de melhoria):** rotas de escrita protegidas por token de operador, cabeçalhos de segurança, painel com taxa de conformidade e fontes prioritárias calculadas sobre as leituras, e PostgreSQL JSONB opcional. Em teste local desta revisão, 30 testes JUnit passaram; um terceiro Compose em `localhost:8083` importou uma cópia do staging (11 leituras), negou escrita sem token (HTTP 401) e preservou a 12ª leitura após reinício. Isso **não** significa que o CI/CD ou os dois ambientes já tenham sido atualizados: os deploys documentados abaixo ainda são da revisão anterior até a nova promoção ser comprovada.
@@ -40,11 +42,31 @@ Os scripts `scripts/esg_mongodb_solution.js` e `scripts/esg_mongodb_advanced.js`
 
 O frontend usa fontes do sistema e uma fotografia empacotada, sem depender de Google Fonts. O build precisa acessar Maven Central e os registries Docker.
 
-### Revisão visual inspirada em Monsoon
+### Propósito: da atenção ao acompanhamento
+
+O EcoHospital organiza uma rotina de gestão ambiental hospitalar: identificar registros que merecem revisão, conferir as informações e acompanhar o trabalho de uma equipe. A **Central de atenção ambiental** mostra a última leitura datada de cada fonte, lacunas de atualização e licenças vencidas ou com vencimento em até 30 dias. O filtro por unidade aplica-se à central; indicadores e contexto histórico permanecem da rede inteira. A janela de 24h é uma regra didática de qualidade dos dados, não requisito regulatório.
+
+O **Plano de ação** permite registrar título, unidade, equipe responsável e prazo; acompanhar `PLANEJADA`, `EM_ANDAMENTO` e `CONCLUIDA`; e consultar o histórico de alterações. A conclusão exige um texto de análise ou referência de evidência, mas não valida automaticamente documentos nem remove prioridades. Use nomes de equipes e nunca dados de pacientes ou credenciais. O token compartilhado não identifica individualmente o autor. Não há upload de arquivos, notificações automáticas ou assinatura de auditor.
+
+As rotas `GET /api/operations` e `GET /api/actions` são de leitura; `POST /api/actions` e `PATCH /api/actions/{id}` exigem o token de operador. A lista opcional `planos_acao` fica no mesmo estado JSON/JSONB, sem modificar as cinco coleções originais e sem migrar os volumes existentes. Restaurar o dataset **apaga também os planos de ação desse ambiente**. Faça backup antes de usar reset.
+
+Metas de redução/energia/árvores são compromissos cadastrados, não resultados alcançados. A média de CO₂ das leituras não é o total emitido pela rede; sugestões acumuladas de árvores não são plantios nem créditos certificados. A aplicação continua acadêmica, com dados simulados. Esta revisão é avaliada em localhost:8083; sua promoção pelo CI/CD ainda precisa ser comprovada.
 
 A abertura traz paisagem clara, navegação translúcida em cápsula, título editorial e atalhos para as abas reais do painel. O painel usa ícones SVG no lugar de emojis, hierarquia de informações, foco visível, mensagens de erro junto às ações e confirmação nativa antes de restaurar dados. A stack HTML/CSS/JavaScript foi mantida para preservar as APIs e o build Java. Não é uma reprodução pixel a pixel nem migração para React.
 
 A fotografia `public/hero-landscape-v2.jpg` é de [A.T.M. Arafath Ali no Unsplash](https://unsplash.com/photos/misty-hills-with-trees-at-sunrise-mGp2_4MeGIw), sob a [licença Unsplash](https://unsplash.com/license). A filmagem do exemplo Monsoon não integra a entrega: os [termos Scrolltide](https://www.scrolltide.co/terms) restringem reutilização de filmagens de demonstração. A referência fornecida foi adaptada para o domínio ESG, sem patrocinadores fictícios ou métricas inventadas. Esta revisão está no ambiente de avaliação `http://localhost:8083`; staging e produção não devem ser considerados atualizados até nova evidência de promoção.
+
+### Inventário GEE e resíduos rastreáveis
+
+As abas **Inventário GEE** e **Rastrear resíduos** complementam o plano de ação. Não há fatores de emissão predefinidos ou resultados ambientais fabricados. Os lançamentos são declarados e não verificados. GET `/api/journal/inventory` e `/api/journal/waste` exportam os registros JSON; POST nessas rotas exige token. POST `/api/journal/{kind}/{id}/void` exige token, `reason` e `responsible`, preservando o original anulado. Não há edição silenciosa ou exclusão individual.
+
+Inventário: unidade existente, período mensal, escopo 1/2/3, atividade, quantidade, unidade, fator **kgCO2e/unidade**, fonte, versão/base GWP, limite/metodologia, referência única do consumo e equipe. A multiplicação usa BigDecimal; o fator é preservado no lançamento. Um fator em tCO2/MWh não deve ser inserido sem adequação das unidades e avaliação dos gases cobertos. GWP já deve estar incorporado no fator CO2e; não se aplica novamente. Escopo 2 mantém localização e mercado separados e permite a mesma evidência nos dois métodos, sem somá-los. Referência duplicada ativa por unidade/método é rejeitada; isso não detecta consumo sobreposto com outro identificador. O filtro anual mostra apenas um inventário parcial declarado, não relatório certificado; ausência de lançamento não significa emissão zero. Biogênico, remoções, créditos e categorias detalhadas do escopo 3 ainda exigem modelagem específica, não devem ser misturados aos lançamentos.
+
+Resíduos: lote, data, grupo A–E, massa, setor, manejo declarado, prestador, destino, referência do transporte e referência opcional de destinação. Comprovantes ausentes geram pendência; referências preenchidas continuam não validadas. Não se presume redução de 80%, nem conversão automática para resíduo comum após tratamento. PGRSS, subgrupos, licenças de prestadores, condições de tratamento e documentos devem ser avaliados por responsável técnico. Não armazenar dados de pacientes. Não há upload, integração MTR/SINIR, assinatura ou cadeia de custódia inviolável.
+
+As listas opcionais `inventario_gee`, `residuos_rastreaveis` e `planos_acao` persistem no estado JSON/JSONB. **Reset apaga todas essas listas**; faça backup. O token compartilhado não comprova autoria individual. O histórico é rastreável dentro do aplicativo, mas um administrador do banco pode alterá-lo; não é log imutável criptográfico.
+
+Fontes de metodologia: [GHG Protocol: escopos e fatores](https://ghgprotocol.org/calculation-tools-faq), [orientação Escopo 2](https://ghgprotocol.org/scope-2-guidance), [MCTI: fatores e distinção inventário/MDL](https://www.gov.br/mcti/pt-br/acompanhe-o-mcti/sirene/dados-e-ferramentas/fatores-de-emissao), [Anvisa: RDC 222/2018 comentada](https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/publicacoes/rdc-222-de-marco-de-2018-comentada.pdf/@@download/file). O sistema acadêmico não declara aderência integral ou certificação por essas normas.
 
 ## Execução local com Docker
 
@@ -248,6 +270,8 @@ Não reutilizar os prints MongoDB anteriores como prova do pipeline. Os JSON loc
 
 ## Entrega ZIP
 
+Pacote desta evolução: `delivery/EcoHospital_CICD_Rastreabilidade.zip`. Gerar com `.\scripts\package-delivery.ps1 -OutputName EcoHospital_CICD_Rastreabilidade.zip` e verificar com `python scripts/verify-delivery.py delivery/EcoHospital_CICD_Rastreabilidade.zip`. Inclui novos módulos, testes, documentação/PDF e evidências v3; não inclui tokens nem o estado privado importado. Pacotes anteriores são preservados. A geração do PDF requer Python com reportlab; no Codex, use o runtime de dependências disponibilizado pelo aplicativo.
+
 Execute `.\scripts\package-delivery.ps1` no PowerShell. Ele inclui Java/testes, backend Node original, frontend, dados, scripts MongoDB, arquivos Docker, workflows, Wrapper, configurações de exemplo, README, documentação PDF e evidências disponíveis. Não inclui `.env` reais, `.git`, `target`, `.runtime`, ferramentas temporárias nem ZIPs anteriores. Os modelos SQL/XML e documentos da atividade NoSQL anterior permanecem na pasta original; não são dependências da aplicação e não integram este pacote CI/CD.
 
 O ZIP é criado em `delivery/EcoHospital_CICD.zip`, com manifesto de arquivos e SHA256. Não sobrescreve um ZIP anterior silenciosamente: mova/renomeie a versão antiga antes de regenerar. Após novos prints ou revisão de integrantes, regenere o PDF e o pacote. O PDF pode ser regenerado com Python + `reportlab` 4.x: `python scripts/generate-technical-pdf.py`.
@@ -255,6 +279,17 @@ O ZIP é criado em `delivery/EcoHospital_CICD.zip`, com manifesto de arquivos e 
 Esta revisão final com os dois deploys usa `delivery/EcoHospital_CICD-final.zip`. Reproduzir: `.\scripts\package-delivery.ps1 -OutputName EcoHospital_CICD-final.zip`, seguido de `python scripts/verify-delivery.py delivery/EcoHospital_CICD-final.zip`. O pacote anterior `EcoHospital_CICD-executado.zip` foi preservado. [docs/RETOMADA.md](docs/RETOMADA.md) explica como repetir a demonstração em outro momento.
 
 ## Checklist do enunciado
+
+Checklist adicional desta evolução:
+
+- [x] Central operacional e plano de ação implementados e verificados localmente.
+- [x] Inventário parcial por escopo com fator documentado e resíduos rastreáveis implementados.
+- [x] 39 testes aprovados, proteção de escrita, persistência e dados originais preservados no ambiente demo.
+- [ ] Nova revisão promovida pelo pipeline para staging e produção.
+- [ ] Fatores oficiais aplicáveis e documentos reais validados por responsável técnico.
+- [ ] Inventário completo, auditoria independente e integração MTR/SINIR (não implementados).
+
+O checklist acadêmico abaixo refere-se às evidências da entrega anterior, não à promoção automática desta evolução.
 
 - [x] Estrutura, linguagem, framework original, testes e configurações examinados; plano apresentado antes das alterações.
 - [x] Backend Java Spring Boot implementado com funcionalidades ESG preservadas e health check HTTP verificado.

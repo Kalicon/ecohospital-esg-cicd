@@ -22,6 +22,13 @@ class EsgApiTest {
     private static final String KEY = "0123456789abcdef0123456789abcdef";
     @BeforeEach void reset() { store.reset(); }
 
+    @Test void journalEndpointsProtectWritesAndRejectInvalidEntries() throws Exception {
+        mvc.perform(get("/api/journal/inventory")).andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(0));
+        mvc.perform(post("/api/journal/waste").contentType("application/json").content("{}")) .andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/journal/inventory").header("X-Operator-Key",KEY).contentType("application/json").content("{}")) .andExpect(status().isBadRequest());
+        mvc.perform(post("/api/journal/inventory/missing/void").contentType("application/json").content("{}")) .andExpect(status().isUnauthorized());
+    }
+
     @Test void servesOriginalFrontend() throws Exception {
         mvc.perform(get("/")).andExpect(status().isOk()).andExpect(forwardedUrl("index.html"));
         mvc.perform(get("/index.html")).andExpect(status().isOk()).andExpect(content().string(containsString("EcoHospital Smart")));
@@ -99,6 +106,19 @@ class EsgApiTest {
         mvc.perform(post("/api/query/preset").contentType("application/json").content("{}"))
                 .andExpect(status().isBadRequest());
         mvc.perform(post("/api/telemetria/simular").contentType("application/json").content("{bad"))
+                .andExpect(status().isBadRequest());
+    }
+    @Test void operationsAndActionsRespectWriteProtection() throws Exception {
+        mvc.perform(get("/api/operations")).andExpect(status().isOk()).andExpect(jsonPath("$.totalSources").value(10));
+        mvc.perform(get("/api/actions")).andExpect(status().isOk()).andExpect(content().json("[]"));
+        String body = "{\"title\":\"Conferir licença\",\"unit\":\"UNID-HOSP-001\",\"owner\":\"Equipe ambiental\",\"due\":\"2026-12-01\"}";
+        mvc.perform(post("/api/actions").contentType("application/json").content(body)).andExpect(status().isUnauthorized());
+        String response = mvc.perform(post("/api/actions").header("X-Operator-Key", KEY).contentType("application/json").content(body))
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.status").value("PLANEJADA")).andReturn().getResponse().getContentAsString();
+        String id = new com.fasterxml.jackson.databind.ObjectMapper().readTree(response).path("id").asText();
+        mvc.perform(patch("/api/actions/" + id).contentType("application/json").content("{\"status\":\"EM_ANDAMENTO\"}"))
+                .andExpect(status().isUnauthorized());
+        mvc.perform(patch("/api/actions/" + id).header("X-Operator-Key", KEY).contentType("application/json").content("{\"status\":\"CONCLUIDA\"}"))
                 .andExpect(status().isBadRequest());
     }
     @Test void integrityReportIsReadOnlyAndHonest() throws Exception {

@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return { ...extra, 'X-Operator-Key': operatorKey };
     }
+    window.esgOperatorWrite = (path, method, body) => apiJson(path, {
+        method, headers: writeHeaders({'Content-Type':'application/json'}), body: JSON.stringify(body)
+    });
     // Estado da aplicação
     const state = {
         kpis: {},
@@ -120,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderizarTelemetria();
             renderizarLicencas();
             renderizarAuditoria();
+            document.dispatchEvent(new Event('esg:data-updated'));
 
         } catch (err) {
             console.error('Erro ao carregar dados:', err);
@@ -205,6 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             state.currentTab = targetTab;
+            document.querySelector('.kpi-strip')?.classList.toggle('context-hidden', targetTab !== 'dashboard');
             document.getElementById(`tab-${targetTab}`)?.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
         });
     });

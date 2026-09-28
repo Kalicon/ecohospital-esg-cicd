@@ -1,5 +1,12 @@
 # Inventário da adaptação CI/CD
 
+## Incremento operacional e rastreabilidade
+
+- Novos Java: `EsgOperations.java`, `OperationsController.java`, `EnvironmentalJournal.java`, `JournalController.java`; novas suítes `EsgOperationsTest.java`, `EnvironmentalJournalTest.java` e casos MockMvc em `EsgApiTest.java`.
+- Frontend: novas `public/operations.js` e `public/journal.js`; `index.html`, `app.js`, `styles.css` adaptados para central de atenção, ações, inventário GEE e lotes de resíduos, com histórico, filtros e exportação JSON.
+- Workflow e `scripts/verify.ps1`: sintaxe dos novos scripts verificada. `scripts/verify-journal-local.ps1` testa escrita protegida, cálculo, duplicata, pendência e persistência apenas em postgres-demo.
+- README, documentação técnica/PDF e `docs/evidence/v3`: metodologia, referências oficiais, evidências e limitações. Sem alteração do seed, das cinco coleções originais ou dos volumes de staging/produção.
+
 ## Criados
 
 - `pom.xml`, `mvnw`, `mvnw.cmd`, `.mvn/wrapper/maven-wrapper.properties`: Java 17, Spring Boot 3.5.16, dependências e Maven reproduzível com checksum.
@@ -56,3 +63,12 @@ Os backups de staging e produção foram salvos em `.tools/backups/2026-09-28`, 
 - `public/hero-landscape-v2.jpg`: fotografia licenciada de A.T.M. Arafath Ali / Unsplash; fonte e licença no README. O vídeo restrito da referência foi descartado antes de publicação.
 
 O redesenho preserva as funcionalidades ESG e a stack Java/HTML/CSS/JavaScript; não afirma execução de testes ou deploys apenas pela aparência da interface.
+
+## Central de atenção e planos de ação
+
+- `EsgOperations.java`, `OperationsController.java`: prioridades descritivas pela última leitura válida, atualidade e calendário de licenças; cadastro/atualização persistente de ações com proteção de escrita.
+- `EsgOperationsTest.java`, `EsgApiTest.java`: casos para persistência, evidência obrigatória, rejeição de unidade/data/status inválidos, proteção HTTP e distinção entre última leitura e histórico.
+- `public/operations.js`, `public/index.html`, `public/styles.css`, `public/app.js`: central filtrada por unidade, sugestões conectadas ao formulário, histórico e andamento, KPIs com limites explícitos.
+- `ci-cd.yml`, `verify.ps1`: verificação de sintaxe do novo controlador de interface.
+
+Ações ocupam uma lista opcional no documento persistente, sem apagar ou exigir migração das coleções originais. Reset remove também essa lista; o diálogo foi atualizado. Não foi criada certificação ESG, identidade individual ou integração com sensores reais.

@@ -1,0 +1,18 @@
+ Container ecohospital-postgres-demo-app-1 Restarting 
+ Container ecohospital-postgres-demo-app-1 Started 
+{
+  "at": "2026-09-28T16:11:27.6558190Z",
+  "environment": "postgres-demo",
+  "storage": null,
+  "unauthorized": 401,
+  "duplicate": 400,
+  "syntheticCalculationKgCO2e": 123.456789,
+  "inventoryVoidedAndPersisted": true,
+  "wasteMissingProofDetected": true,
+  "wasteSyntheticVoided": true,
+  "actionPersisted": true,
+  "actionHistoryEntries": 2,
+  "readingsBefore": 12,
+  "readingsAfter": 12,
+  "note": "Somente teste tecnico sintetico em postgres-demo; nenhum resultado ambiental real comprovado."
+}

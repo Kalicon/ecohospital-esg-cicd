@@ -1,0 +1,162 @@
+{
+  "health": {
+    "status": "UP",
+    "version": "development",
+    "environment": "postgres-demo"
+  },
+  "storage": "PostgreSQL JSONB",
+  "inventory": [
+    [
+      {
+        "id": "152c0f67-937e-4f07-b53f-9365605c47e0",
+        "unit": "UNID-HOSP-001",
+        "scope": "2",
+        "factor": 0.123456789,
+        "kgCO2e": 123.456789,
+        "method": "LOCATION",
+        "period": "2026-09",
+        "activity": "TESTE SINTETICO - nao representa consumo hospitalar",
+        "boundary": "Dados ficticios de teste, nao usar em relatorios reais",
+        "quantity": 1000,
+        "voidedAt": "2026-09-28T16:09:57.109687824Z",
+        "createdAt": "2026-09-28T16:09:56.972735664Z",
+        "reference": "TESTE-TECNICO-GEE-5b5bc0692dbf4ff690b901a6964e0a72",
+        "voidReason": "Encerramento de teste tecnico sintetico - excluir dos totais",
+        "factorBasis": "kgCO2e por unidade de atividade; GWP já incorporado no fator informado",
+        "responsible": "Equipe de testes (demonstracao)",
+        "activityUnit": "kWh",
+        "factorSource": "FATOR SINTETICO exclusivo para testar a multiplicacao, sem validade ambiental",
+        "verification": "DECLARADO_NAO_VERIFICADO",
+        "factorVersion": "Teste tecnico v1",
+        "voidResponsible": "Equipe de testes"
+      },
+      {
+        "id": "a1032b04-b405-45c8-b527-9830b130e8ce",
+        "unit": "UNID-HOSP-001",
+        "scope": "2",
+        "factor": 0.123456789,
+        "kgCO2e": 123.456789,
+        "method": "LOCATION",
+        "period": "2026-09",
+        "activity": "TESTE SINTETICO - nao representa consumo hospitalar",
+        "boundary": "Dados ficticios de teste, nao usar em relatorios reais",
+        "quantity": 1000,
+        "voidedAt": "2026-09-28T16:11:17.561918163Z",
+        "createdAt": "2026-09-28T16:11:17.452347115Z",
+        "reference": "TESTE-TECNICO-GEE-57b6563fdf384e838078b86617e122f5",
+        "voidReason": "Encerramento de teste tecnico sintetico - excluir dos totais",
+        "factorBasis": "kgCO2e por unidade de atividade; GWP já incorporado no fator informado",
+        "responsible": "Equipe de testes (demonstracao)",
+        "activityUnit": "kWh",
+        "factorSource": "FATOR SINTETICO exclusivo para testar a multiplicacao, sem validade ambiental",
+        "verification": "DECLARADO_NAO_VERIFICADO",
+        "factorVersion": "Teste tecnico v1",
+        "voidResponsible": "Equipe de testes"
+      }
+    ]
+  ],
+  "waste": [
+    [
+      {
+        "id": "7ef41704-1ecb-4484-9ba6-070c7fe5a093",
+        "kg": 12.5,
+        "date": "2026-09-28",
+        "unit": "UNID-HOSP-001",
+        "group": "D",
+        "sector": "Setor ficticio de teste",
+        "handling": "Nenhum tratamento real - teste",
+        "provider": "Prestador ficticio",
+        "voidedAt": "2026-09-28T16:09:57.219485180Z",
+        "createdAt": "2026-09-28T16:09:57.164187704Z",
+        "reference": "TESTE-TECNICO-LOTE-5b5bc0692dbf4ff690b901a6964e0a72",
+        "voidReason": "Encerramento de teste sintetico - nenhum residuo real movimentado",
+        "destination": "Destino ficticio",
+        "responsible": "Equipe de testes",
+        "verification": "DECLARADO_NAO_VERIFICADO",
+        "documentation": "PENDENTE_COMPROVANTE",
+        "voidResponsible": "Equipe de testes",
+        "destinationProof": ""
+      },
+      {
+        "id": "fd27400c-5b05-49de-a312-65ff52f63755",
+        "kg": 12.5,
+        "date": "2026-09-28",
+        "unit": "UNID-HOSP-001",
+        "group": "D",
+        "sector": "Setor ficticio de teste",
+        "handling": "Nenhum tratamento real - teste",
+        "provider": "Prestador ficticio",
+        "voidedAt": "2026-09-28T16:11:17.671724631Z",
+        "createdAt": "2026-09-28T16:11:17.620840122Z",
+        "reference": "TESTE-TECNICO-LOTE-57b6563fdf384e838078b86617e122f5",
+        "voidReason": "Encerramento de teste sintetico - nenhum residuo real movimentado",
+        "destination": "Destino ficticio",
+        "responsible": "Equipe de testes",
+        "verification": "DECLARADO_NAO_VERIFICADO",
+        "documentation": "PENDENTE_COMPROVANTE",
+        "voidResponsible": "Equipe de testes",
+        "destinationProof": ""
+      }
+    ]
+  ],
+  "actions": [
+    [
+      {
+        "id": "4aa12d82-33f1-4520-bdd5-f7624b6faade",
+        "due": "2026-10-05",
+        "unit": "UNID-HOSP-001",
+        "owner": "Equipe ambiental (demonstracao)",
+        "title": "DEMONSTRACAO - revisar documentos ambientais e definir fatores de emissao",
+        "status": "EM_ANDAMENTO",
+        "history": [
+          {
+            "at": "2026-09-28T16:09:57.270771394Z",
+            "status": "PLANEJADA",
+            "evidence": ""
+          },
+          {
+            "at": "2026-09-28T16:09:57.324031759Z",
+            "status": "EM_ANDAMENTO",
+            "evidence": "Registro demonstrativo: levantamento de fatores e documentos ainda nao realizado."
+          }
+        ],
+        "evidence": "Registro demonstrativo: levantamento de fatores e documentos ainda nao realizado.",
+        "createdAt": "2026-09-28T16:09:57.270771394Z",
+        "updatedAt": "2026-09-28T16:09:57.324031759Z"
+      },
+      {
+        "id": "c5f17b42-c405-4efb-94dd-0a7fe228d25f",
+        "due": "2026-10-05",
+        "unit": "UNID-HOSP-001",
+        "owner": "Equipe ambiental (demonstracao)",
+        "title": "DEMONSTRACAO - revisar documentos ambientais e definir fatores de emissao",
+        "status": "EM_ANDAMENTO",
+        "history": [
+          {
+            "at": "2026-09-28T16:11:17.719497688Z",
+            "status": "PLANEJADA",
+            "evidence": ""
+          },
+          {
+            "at": "2026-09-28T16:11:17.774768352Z",
+            "status": "EM_ANDAMENTO",
+            "evidence": "Registro demonstrativo: levantamento de fatores e documentos ainda nao realizado."
+          }
+        ],
+        "evidence": "Registro demonstrativo: levantamento de fatores e documentos ainda nao realizado.",
+        "createdAt": "2026-09-28T16:11:17.719497688Z",
+        "updatedAt": "2026-09-28T16:11:17.774768352Z"
+      }
+    ]
+  ],
+  "staging": {
+    "environment": "staging",
+    "version": "461ffa3eea37b904018856681c4fbea1cdc2c8b8",
+    "status": "UP"
+  },
+  "production": {
+    "status": "UP",
+    "version": "461ffa3eea37b904018856681c4fbea1cdc2c8b8",
+    "environment": "production"
+  }
+}

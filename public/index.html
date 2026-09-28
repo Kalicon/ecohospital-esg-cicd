@@ -38,9 +38,9 @@
             </div>
         </nav>
         <div class="hero-content">
-            <span class="hero-eyebrow">Inteligência ambiental para a saúde</span>
+            <span class="hero-eyebrow">Gestão ambiental hospitalar · da atenção à ação</span>
             <h1 id="heroTitle">Saúde que cuida<br>do planeta.</h1>
-            <p>Uma visão clara de emissões, licenças e metas ESG da rede hospitalar — dos dados registrados às decisões do dia a dia.</p>
+            <p>Saiba o que merece atenção, entenda os registros e organize a resposta da equipe. Emissões, licenças e planos de ação em um só lugar.</p>
             <div class="hero-actions">
                 <a class="hero-button hero-button-primary" href="#painel" data-hero-tab="dashboard">Explorar o painel <span aria-hidden="true">→</span></a>
                 <a class="hero-button hero-button-secondary" href="#painel" data-hero-tab="telemetria">Ver telemetria</a>
@@ -127,6 +127,9 @@
                     <span>Governança</span>
                     <span class="badge-count" id="countAuditoria">—</span>
                 </button>
+                <button class="nav-item" data-tab="acoes"><span class="nav-icon"><svg class="icon"><use href="#i-target"></use></svg></span><span>Plano de ação</span><span class="badge-count" id="countActions">—</span></button>
+                <button class="nav-item" data-tab="inventario"><span class="nav-icon"><svg class="icon"><use href="#i-chart"></use></svg></span><span>Inventário GEE</span></button>
+                <button class="nav-item" data-tab="residuos"><span class="nav-icon"><svg class="icon"><use href="#i-target"></use></svg></span><span>Rastrear resíduos</span></button>
                 <div class="sidebar-divider"></div>
                 <div class="sidebar-section-title">FERRAMENTAS</div>
                 <button class="nav-item" data-tab="console">
@@ -178,7 +181,7 @@
                     <div class="kpi-info">
                         <span class="kpi-label">Emissão média</span>
                         <span class="kpi-value" id="kpiMediaCo2">—</span>
-                        <span class="kpi-sub">CO₂ por hora · leituras</span>
+                        <span class="kpi-sub">Média histórica · não é inventário total</span>
                     </div>
                 </div>
 
@@ -187,7 +190,7 @@
                     <div class="kpi-info">
                         <span class="kpi-label">Compensação estimada</span>
                         <span class="kpi-value" id="kpiArvores">—</span>
-                        <span class="kpi-sub">Árvores sugeridas</span>
+                        <span class="kpi-sub">Sugestões acumuladas · não são plantios</span>
                     </div>
                 </div>
 
@@ -204,14 +207,23 @@
             <!-- TAB 1: DASHBOARD GERAL -->
             <div id="tab-dashboard" class="tab-pane active">
                 <div class="content-header">
-                    <h2>Visão geral</h2>
-                    <p>Indicadores ambientais e operacionais da rede hospitalar, calculados a partir dos dados deste ambiente.</p>
+                    <h2>Central de atenção ambiental</h2>
+                    <p>Primeiro entenda a prioridade; depois confira o registro e organize uma ação. Os indicadores acima e as seções históricas abaixo abrangem toda a rede.</p>
                 </div>
+
+                <section class="operations-panel" aria-labelledby="operationsTitle">
+                    <div class="operations-heading"><div><span class="section-eyebrow">O que precisa de atenção?</span><h3 id="operationsTitle">Prioridades e próximos passos</h3></div><label class="field-label">Unidade da central<select id="operationsUnit"><option value="">Toda a rede</option></select></label></div>
+                    <p id="operationsSummary" class="operations-summary" role="status">Consultando registros…</p>
+                    <div id="priorityQueue" class="priority-queue"></div>
+                    <p id="operationsMethodology" class="methodology-note"></p>
+                </section>
+
+                <div class="section-heading"><h3>Contexto histórico da rede</h3><p>Metas são compromissos cadastrados. Não há série de referência para comprovar redução alcançada.</p></div>
 
                 <div class="grid-2-cols">
                     <div class="glass-card">
                         <div class="card-title">
-                            <span><svg class="icon"><use href="#i-target"></use></svg> Metas anuais por unidade</span>
+                            <span><svg class="icon"><use href="#i-target"></use></svg> Metas cadastradas · não são resultados</span>
                         </div>
                         <div class="table-responsive">
                             <table class="data-table" id="tableMetasDashboard">
@@ -258,6 +270,34 @@
                 </div>
             </div>
 
+            <div id="tab-acoes" class="tab-pane">
+                <div class="content-header"><h2>Plano de ação ambiental</h2><p>Transforme a análise em trabalho acompanhado. Concluir uma ação não remove alertas nem comprova conformidade ambiental.</p></div>
+                <div class="operations-heading"><label class="field-label">Filtrar ações por unidade<select id="actionsUnit"><option value="">Toda a rede</option></select></label><span id="actionSummary" role="status"></span></div>
+                <div class="grid-2-cols">
+                    <form id="actionForm" class="glass-card action-form">
+                        <h3>Registrar uma ação</h3>
+                        <label class="field-label">O que será feito?<input name="title" required maxlength="180" placeholder="Ex.: conferir documentação da licença"></label>
+                        <label class="field-label">Unidade<select name="unit" id="actionUnit" required></select></label>
+                        <label class="field-label">Equipe responsável<input name="owner" required maxlength="100" placeholder="Ex.: equipe de gestão ambiental"></label>
+                        <label class="field-label">Prazo<input name="due" type="date" required></label>
+                        <p class="methodology-note">Use nomes de equipes; não registre dados de pacientes, credenciais ou informações sensíveis. A escrita exige token de operador.</p>
+                        <button class="btn btn-emerald" type="submit">Salvar ação</button>
+                        <p id="actionFeedback" role="status" aria-live="polite" hidden></p>
+                    </form>
+                    <div class="glass-card"><h3>Ações registradas</h3><div id="actionList" class="priority-queue"></div></div>
+                </div>
+            </div>
+
+            <div id="tab-inventario" class="tab-pane">
+                <div class="content-header"><h2>Inventário de gases de efeito estufa</h2><p>Consumo × fator = kgCO₂e. Registros declarados, sem verificação independente. As leituras históricas em kg/h não são convertidas em inventário anual.</p></div>
+                <p class="methodology-note">Informe fator em kgCO₂e por unidade, com GWP já incorporado, fonte e versão. Não multiplique o GWP novamente. Não há fatores oficiais pré-carregados. Gases anestésicos exigem metodologia e fatores específicos, revisados por profissional habilitado.</p>
+                <div id="inventoryJournal"></div>
+            </div>
+            <div id="tab-residuos" class="tab-pane">
+                <div class="content-header"><h2>Rastreabilidade de resíduos</h2><p>Registre a origem, classificação, massa, prestador, destinação e referências documentais de cada lote.</p></div>
+                <p class="methodology-note">A classificação e o manejo devem seguir o PGRSS e as exigências aplicáveis. Grupos A–E não definem sozinhos o tratamento: subgrupos e riscos precisam de avaliação técnica. Autoclavagem não autoriza automaticamente descarte comum. Referência informada não equivale a documento validado; não há redução percentual presumida.</p>
+                <div id="wasteJournal"></div>
+            </div>
             <!-- TAB 2: UNIDADES HOSPITALARES -->
             <div id="tab-hospitais" class="tab-pane">
                 <div class="content-header">
@@ -471,7 +511,7 @@
     <dialog id="resetDialog" class="confirm-dialog" aria-labelledby="resetDialogTitle" aria-describedby="resetDialogDescription">
         <form method="dialog">
             <h2 id="resetDialogTitle">Restaurar dados deste ambiente?</h2>
-            <p id="resetDialogDescription">As simulações e alterações serão removidas. O dataset original será carregado apenas neste ambiente.</p>
+            <p id="resetDialogDescription">As simulações, planos de ação, inventário GEE, registros de resíduos e alterações serão removidos. Faça backup antes. O dataset original será carregado apenas neste ambiente.</p>
             <div class="dialog-actions">
                 <button class="btn btn-outline" value="cancel">Cancelar</button>
                 <button class="btn btn-danger" value="confirm">Restaurar dados</button>
@@ -483,5 +523,7 @@
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
     <script src="app.js"></script>
+    <script src="operations.js"></script>
+    <script src="journal.js"></script>
 </body>
 </html>

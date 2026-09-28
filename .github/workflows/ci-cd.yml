@@ -26,6 +26,8 @@ jobs:
       - name: Testes existentes e sintaxe do frontend
         run: |
           node --check public/app.js
+          node --check public/operations.js
+          node --check public/journal.js
           node --check src/server.js
           node src/test_mongodb_runner.js
       - name: Build, JUnit e empacotamento Spring Boot

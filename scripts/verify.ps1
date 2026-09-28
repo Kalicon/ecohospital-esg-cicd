@@ -8,6 +8,8 @@ try {
     $commands = @(
         @{Name='legacy-runner.log'; Command={node src/test_mongodb_runner.js}},
         @{Name='frontend-syntax.log'; Command={node --check public/app.js}},
+        @{Name='operations-syntax.log'; Command={node --check public/operations.js}},
+        @{Name='journal-syntax.log'; Command={node --check public/journal.js}},
         @{Name='maven-verify.log'; Command={& .\mvnw.cmd -B -ntp verify}}
     )
     foreach ($entry in $commands) {
