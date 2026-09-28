@@ -1,0 +1,53 @@
+name: Deploy no PC do laboratório
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+      image:
+        type: string
+        required: true
+      version:
+        type: string
+        required: true
+permissions:
+  contents: read
+  packages: read
+jobs:
+  deploy:
+    if: github.repository == 'Kalicon/ecohospital-esg-cicd' && github.actor == 'Kalicon' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: [self-hosted, Windows, X64, ecohospital-lab]
+    timeout-minutes: 10
+    environment:
+      name: ${{ inputs.environment }}
+      url: ${{ inputs.environment == 'staging' && 'http://localhost:8081' || 'http://localhost:8082' }}
+    concurrency:
+      group: deploy-${{ inputs.environment }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+      - name: Autenticar para pull sem PAT permanente
+        shell: powershell
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_USER: ${{ github.actor }}
+        run: |
+          $dockerBin = Join-Path $env:LOCALAPPDATA 'Programs/DockerDesktop/resources/bin/docker.exe'
+          if (-not (Test-Path $dockerBin)) { $dockerBin = 'C:\Program Files\Docker\Docker\resources\bin\docker.exe' }
+          $env:GHCR_TOKEN | & $dockerBin login ghcr.io --username $env:GHCR_USER --password-stdin
+          if ($LASTEXITCODE -ne 0) { throw 'Falha no login GHCR.' }
+      - name: Deploy com volume e health verificados
+        shell: powershell
+        env:
+          APP_ENV: ${{ inputs.environment }}
+          IMAGE: ${{ inputs.image }}
+          APP_VERSION: ${{ inputs.version }}
+        run: .\scripts\deploy-local.ps1 -EnvironmentName $env:APP_ENV -Image $env:IMAGE -Version $env:APP_VERSION
+      - name: Guardar evidências reais
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: local-deploy-${{ inputs.environment }}-${{ github.sha }}
+          path: evidence/
+          if-no-files-found: warn
