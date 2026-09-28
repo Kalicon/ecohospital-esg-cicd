@@ -27,22 +27,12 @@ jobs:
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v7
-      - name: Isolar credenciais Docker do usuário
+      - name: Usar pull anônimo da imagem pública
         shell: powershell
         run: |
-          $configDir = Join-Path $env:RUNNER_TEMP 'ecohospital-docker-auth'
+          $configDir = Join-Path $env:RUNNER_TEMP 'ecohospital-docker-anonymous'
           New-Item -ItemType Directory -Force -Path $configDir | Out-Null
           "DOCKER_CONFIG=$configDir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-      - name: Autenticar para pull sem PAT permanente
-        shell: powershell
-        env:
-          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GHCR_USER: ${{ github.actor }}
-        run: |
-          $dockerBin = Join-Path $env:LOCALAPPDATA 'Programs/DockerDesktop/resources/bin/docker.exe'
-          if (-not (Test-Path $dockerBin)) { $dockerBin = 'C:\Program Files\Docker\Docker\resources\bin\docker.exe' }
-          $env:GHCR_TOKEN | & $dockerBin login ghcr.io --username $env:GHCR_USER --password-stdin
-          if ($LASTEXITCODE -ne 0) { throw 'Falha no login GHCR.' }
       - name: Deploy com volume e health verificados
         shell: powershell
         env:
@@ -57,11 +47,3 @@ jobs:
           name: local-deploy-${{ inputs.environment }}-${{ github.sha }}
           path: evidence/
           if-no-files-found: warn
-      - name: Encerrar autenticação temporária
-        if: always()
-        shell: powershell
-        run: |
-          $dockerBin = Join-Path $env:LOCALAPPDATA 'Programs/DockerDesktop/resources/bin/docker.exe'
-          if (-not (Test-Path $dockerBin)) { $dockerBin = 'C:\Program Files\Docker\Docker\resources\bin\docker.exe' }
-          & $dockerBin logout ghcr.io
-          if ($LASTEXITCODE -ne 0) { throw 'Falha ao remover autenticação Docker temporária.' }
