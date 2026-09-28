@@ -47,3 +47,12 @@ A linguagem original divergia do enunciado. Após a autorização para adotar a 
 - `scripts/package-delivery.ps1`, `verify-delivery.py`: novo Compose no ZIP e exclusão explícita de snapshots importados.
 
 Os backups de staging e produção foram salvos em `.tools/backups/2026-09-28`, fora do Git/ZIP. O terceiro Compose de teste em `localhost:8083` não substitui os ambientes originais.
+
+## Revisão UI/UX — referência Monsoon
+
+- `public/index.html`: abertura editorial, navegação em cápsula e atalhos para o painel; SVG substituem emojis; dialogs nativos para integridade e confirmação de reset.
+- `public/styles.css`: tema claro, hierarquia, contraste, layout responsivo e foco acessível. A preservação do CSS citada acima se refere à entrega original; nesta revisão ele foi redesenhado.
+- `public/app.js`: campos de especificações e datas corrigidos conforme dataset, filtros de incineradores/chillers, feedback próximo às ações, respeito à preferência de movimento reduzido e navegação da abertura para abas reais.
+- `public/hero-landscape-v2.jpg`: fotografia licenciada de A.T.M. Arafath Ali / Unsplash; fonte e licença no README. O vídeo restrito da referência foi descartado antes de publicação.
+
+O redesenho preserva as funcionalidades ESG e a stack Java/HTML/CSS/JavaScript; não afirma execução de testes ou deploys apenas pela aparência da interface.

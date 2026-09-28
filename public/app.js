@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     keyButton?.addEventListener('click', () => {
         operatorKey = keyInput.value.trim();
         keyInput.value = '';
+        setActionFeedback(operatorKey ? 'Edição ativada nesta aba.' : 'Informe o token de edição.', !operatorKey);
         mostrarToast(operatorKey ? 'Token ativado somente nesta aba.' : 'Informe o token do operador.', !operatorKey);
     });
     function writeHeaders(extra = {}) {
@@ -55,6 +56,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const queryTotalResults = document.getElementById('queryTotalResults');
     const btnCopiarJson = document.getElementById('btnCopiarJson');
 
+    function formatDateTime(value) {
+        if (!value) return 'Sem data';
+        const date = new Date(value);
+        return Number.isNaN(date.getTime()) ? 'Data inválida' : date.toLocaleString('pt-BR');
+    }
+
+    function plural(count, singular, pluralForm) { return `${count} ${count === 1 ? singular : pluralForm}`; }
+
     async function apiJson(path, options) {
         const response = await fetch(path, options);
         const data = await response.json();
@@ -67,12 +76,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function identificarAmbiente() {
         const label = document.getElementById('environmentLabel');
+        const storageLabel = document.getElementById('storageLabel');
         try {
-            const health = await apiJson('/health');
-            label.textContent = `Ambiente: ${health.environment}`;
+            const [health, status] = await Promise.all([apiJson('/health'), apiJson('/api/status')]);
+            label.textContent = `Ambiente · ${health.environment}`;
             label.title = `Versão: ${health.version}`;
+            storageLabel.textContent = status.storage;
         } catch (error) {
             label.textContent = 'API indisponível';
+            storageLabel.textContent = 'Sem conexão';
         }
     }
 
@@ -98,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             state.auditoria = resAud.data || [];
             state.kpis = resKpi || {};
             renderizarInsights(resInsights);
+            document.getElementById('pageError').hidden = true;
 
             atualizarContadoresSideBar();
             atualizarKPIs();
@@ -110,14 +123,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (err) {
             console.error('Erro ao carregar dados:', err);
-            mostrarToast('Erro ao conectar com a API EcoHospital', true);
+            const error = document.getElementById('pageError');
+            error.textContent = `Não foi possível carregar os dados. ${err.message} Recarregue a página para tentar novamente.`;
+            error.hidden = false;
+            mostrarToast('Não foi possível carregar os dados.', true);
         }
     }
 
     function renderizarInsights(insights) {
         document.getElementById('insightSummary').textContent =
             `${insights.taxaConformidadePct}% de leituras conformes (${insights.conformes}/${insights.totalLeituras}); ` +
-            `${insights.alertasPreventivos} alerta(s), ${insights.violacoes} violação(ões) e ${insights.licencasCriticas} licença(s) crítica(s).`;
+            `${plural(insights.alertasPreventivos, 'alerta', 'alertas')}, ` +
+            `${plural(insights.violacoes, 'violação', 'violações')} e ` +
+            `${plural(insights.licencasCriticas, 'licença crítica', 'licenças críticas')}.`;
         document.getElementById('insightMethodology').textContent = insights.metodologia;
         const container = document.getElementById('insightSources');
         container.replaceChildren();
@@ -125,7 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const row = document.createElement('div');
             row.className = 'agg-item';
             row.textContent = `${source.codigoFonte}: média ${source.mediaCo2KgHora} kg/h, ` +
-                `${source.usoDoLimitePct ?? 'n/a'}% do limite, ${source.alertas} alertas (${source.leituras} leituras)`;
+                `${source.usoDoLimitePct ?? 'n/a'}% do limite, ` +
+                `${plural(source.alertas, 'alerta', 'alertas')} (${plural(source.leituras, 'leitura', 'leituras')})`;
             container.appendChild(row);
         }
     }
@@ -174,7 +193,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!targetTab) return;
 
             navItems.forEach(n => n.classList.remove('active'));
+            navItems.forEach(n => n.removeAttribute('aria-current'));
             item.classList.add('active');
+            item.setAttribute('aria-current', 'page');
 
             tabPanes.forEach(pane => {
                 pane.classList.remove('active');
@@ -184,6 +205,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             state.currentTab = targetTab;
+            document.getElementById(`tab-${targetTab}`)?.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        });
+    });
+    document.querySelectorAll('[data-hero-tab]').forEach(link => {
+        link.addEventListener('click', event => {
+            event.preventDefault();
+            const tab = link.getAttribute('data-hero-tab');
+            document.querySelector(`.nav-item[data-tab="${tab}"]`)?.click();
         });
     });
 
@@ -200,9 +229,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <tr>
                         <td><strong>${h.nome_unidade}</strong><br><small class="card-code">${h.codigo_unidade}</small></td>
                         <td>${h.endereco?.cidade || 'SP'}</td>
-                        <td><span class="badge badge-conforme">-${metas.meta_reducao_carbono_pct || 15}%</span></td>
-                        <td><span class="badge badge-tag">${metas.meta_energia_renovavel_pct || 80}%</span></td>
-                        <td><strong>${(metas.meta_reflorestamento_arvores || 1000).toLocaleString('pt-BR')}</strong> mudas</td>
+                        <td><span class="badge badge-conforme">${metas.meta_reducao_carbono_pct == null ? '—' : `-${metas.meta_reducao_carbono_pct}%`}</span></td>
+                        <td><span class="badge badge-tag">${metas.meta_energia_renovavel_pct == null ? '—' : `${metas.meta_energia_renovavel_pct}%`}</span></td>
+                        <td><strong>${metas.meta_reflorestamento_arvores == null ? '—' : metas.meta_reflorestamento_arvores.toLocaleString('pt-BR')}</strong> mudas</td>
                     </tr>
                 `;
             }).join('');
@@ -226,10 +255,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const media = (item.co2 / item.count).toFixed(1);
                 return `
                     <div class="agg-item">
-                        <div class="agg-fonte">🏭 ${k}</div>
+                        <div class="agg-fonte">${k}</div>
                         <div class="agg-metrics">
                             <span class="agg-co2">Média: <strong>${media} kg/h</strong></span>
-                            <span class="agg-arvores">🌳 ${item.arvores} árvores</span>
+                <span class="agg-arvores">${plural(item.arvores, 'árvore sugerida', 'árvores sugeridas')}</span>
                         </div>
                     </div>
                 `;
@@ -260,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!container) return;
 
         container.innerHTML = state.hospitais.map(h => {
-            const coords = h.localizacao_geografica?.coordinates || [-46.65, -23.56];
+            const coords = h.localizacao_geografica?.coordinates;
             const certs = (h.certificacoes_esg || []).map(c => `<span class="cert-chip">${c}</span>`).join('');
             const metas = h.metas_esg_anuais || {};
 
@@ -269,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div>
                         <div class="card-top">
                             <span class="card-code">${h.codigo_unidade}</span>
-                            <span class="badge badge-conforme">${h.status_operacional || 'ATIVO'}</span>
+                            <span class="badge badge-conforme">${h.status_operacional || 'Não informado'}</span>
                         </div>
                         <h3 class="card-title-main">${h.nome_unidade}</h3>
                         <p class="card-desc">${h.tipo_estabelecimento} | CNPJ: ${h.cnpj}</p>
@@ -284,8 +313,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <span class="val">${h.endereco?.logradouro}, ${h.endereco?.numero} - ${h.endereco?.cidade}/${h.endereco?.estado}</span>
                             </div>
                             <div class="spec-item">
-                                <span class="label">GeoJSON (2dsphere):</span>
-                                <span class="val">[${coords[0]}, ${coords[1]}]</span>
+                                <span class="label">Coordenadas:</span>
+                                <span class="val">${Array.isArray(coords) && coords.length >= 2 ? `[${coords[0]}, ${coords[1]}]` : 'Não informadas'}</span>
                             </div>
                             <div class="spec-item">
                                 <span class="label">Meta Carbono 2026:</span>
@@ -322,34 +351,36 @@ document.addEventListener('DOMContentLoaded', () => {
             // Renderização polimórfica baseada no tipo da fonte
             if (f.tipo_fonte === 'CALDEIRA_VAPOR') {
                 specsHtml = `
-                    <div class="spec-item"><span class="label">Combustível:</span><span class="val">${specs.tipo_combustivel}</span></div>
-                    <div class="spec-item"><span class="label">Capacidade Vapor:</span><span class="val">${specs.capacidade_vapor_ton_hora} ton/h</span></div>
-                    <div class="spec-item"><span class="label">Pressão:</span><span class="val">${specs.pressao_operacao_bar} bar</span></div>
+                    <div class="spec-item"><span class="label">Combustível:</span><span class="val">${specs.combustivel ?? 'Não informado'}</span></div>
+                    <div class="spec-item"><span class="label">Capacidade vapor:</span><span class="val">${specs.capacidade_vapor_kg_h ?? '—'} kg/h</span></div>
+                    <div class="spec-item"><span class="label">Pressão:</span><span class="val">${specs.pressao_trabalho_bar ?? '—'} bar</span></div>
                 `;
             } else if (f.tipo_fonte === 'GRUPO_GERADOR_DIESEL') {
                 specsHtml = `
-                    <div class="spec-item"><span class="label">Potência:</span><span class="val">${specs.potencia_kva} kVA</span></div>
-                    <div class="spec-item"><span class="label">Consumo Diesel:</span><span class="val">${specs.consumo_diesel_litros_hora} L/h</span></div>
-                    <div class="spec-item"><span class="label">Tanque:</span><span class="val">${specs.capacidade_tanque_litros} Litros</span></div>
+                    <div class="spec-item"><span class="label">Potência elétrica:</span><span class="val">${specs.potencia_eletrica_kva ?? '—'} kVA</span></div>
+                    <div class="spec-item"><span class="label">Consumo:</span><span class="val">${specs.consumo_combustivel_l_h ?? '—'} L/h</span></div>
+                    <div class="spec-item"><span class="label">Combustível:</span><span class="val">${specs.combustivel ?? 'Não informado'}</span></div>
                 `;
             } else if (f.tipo_fonte === 'FROTA_AMBULANCIA_HIBRIDA') {
                 specsHtml = `
                     <div class="spec-item"><span class="label">Propulsão:</span><span class="val">${specs.tipo_propulsao}</span></div>
                     <div class="spec-item"><span class="label">Placa:</span><span class="val">${specs.placa}</span></div>
-                    <div class="spec-item"><span class="label">Bateria / Autonomia:</span><span class="val">${specs.bateria_kwh || 0} kWh | ${specs.autonomia_urbana_km || specs.autonomia_modo_eletrico_km}km</span></div>
+                    <div class="spec-item"><span class="label">Bateria / Autonomia:</span><span class="val">${specs.capacidade_bateria_kwh ?? '—'} kWh | ${specs.autonomia_urbana_km ?? specs.autonomia_modo_eletrico_km ?? '—'} km</span></div>
                 `;
-            } else if (f.tipo_fonte === 'INCINERADOR_RESIDUOS_HOSP') {
+            } else if (f.tipo_fonte === 'INCINERADOR_RESIDUOS') {
                 specsHtml = `
-                    <div class="spec-item"><span class="label">Capacidade:</span><span class="val">${specs.capacidade_queima_kg_hora} kg/h</span></div>
-                    <div class="spec-item"><span class="label">Temp. Câmara 2:</span><span class="val">${specs.temperatura_pos_combustao_c}°C</span></div>
-                    <div class="spec-item"><span class="label">Filtros:</span><span class="val">${specs.tipo_lavador_gases}</span></div>
+                    <div class="spec-item"><span class="label">Resíduo tratado:</span><span class="val">${specs.tipo_residuo_tratado ?? 'Não informado'}</span></div>
+                    <div class="spec-item"><span class="label">Temperatura:</span><span class="val">${specs.temperatura_pos_combustao_c ?? specs.temperatura_operacao_c ?? '—'} °C</span></div>
+                    <div class="spec-item"><span class="label">Capacidade / redução:</span><span class="val">${specs.capacidade_destruicao_kg_ciclo != null ? `${specs.capacidade_destruicao_kg_ciclo} kg/ciclo` : specs.reducao_volume_pct != null ? `${specs.reducao_volume_pct}% do volume` : 'Não informada'}</span></div>
+                `;
+            } else if (f.tipo_fonte === 'SISTEMA_CLIMATIZACAO_CHILLER') {
+                specsHtml = `
+                    <div class="spec-item"><span class="label">Capacidade térmica:</span><span class="val">${specs.capacidade_termica_tr ?? '—'} TR</span></div>
+                    <div class="spec-item"><span class="label">Fluido refrigerante:</span><span class="val">${specs.fluido_refrigerante ?? 'Não informado'}</span></div>
+                    <div class="spec-item"><span class="label">COP eficiência:</span><span class="val">${specs.coeficiente_performance_cop ?? '—'}</span></div>
                 `;
             } else {
-                specsHtml = `
-                    <div class="spec-item"><span class="label">Capacidade Térmica:</span><span class="val">${specs.capacidade_refrigeracao_tr} TR</span></div>
-                    <div class="spec-item"><span class="label">Gás Refrigerante:</span><span class="val">${specs.gas_refrigerante}</span></div>
-                    <div class="spec-item"><span class="label">COP Eficiência:</span><span class="val">${specs.coeficiente_performance_cop}</span></div>
-                `;
+                specsHtml = '<div class="spec-item"><span class="label">Especificações:</span><span class="val">Tipo não mapeado nesta visualização.</span></div>';
             }
 
             return `
@@ -365,14 +396,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="card-specs">
                             <div class="spec-item">
                                 <span class="label">Limite CO2 Regulamentar:</span>
-                                <span class="val" style="color: #38bdf8;">${f.limite_max_co2_kg_hora} kg/h</span>
+                                <span class="val text-emerald">${f.limite_max_co2_kg_hora} kg/h</span>
                             </div>
                             ${specsHtml}
                         </div>
                     </div>
 
                     <div>
-                        <span class="kpi-label">Frequência de Manutenção: ${f.manutencao_preventiva?.periodicidade_dias || 90} dias</span>
+                        <span class="kpi-label">Manutenção: ${f.frequencia_manutencao ?? 'Não informada'}</span>
                     </div>
                 </div>
             `;
@@ -407,8 +438,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 statusBadge = '<span class="badge badge-violacao">VIOLAÇÃO</span>';
             }
 
-            const dataHora = new Date(l.timestamp).toLocaleString('pt-BR');
-            const arvores = l.compensacao_ambiental?.arvores_sugeridas || 1;
+            const dataHora = formatDateTime(l.timestamp_leitura || l.timestamp);
+            const arvores = l.compensacao_ambiental?.arvores_sugeridas ?? '—';
 
             return `
                 <tr>
@@ -418,7 +449,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td><strong>${l.medicoes?.co2_kg_hora}</strong> kg/h</td>
                     <td>${l.limite_regulamentar_kg_hora} kg/h</td>
                     <td>${statusBadge}</td>
-                    <td><strong>🌳 ${arvores}</strong> mudas (${l.compensacao_ambiental?.bioma_prioritario || 'Mata Atlântica'})</td>
+                    <td><strong>${arvores}</strong> mudas${l.compensacao_ambiental?.bioma_prioritario ? ` (${l.compensacao_ambiental.bioma_prioritario})` : ''}</td>
                 </tr>
             `;
         }).join('');
@@ -433,15 +464,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         tbody.innerHTML = state.licencas.map(lic => {
             let badge = '';
-            if (lic.status === 'VALIDA') {
-                badge = '<span class="badge badge-conforme">VÁLIDA</span>';
+            const deadline = new Date(lic.data_vencimento);
+            const expiredByDate = !Number.isNaN(deadline.getTime()) && deadline.getTime() < Date.now();
+            if (lic.status === 'VENCIDA' || expiredByDate) {
+                badge = '<span class="badge badge-violacao">VENCIDA PELO PRAZO</span>';
             } else if (lic.status === 'EXPIRA_EM_BREVE') {
                 badge = '<span class="badge badge-alerta">EXPIRA EM BREVE</span>';
             } else {
-                badge = '<span class="badge badge-violacao">VENCIDA</span>';
+                badge = '<span class="badge badge-conforme">VIGENTE</span>';
             }
 
-            const venc = new Date(lic.data_vencimento).toLocaleDateString('pt-BR');
+            const venc = Number.isNaN(deadline.getTime()) ? 'Sem data' : deadline.toLocaleDateString('pt-BR');
             const condCount = (lic.condicionantes_ambientais || []).length;
 
             return `
@@ -475,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 sevBadge = '<span class="badge badge-conforme">' + log.nivel_severidade + '</span>';
             }
 
-            const dataHora = new Date(log.timestamp).toLocaleString('pt-BR');
+            const dataHora = formatDateTime(log.data_hora || log.timestamp);
             const odsPills = (log.ods_onu_impactado || []).map(o => `<span class="ods-pill ods-${o}">ODS ${o}</span>`).join(' ');
 
             return `
@@ -486,7 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${sevBadge}</td>
                     <td>${log.descricao_evento}</td>
                     <td>${odsPills || '-'}</td>
-                    <td><span class="badge badge-tag">${log.status_resolucao || 'AUDITADO'}</span></td>
+                    <td><span class="badge badge-tag">${log.status_resolucao || 'Não informado'}</span></td>
                 </tr>
             `;
         }).join('');
@@ -547,7 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // =========================================================================
     async function dispararSimulacaoIoT() {
         try {
-            mostrarToast('Simulando envio de pacote de dados IoT...');
+            setActionFeedback('Registrando simulação IoT…');
             const data = await apiJson('/api/telemetria/simular', {
                 method: 'POST',
                 headers: writeHeaders({ 'Content-Type': 'application/json' }),
@@ -555,10 +588,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (data.leitura) {
-                mostrarToast(`Leitura IoT gerada! ${data.leitura.codigo_fonte}: ${data.leitura.medicoes.co2_kg_hora} kg/h [${data.leitura.status_conformidade}]`);
+                const message = `Leitura registrada: ${data.leitura.codigo_fonte}, ${data.leitura.medicoes.co2_kg_hora} kg/h (${data.leitura.status_conformidade}).`;
+                setActionFeedback(message);
+                mostrarToast(message);
                 carregarTodosDados();
             }
         } catch (err) {
+            setActionFeedback(err.message, true);
             mostrarToast(err.message, true);
         }
     }
@@ -571,7 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // =========================================================================
     if (btnRunTestRunner) {
         btnRunTestRunner.addEventListener('click', async () => {
-            modal.classList.add('open');
+            modal.showModal();
             terminalOutput.textContent = '>>> [ECOHOSPITAL SMART] Consultando o relatório de integridade...\n>>> Aguarde...';
 
             try {
@@ -583,24 +619,41 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const fecharModal = () => modal.classList.remove('open');
+    const fecharModal = () => modal.close();
     if (btnCloseModal) btnCloseModal.addEventListener('click', fecharModal);
     if (btnCloseModalBtn) btnCloseModalBtn.addEventListener('click', fecharModal);
 
     // =========================================================================
     // RESET DB
     // =========================================================================
+    const resetDialog = document.getElementById('resetDialog');
     if (btnResetDB) {
-        btnResetDB.addEventListener('click', async () => {
+        btnResetDB.addEventListener('click', () => {
+            resetDialog.returnValue = 'cancel';
+            resetDialog.showModal();
+        });
+        resetDialog.addEventListener('close', async () => {
+            if (resetDialog.returnValue !== 'confirm') return;
             try {
-                if (!window.confirm('Restaurar o dataset original? As alterações deste ambiente serão apagadas.')) return;
                 const data = await apiJson('/api/reset', { method: 'POST', headers: writeHeaders() });
+                setActionFeedback(data.mensagem || 'Dados restaurados.');
                 mostrarToast(data.mensagem || 'Banco resetado com sucesso!');
                 carregarTodosDados();
             } catch (err) {
+                setActionFeedback(err.message, true);
                 mostrarToast(err.message, true);
             }
         });
+    }
+
+    function setActionFeedback(message, isError = false) {
+        for (const id of ['headerFeedback', 'telemetryFeedback']) {
+            const element = document.getElementById(id);
+            if (!element) continue;
+            element.textContent = message;
+            element.dataset.state = isError ? 'error' : 'success';
+            element.hidden = false;
+        }
     }
 
     // =========================================================================
@@ -609,7 +662,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function mostrarToast(mensagem, isError = false) {
         if (!toastEl) return;
         toastEl.textContent = mensagem;
-        toastEl.style.borderColor = isError ? 'var(--accent-rose)' : 'var(--primary-emerald)';
+        toastEl.style.borderColor = isError ? 'var(--danger)' : 'var(--accent)';
         toastEl.classList.add('show');
         setTimeout(() => {
             toastEl.classList.remove('show');

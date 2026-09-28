@@ -38,7 +38,13 @@ A aplicação não dependia de MongoDB real. JSON com gravação atômica e volu
 
 Os scripts `scripts/esg_mongodb_solution.js` e `scripts/esg_mongodb_advanced.js` continuam presentes, mas não são executados pela aplicação ou pelo Compose. Eles contêm limpeza de collections: use somente um MongoDB descartável para estudá-los. As consultas MongoDB exibidas pelo console são equivalentes didáticos às operações realizadas em JSON. Os prints históricos de `ENTREGA_FINAL` pertencem à atividade NoSQL anterior e não comprovam este CI/CD.
 
-Google Fonts é usado pelo frontend; sua indisponibilidade afeta a fonte visual, não a API. O build precisa acessar Maven Central e os registries Docker.
+O frontend usa fontes do sistema e uma fotografia empacotada, sem depender de Google Fonts. O build precisa acessar Maven Central e os registries Docker.
+
+### Revisão visual inspirada em Monsoon
+
+A abertura traz paisagem clara, navegação translúcida em cápsula, título editorial e atalhos para as abas reais do painel. O painel usa ícones SVG no lugar de emojis, hierarquia de informações, foco visível, mensagens de erro junto às ações e confirmação nativa antes de restaurar dados. A stack HTML/CSS/JavaScript foi mantida para preservar as APIs e o build Java. Não é uma reprodução pixel a pixel nem migração para React.
+
+A fotografia `public/hero-landscape-v2.jpg` é de [A.T.M. Arafath Ali no Unsplash](https://unsplash.com/photos/misty-hills-with-trees-at-sunrise-mGp2_4MeGIw), sob a [licença Unsplash](https://unsplash.com/license). A filmagem do exemplo Monsoon não integra a entrega: os [termos Scrolltide](https://www.scrolltide.co/terms) restringem reutilização de filmagens de demonstração. A referência fornecida foi adaptada para o domínio ESG, sem patrocinadores fictícios ou métricas inventadas. Esta revisão está no ambiente de avaliação `http://localhost:8083`; staging e produção não devem ser considerados atualizados até nova evidência de promoção.
 
 ## Execução local com Docker
 
