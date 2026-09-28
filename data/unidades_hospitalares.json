@@ -1,0 +1,398 @@
+[
+  {
+    "codigo_unidade": "UNID-HOSP-001",
+    "nome_unidade": "Hospital Central de Clínicas Sustentáveis",
+    "cnpj": "12.345.678/0001-90",
+    "tipo_estabelecimento": "Hospital Geral de Alta Complexidade",
+    "leitos_ativos": 420,
+    "endereco": {
+      "logradouro": "Av. Paulista",
+      "numero": "1578",
+      "bairro": "Bela Vista",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "cep": "01310-200"
+    },
+    "localizacao_geografica": {
+      "type": "Point",
+      "coordinates": [
+        -46.6534,
+        -23.5612
+      ]
+    },
+    "certificacoes_esg": [
+      "ISO 14001",
+      "ONA Nível 3 - Acreditado com Excelência",
+      "LEED Gold",
+      "Hospital Amigo do Clima"
+    ],
+    "metas_esg_anuais": {
+      "ano_referencia": 2026,
+      "meta_reducao_carbono_pct": 18.5,
+      "meta_energia_renovavel_pct": 85.0,
+      "meta_reflorestamento_arvores": 1500
+    },
+    "gestor_sustentabilidade": {
+      "nome": "Dra. Mariana Albuquerque",
+      "cargo": "Diretora de ESG e Compliance",
+      "email": "mariana.albuquerque@hospitalsustentavel.com.br",
+      "telefone": "+55 11 3254-8900"
+    },
+    "status_operacional": "ATIVO"
+  },
+  {
+    "codigo_unidade": "UNID-HOSP-002",
+    "nome_unidade": "Hospital Infantil São Camilo Verde",
+    "cnpj": "23.456.789/0001-01",
+    "tipo_estabelecimento": "Hospital Especializado Pediátrico",
+    "leitos_ativos": 180,
+    "endereco": {
+      "logradouro": "Rua Domingos de Morais",
+      "numero": "2100",
+      "bairro": "Vila Mariana",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "cep": "04036-000"
+    },
+    "localizacao_geografica": {
+      "type": "Point",
+      "coordinates": [
+        -46.6389,
+        -23.5894
+      ]
+    },
+    "certificacoes_esg": [
+      "ISO 14001",
+      "Selo Verde Brasil"
+    ],
+    "metas_esg_anuais": {
+      "ano_referencia": 2026,
+      "meta_reducao_carbono_pct": 12.0,
+      "meta_energia_renovavel_pct": 70.0,
+      "meta_reflorestamento_arvores": 600
+    },
+    "gestor_sustentabilidade": {
+      "nome": "Eng. Roberto Menezes",
+      "cargo": "Gerente de Engenharia Clínica",
+      "email": "roberto.menezes@saocamiloverde.com.br",
+      "telefone": "+55 11 3889-1200"
+    },
+    "status_operacional": "ATIVO"
+  },
+  {
+    "codigo_unidade": "UNID-HOSP-003",
+    "nome_unidade": "Complexo Hospitalar do Vale do Paraíba",
+    "cnpj": "34.567.890/0001-12",
+    "tipo_estabelecimento": "Hospital Regional e Maternidade",
+    "leitos_ativos": 310,
+    "endereco": {
+      "logradouro": "Av. São João",
+      "numero": "450",
+      "bairro": "Jardim das Colinas",
+      "cidade": "São José dos Campos",
+      "estado": "SP",
+      "cep": "12242-000"
+    },
+    "localizacao_geografica": {
+      "type": "Point",
+      "coordinates": [
+        -45.8942,
+        -23.2056
+      ]
+    },
+    "certificacoes_esg": [
+      "ISO 14001",
+      "ISO 50001 - Gestão de Energia",
+      "ONA Nível 2"
+    ],
+    "metas_esg_anuais": {
+      "ano_referencia": 2026,
+      "meta_reducao_carbono_pct": 20.0,
+      "meta_energia_renovavel_pct": 90.0,
+      "meta_reflorestamento_arvores": 2000
+    },
+    "gestor_sustentabilidade": {
+      "nome": "Dra. Camila Zanetti",
+      "cargo": "Superintendente de Sustentabilidade",
+      "email": "camila.zanetti@hospitalvale.com.br",
+      "telefone": "+55 12 3901-4400"
+    },
+    "status_operacional": "ATIVO"
+  },
+  {
+    "codigo_unidade": "UNID-HOSP-004",
+    "nome_unidade": "Hospital Universitário BioSaúde Campinas",
+    "cnpj": "45.678.901/0001-23",
+    "tipo_estabelecimento": "Hospital de Ensino e Pesquisa",
+    "leitos_ativos": 500,
+    "endereco": {
+      "logradouro": "Av. Barão Geraldo",
+      "numero": "1200",
+      "bairro": "Barão Geraldo",
+      "cidade": "Campinas",
+      "estado": "SP",
+      "cep": "13083-000"
+    },
+    "localizacao_geografica": {
+      "type": "Point",
+      "coordinates": [
+        -47.0789,
+        -22.8234
+      ]
+    },
+    "certificacoes_esg": [
+      "ISO 14001",
+      "LEED Platinum",
+      "ONA Nível 3",
+      "Compromisso Net Zero 2030"
+    ],
+    "metas_esg_anuais": {
+      "ano_referencia": 2026,
+      "meta_reducao_carbono_pct": 25.0,
+      "meta_energia_renovavel_pct": 100.0,
+      "meta_reflorestamento_arvores": 3500
+    },
+    "gestor_sustentabilidade": {
+      "nome": "Prof. Dr. Eduardo Silveira",
+      "cargo": "Diretor de Governança e Inovação",
+      "email": "eduardo.silveira@biosaude.unicamp.br",
+      "telefone": "+55 19 3521-7000"
+    },
+    "status_operacional": "ATIVO"
+  },
+  {
+    "codigo_unidade": "UNID-HOSP-005",
+    "nome_unidade": "Centro de Oncologia e Radioterapia Verde Vida",
+    "cnpj": "56.789.012/0001-34",
+    "tipo_estabelecimento": "Hospital Especializado em Oncologia",
+    "leitos_ativos": 120,
+    "endereco": {
+      "logradouro": "Rua da Consolação",
+      "numero": "3200",
+      "bairro": "Cerqueira César",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "cep": "01416-000"
+    },
+    "localizacao_geografica": {
+      "type": "Point",
+      "coordinates": [
+        -46.6621,
+        -23.5578
+      ]
+    },
+    "certificacoes_esg": [
+      "ISO 14001",
+      "ONA Nível 3"
+    ],
+    "metas_esg_anuais": {
+      "ano_referencia": 2026,
+      "meta_reducao_carbono_pct": 15.0,
+      "meta_energia_renovavel_pct": 80.0,
+      "meta_reflorestamento_arvores": 800
+    },
+    "gestor_sustentabilidade": {
+      "nome": "Fabiana Prado",
+      "cargo": "Coordenadora de QSMS",
+      "email": "fabiana.prado@verdevida.com.br",
+      "telefone": "+55 11 3120-9900"
+    },
+    "status_operacional": "ATIVO"
+  },
+  {
+    "codigo_unidade": "UNID-HOSP-006",
+    "nome_unidade": "Hospital Geral de Santos e Litoral Sustentável",
+    "cnpj": "67.890.123/0001-45",
+    "tipo_estabelecimento": "Hospital Geral e Urgência",
+    "leitos_ativos": 260,
+    "endereco": {
+      "logradouro": "Av. Ana Costa",
+      "numero": "400",
+      "bairro": "Gonzaga",
+      "cidade": "Santos",
+      "estado": "SP",
+      "cep": "11060-000"
+    },
+    "localizacao_geografica": {
+      "type": "Point",
+      "coordinates": [
+        -46.3312,
+        -23.9634
+      ]
+    },
+    "certificacoes_esg": [
+      "ISO 14001",
+      "Selo Azul de Proteção aos Oceanos"
+    ],
+    "metas_esg_anuais": {
+      "ano_referencia": 2026,
+      "meta_reducao_carbono_pct": 14.0,
+      "meta_energia_renovavel_pct": 75.0,
+      "meta_reflorestamento_arvores": 1100
+    },
+    "gestor_sustentabilidade": {
+      "nome": "Lucas Fontes",
+      "cargo": "Gerente de Meio Ambiente",
+      "email": "lucas.fontes@hospitalsantos.com.br",
+      "telefone": "+55 13 3289-5000"
+    },
+    "status_operacional": "ATIVO"
+  },
+  {
+    "codigo_unidade": "UNID-HOSP-007",
+    "nome_unidade": "Instituto de Cardiologia e Sustentabilidade de Ribeirão",
+    "cnpj": "78.901.234/0001-56",
+    "tipo_estabelecimento": "Hospital Cardiológico",
+    "leitos_ativos": 190,
+    "endereco": {
+      "logradouro": "Av. Presidente Vargas",
+      "numero": "1800",
+      "bairro": "Jardim Santa Ângela",
+      "cidade": "Ribeirão Preto",
+      "estado": "SP",
+      "cep": "14020-260"
+    },
+    "localizacao_geografica": {
+      "type": "Point",
+      "coordinates": [
+        -47.8103,
+        -21.1775
+      ]
+    },
+    "certificacoes_esg": [
+      "ISO 14001",
+      "ONA Nível 2"
+    ],
+    "metas_esg_anuais": {
+      "ano_referencia": 2026,
+      "meta_reducao_carbono_pct": 16.0,
+      "meta_energia_renovavel_pct": 85.0,
+      "meta_reflorestamento_arvores": 950
+    },
+    "gestor_sustentabilidade": {
+      "nome": "Juliana Garcia",
+      "cargo": "Supervisora de Compliance",
+      "email": "juliana.garcia@cardioribeirao.com.br",
+      "telefone": "+55 16 3602-8800"
+    },
+    "status_operacional": "ATIVO"
+  },
+  {
+    "codigo_unidade": "UNID-HOSP-008",
+    "nome_unidade": "Hospital Metropolitano Zona Leste Verde",
+    "cnpj": "89.012.345/0001-67",
+    "tipo_estabelecimento": "Hospital Geral de Urgência",
+    "leitos_ativos": 380,
+    "endereco": {
+      "logradouro": "Av. Radial Leste",
+      "numero": "5400",
+      "bairro": "Tatuapé",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "cep": "03067-000"
+    },
+    "localizacao_geografica": {
+      "type": "Point",
+      "coordinates": [
+        -46.5765,
+        -23.5412
+      ]
+    },
+    "certificacoes_esg": [
+      "ISO 14001",
+      "ONA Nível 3"
+    ],
+    "metas_esg_anuais": {
+      "ano_referencia": 2026,
+      "meta_reducao_carbono_pct": 15.5,
+      "meta_energia_renovavel_pct": 80.0,
+      "meta_reflorestamento_arvores": 1400
+    },
+    "gestor_sustentabilidade": {
+      "nome": "Marcelo Henrique Dias",
+      "cargo": "Gerente de Operações e ESG",
+      "email": "marcelo.dias@metropolitanoverde.com.br",
+      "telefone": "+55 11 2090-3300"
+    },
+    "status_operacional": "ATIVO"
+  },
+  {
+    "codigo_unidade": "UNID-HOSP-009",
+    "nome_unidade": "Hospital Materno-Infantil Vida e Natureza Sorocaba",
+    "cnpj": "90.123.456/0001-78",
+    "tipo_estabelecimento": "Hospital Materno-Infantil",
+    "leitos_ativos": 150,
+    "endereco": {
+      "logradouro": "Av. Afonso Vergueiro",
+      "numero": "850",
+      "bairro": "Centro",
+      "cidade": "Sorocaba",
+      "estado": "SP",
+      "cep": "18035-370"
+    },
+    "localizacao_geografica": {
+      "type": "Point",
+      "coordinates": [
+        -47.4581,
+        -23.5015
+      ]
+    },
+    "certificacoes_esg": [
+      "ISO 14001",
+      "Iniciativa Hospital Amigo da Criança e do Clima"
+    ],
+    "metas_esg_anuais": {
+      "ano_referencia": 2026,
+      "meta_reducao_carbono_pct": 11.0,
+      "meta_energia_renovavel_pct": 65.0,
+      "meta_reflorestamento_arvores": 500
+    },
+    "gestor_sustentabilidade": {
+      "nome": "Beatriz Nogueira",
+      "cargo": "Analista de Sustentabilidade Sênior",
+      "email": "beatriz.nogueira@vidaenatureza.com.br",
+      "telefone": "+55 15 3233-1000"
+    },
+    "status_operacional": "ATIVO"
+  },
+  {
+    "codigo_unidade": "UNID-HOSP-010",
+    "nome_unidade": "Hospital de Reabilitação e Cuidados Integrados Alphaville",
+    "cnpj": "01.234.567/0001-89",
+    "tipo_estabelecimento": "Hospital de Transição e Reabilitação",
+    "leitos_ativos": 110,
+    "endereco": {
+      "logradouro": "Alameda Araguaia",
+      "numero": "2400",
+      "bairro": "Alphaville",
+      "cidade": "Barueri",
+      "estado": "SP",
+      "cep": "06455-000"
+    },
+    "localizacao_geografica": {
+      "type": "Point",
+      "coordinates": [
+        -46.8523,
+        -23.5089
+      ]
+    },
+    "certificacoes_esg": [
+      "ISO 14001",
+      "LEED Silver",
+      "Green Hospital Award 2025"
+    ],
+    "metas_esg_anuais": {
+      "ano_referencia": 2026,
+      "meta_reducao_carbono_pct": 22.0,
+      "meta_energia_renovavel_pct": 95.0,
+      "meta_reflorestamento_arvores": 1300
+    },
+    "gestor_sustentabilidade": {
+      "nome": "Gustavo Correa",
+      "cargo": "Diretor Executivo e ESG",
+      "email": "gustavo.correa@reabalphaville.com.br",
+      "telefone": "+55 11 4195-6600"
+    },
+    "status_operacional": "ATIVO"
+  }
+]

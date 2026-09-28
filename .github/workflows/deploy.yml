@@ -1,0 +1,51 @@
+name: Deploy protegido
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      image:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: ${{ inputs.environment }}
+      url: ${{ vars.APP_URL }}
+    concurrency:
+      group: deploy-${{ inputs.environment }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy da mesma imagem por digest e verificação HTTP
+        shell: bash
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+          GHCR_USER: ${{ secrets.GHCR_USER }}
+          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+          IMAGE: ${{ inputs.image }}
+          APP_VERSION: ${{ inputs.version }}
+          APP_ENV: ${{ inputs.environment }}
+          APP_PORT: ${{ vars.APP_PORT }}
+          BIND_ADDRESS: ${{ vars.BIND_ADDRESS }}
+          APP_URL: ${{ vars.APP_URL }}
+        run: bash scripts/deploy-ci.sh
+      - name: Guardar evidência HTTP do ambiente
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: health-${{ inputs.environment }}-${{ github.sha }}
+          path: evidence/*-health.json
+          if-no-files-found: warn

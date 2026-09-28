@@ -1,0 +1,206 @@
+[
+  {
+    "numero_processo": "CETESB-2024-SP-098234",
+    "codigo_unidade": "UNID-HOSP-001",
+    "orgao_emissor": "CETESB",
+    "tipo_licenca": "LO - Licença de Operação",
+    "data_emissao": "2024-04-10T00:00:00Z",
+    "data_vencimento": "2026-04-15T00:00:00Z",
+    "taxa_licenciamento_brl": 18500.0,
+    "status": "EXPIRA_EM_BREVE",
+    "condicionantes_ambientais": [
+      {
+        "item": 1,
+        "descricao": "Apresentar relatório de medição contínua de emissões atmosféricas semestral",
+        "status": "CUMPRIDA",
+        "protocolo_comprovante": "PROT-CETESB-88392"
+      },
+      {
+        "item": 2,
+        "descricao": "Contrato ativo de destinação de resíduos perigosos e perfurocortantes",
+        "status": "EM_ANDAMENTO",
+        "protocolo_comprovante": null
+      },
+      {
+        "item": 3,
+        "descricao": "Compensação ambiental de 1500 mudas nativas da Mata Atlântica",
+        "status": "CUMPRIDA",
+        "protocolo_comprovante": "PROT-CETESB-90112"
+      }
+    ]
+  },
+  {
+    "numero_processo": "DAEE-2023-OUT-00451",
+    "codigo_unidade": "UNID-HOSP-001",
+    "orgao_emissor": "DAEE",
+    "tipo_licenca": "Outorga de Captação Hídrica",
+    "data_emissao": "2023-08-20T00:00:00Z",
+    "data_vencimento": "2028-08-20T00:00:00Z",
+    "taxa_licenciamento_brl": 4200.0,
+    "status": "VIGENTE",
+    "condicionantes_ambientais": [
+      {
+        "item": 1,
+        "descricao": "Instalação de hidrômetro telemetrado",
+        "status": "CUMPRIDA",
+        "protocolo_comprovante": "DAEE-CONF-3321"
+      },
+      {
+        "item": 2,
+        "descricao": "Análises trimestrais físico-químicas da água",
+        "status": "EM_ANDAMENTO",
+        "protocolo_comprovante": null
+      }
+    ]
+  },
+  {
+    "numero_processo": "CETESB-2025-SP-112340",
+    "codigo_unidade": "UNID-HOSP-002",
+    "orgao_emissor": "CETESB",
+    "tipo_licenca": "LO - Licença de Operação",
+    "data_emissao": "2025-01-15T00:00:00Z",
+    "data_vencimento": "2027-01-15T00:00:00Z",
+    "taxa_licenciamento_brl": 9500.0,
+    "status": "VIGENTE",
+    "condicionantes_ambientais": [
+      {
+        "item": 1,
+        "descricao": "Manutenção de silenciador e laudo acústico",
+        "status": "CUMPRIDA",
+        "protocolo_comprovante": "CETESB-ACUST-402"
+      }
+    ]
+  },
+  {
+    "numero_processo": "CETESB-2023-SJC-04421",
+    "codigo_unidade": "UNID-HOSP-003",
+    "orgao_emissor": "CETESB",
+    "tipo_licenca": "LO - Licença de Operação",
+    "data_emissao": "2023-05-10T00:00:00Z",
+    "data_vencimento": "2026-05-10T00:00:00Z",
+    "taxa_licenciamento_brl": 14200.0,
+    "status": "EXPIRA_EM_BREVE",
+    "condicionantes_ambientais": [
+      {
+        "item": 1,
+        "descricao": "Laudo de eficiência de tratamento ETE > 90%",
+        "status": "EM_ANDAMENTO",
+        "protocolo_comprovante": null
+      }
+    ]
+  },
+  {
+    "numero_processo": "IBAMA-2024-BR-00984",
+    "codigo_unidade": "UNID-HOSP-004",
+    "orgao_emissor": "IBAMA",
+    "tipo_licenca": "CTF/APP Atividade Poluidora",
+    "data_emissao": "2024-03-01T00:00:00Z",
+    "data_vencimento": "2027-03-01T00:00:00Z",
+    "taxa_licenciamento_brl": 12000.0,
+    "status": "VIGENTE",
+    "condicionantes_ambientais": [
+      {
+        "item": 1,
+        "descricao": "Envio do RAPP anual",
+        "status": "CUMPRIDA",
+        "protocolo_comprovante": "IBAMA-RAPP-2025"
+      },
+      {
+        "item": 2,
+        "descricao": "Auditoria externa de dioxinas e furanos",
+        "status": "EM_ANDAMENTO",
+        "protocolo_comprovante": null
+      }
+    ]
+  },
+  {
+    "numero_processo": "ANVISA-2024-RAD-0023",
+    "codigo_unidade": "UNID-HOSP-005",
+    "orgao_emissor": "ANVISA / CNEN",
+    "tipo_licenca": "Autorização Radioterapia e Medicina Nuclear",
+    "data_emissao": "2024-02-15T00:00:00Z",
+    "data_vencimento": "2029-02-15T00:00:00Z",
+    "taxa_licenciamento_brl": 25000.0,
+    "status": "VIGENTE",
+    "condicionantes_ambientais": [
+      {
+        "item": 1,
+        "descricao": "Inspeção semestral de blindagem e dosimetria",
+        "status": "EM_ANDAMENTO",
+        "protocolo_comprovante": null
+      }
+    ]
+  },
+  {
+    "numero_processo": "CETESB-2023-STS-07812",
+    "codigo_unidade": "UNID-HOSP-006",
+    "orgao_emissor": "CETESB",
+    "tipo_licenca": "LO - Licença de Operação",
+    "data_emissao": "2023-11-20T00:00:00Z",
+    "data_vencimento": "2025-11-20T00:00:00Z",
+    "taxa_licenciamento_brl": 11000.0,
+    "status": "VENCIDA",
+    "condicionantes_ambientais": [
+      {
+        "item": 1,
+        "descricao": "Renovação com 120 dias de antecedência",
+        "status": "NAO_CUMPRIDA",
+        "protocolo_comprovante": null
+      }
+    ]
+  },
+  {
+    "numero_processo": "CETESB-2024-RP-05634",
+    "codigo_unidade": "UNID-HOSP-007",
+    "orgao_emissor": "CETESB",
+    "tipo_licenca": "LO - Licença de Operação",
+    "data_emissao": "2024-07-10T00:00:00Z",
+    "data_vencimento": "2028-07-10T00:00:00Z",
+    "taxa_licenciamento_brl": 8900.0,
+    "status": "VIGENTE",
+    "condicionantes_ambientais": [
+      {
+        "item": 1,
+        "descricao": "Monitoramento semestral de particulados",
+        "status": "EM_ANDAMENTO",
+        "protocolo_comprovante": null
+      }
+    ]
+  },
+  {
+    "numero_processo": "CETESB-2024-SP-099412",
+    "codigo_unidade": "UNID-HOSP-008",
+    "orgao_emissor": "CETESB",
+    "tipo_licenca": "LO - Licença de Operação",
+    "data_emissao": "2024-09-05T00:00:00Z",
+    "data_vencimento": "2027-09-05T00:00:00Z",
+    "taxa_licenciamento_brl": 16800.0,
+    "status": "VIGENTE",
+    "condicionantes_ambientais": [
+      {
+        "item": 1,
+        "descricao": "Laudos mensais de inativação biológica em autoclave",
+        "status": "CUMPRIDA",
+        "protocolo_comprovante": "CETESB-BIO-2026-12"
+      }
+    ]
+  },
+  {
+    "numero_processo": "CETESB-2024-SOR-03129",
+    "codigo_unidade": "UNID-HOSP-009",
+    "orgao_emissor": "CETESB",
+    "tipo_licenca": "LO - Licença de Operação",
+    "data_emissao": "2024-10-18T00:00:00Z",
+    "data_vencimento": "2028-10-18T00:00:00Z",
+    "taxa_licenciamento_brl": 7600.0,
+    "status": "VIGENTE",
+    "condicionantes_ambientais": [
+      {
+        "item": 1,
+        "descricao": "Programa de reuso de água pluvial",
+        "status": "CUMPRIDA",
+        "protocolo_comprovante": "SOR-AGUA-88"
+      }
+    ]
+  }
+]

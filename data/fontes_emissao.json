@@ -1,0 +1,194 @@
+[
+  {
+    "codigo_fonte": "FONTE-CALD-01",
+    "codigo_unidade": "UNID-HOSP-001",
+    "tipo_fonte": "CALDEIRA_VAPOR",
+    "nome_equipamento": "Caldeira Aquotubular Principal - Ala Norte",
+    "fabricante": "Aalborg Industries",
+    "ano_fabricacao": 2021,
+    "status_operacional": "OPERANDO",
+    "limite_max_co2_kg_hora": 1500.0,
+    "especificacoes_tecnicas": {
+      "combustivel": "Gás Natural Canalizado (GN)",
+      "capacidade_vapor_kg_h": 3000,
+      "pressao_trabalho_bar": 10.5,
+      "temperatura_gases_exaustao_c": 185,
+      "rendimento_termico_pct": 94.2,
+      "filtro_instalado": "Economizador de Calor com Lavador de Gases Ciclônico"
+    },
+    "frequencia_manutencao": "Trimestral"
+  },
+  {
+    "codigo_fonte": "FONTE-CALD-02",
+    "codigo_unidade": "UNID-HOSP-004",
+    "tipo_fonte": "CALDEIRA_VAPOR",
+    "nome_equipamento": "Caldeira Flamotubular de Alta Eficiência - Bloco Cirúrgico",
+    "fabricante": "Combustol Termotecnologia",
+    "ano_fabricacao": 2023,
+    "status_operacional": "OPERANDO",
+    "limite_max_co2_kg_hora": 1200.0,
+    "especificacoes_tecnicas": {
+      "combustivel": "Biometano Renovável",
+      "capacidade_vapor_kg_h": 2200,
+      "pressao_trabalho_bar": 8.0,
+      "temperatura_gases_exaustao_c": 160,
+      "rendimento_termico_pct": 96.5,
+      "filtro_instalado": "Catalisador de Baixo NOx"
+    },
+    "frequencia_manutencao": "Semestral"
+  },
+  {
+    "codigo_fonte": "FONTE-GER-01",
+    "codigo_unidade": "UNID-HOSP-001",
+    "tipo_fonte": "GRUPO_GERADOR_DIESEL",
+    "nome_equipamento": "Grupo Gerador de Emergência UTI / Centros Cirúrgicos",
+    "fabricante": "Cummins Power Systems",
+    "ano_fabricacao": 2022,
+    "status_operacional": "STANDBY_PRONTO",
+    "limite_max_co2_kg_hora": 850.0,
+    "especificacoes_tecnicas": {
+      "combustivel": "Biodiesel B20 S-10",
+      "potencia_eletrica_kva": 750,
+      "tensao_v": 380,
+      "consumo_combustivel_l_h": 140.5,
+      "nivel_ruido_db": 72,
+      "sistema_filtragem": "Filtro de Partículas Diesel (DPF) + Sistema SCR (Arla 32)"
+    },
+    "capacidade_tanque_litros": 2000
+  },
+  {
+    "codigo_fonte": "FONTE-GER-02",
+    "codigo_unidade": "UNID-HOSP-003",
+    "tipo_fonte": "GRUPO_GERADOR_DIESEL",
+    "nome_equipamento": "Gerador Backup Subestação Leste",
+    "fabricante": "Stemac Grupos Geradores",
+    "ano_fabricacao": 2020,
+    "status_operacional": "STANDBY_PRONTO",
+    "limite_max_co2_kg_hora": 900.0,
+    "especificacoes_tecnicas": {
+      "combustivel": "Diesel S-10",
+      "potencia_eletrica_kva": 800,
+      "tensao_v": 440,
+      "consumo_combustivel_l_h": 155.0,
+      "nivel_ruido_db": 75,
+      "sistema_filtragem": "Silencioso Hospitalar com Catalisador de Oxidação (DOC)"
+    },
+    "capacidade_tanque_litros": 2500
+  },
+  {
+    "codigo_fonte": "FONTE-INC-01",
+    "codigo_unidade": "UNID-HOSP-004",
+    "tipo_fonte": "INCINERADOR_RESIDUOS",
+    "nome_equipamento": "Incinerador Pirolítico de Resíduos Sépticos Classe RSS",
+    "fabricante": "EcoThermax Brasil",
+    "ano_fabricacao": 2022,
+    "status_operacional": "OPERANDO",
+    "limite_max_co2_kg_hora": 450.0,
+    "especificacoes_tecnicas": {
+      "tipo_residuo_tratado": "Resíduos de Serviços de Saúde - Grupos A e E",
+      "temperatura_camara_primaria_c": 850,
+      "temperatura_pos_combustao_c": 1200,
+      "capacidade_destruicao_kg_ciclo": 250,
+      "lavador_gases_wet_scrubber": true,
+      "injecao_carvao_ativado": true,
+      "monitoramento_dioxinas_furanos": "Semestral Acreditado"
+    },
+    "certificacao_conama_316": true
+  },
+  {
+    "codigo_fonte": "FONTE-INC-02",
+    "codigo_unidade": "UNID-HOSP-008",
+    "tipo_fonte": "INCINERADOR_RESIDUOS",
+    "nome_equipamento": "Sistema de Termodescontaminação e Autoclave de Alta Pressão",
+    "fabricante": "Sterilwave Medical Systems",
+    "ano_fabricacao": 2023,
+    "status_operacional": "OPERANDO",
+    "limite_max_co2_kg_hora": 200.0,
+    "especificacoes_tecnicas": {
+      "tipo_residuo_tratado": "Resíduos Infectantes e Laboratoriais",
+      "metodo_tratamento": "Micro-ondas + Trituração + Injeção de Vapor",
+      "temperatura_operacao_c": 140,
+      "reducao_volume_pct": 80.0,
+      "emissao_efluentes_zero": true
+    },
+    "certificacao_conama_316": true
+  },
+  {
+    "codigo_fonte": "FONTE-FROT-01",
+    "codigo_unidade": "UNID-HOSP-001",
+    "tipo_fonte": "FROTA_AMBULANCIA_HIBRIDA",
+    "nome_equipamento": "Ambulância UTI Móvel Elétrica Avançada 01",
+    "fabricante": "Mercedes-Benz / Equipamento Rontan",
+    "ano_fabricacao": 2024,
+    "status_operacional": "EM_ROTA",
+    "limite_max_co2_kg_hora": 45.0,
+    "especificacoes_tecnicas": {
+      "placa": "ESG-2026",
+      "tipo_propulsao": "100% Elétrica Plug-in (BEV)",
+      "capacidade_bateria_kwh": 110.0,
+      "autonomia_urbana_km": 260,
+      "tempo_recarga_rapida_min": 35,
+      "painel_solar_teto_w": 400,
+      "consumo_medio_kwh_100km": 32.4
+    },
+    "quilometragem_atual": 14520,
+    "telemetria_gps_ativa": true
+  },
+  {
+    "codigo_fonte": "FONTE-FROT-02",
+    "codigo_unidade": "UNID-HOSP-003",
+    "tipo_fonte": "FROTA_AMBULANCIA_HIBRIDA",
+    "nome_equipamento": "Ambulância de Suporte Básico Híbrida Flex 03",
+    "fabricante": "Renault Master E-Tech",
+    "ano_fabricacao": 2023,
+    "status_operacional": "DISPONIVEL_BASE",
+    "limite_max_co2_kg_hora": 70.0,
+    "especificacoes_tecnicas": {
+      "placa": "BIO-9E26",
+      "tipo_propulsao": "Híbrida Flex (Etanol / Elétrico)",
+      "capacidade_bateria_kwh": 52.0,
+      "autonomia_modo_eletrico_km": 120,
+      "tanque_combustivel_l": 60,
+      "fator_emissao_etanol_co2_g_km": 38.0
+    },
+    "quilometragem_atual": 28900,
+    "telemetria_gps_ativa": true
+  },
+  {
+    "codigo_fonte": "FONTE-CHILL-01",
+    "codigo_unidade": "UNID-HOSP-001",
+    "tipo_fonte": "SISTEMA_CLIMATIZACAO_CHILLER",
+    "nome_equipamento": "Central de Água Gelada (CAG) - Centros Cirúrgicos e UTIs",
+    "fabricante": "Daikin Applied",
+    "ano_fabricacao": 2023,
+    "status_operacional": "OPERANDO",
+    "limite_max_co2_kg_hora": 350.0,
+    "especificacoes_tecnicas": {
+      "fluido_refrigerante": "R-1234ze (GWP < 1)",
+      "capacidade_termica_tr": 600,
+      "coeficiente_performance_cop": 6.8,
+      "compressor": "Mancal Magnético Isento de Óleo",
+      "consumo_energia_kw_tr": 0.52,
+      "sensores_deteccao_vazamento_gas": true
+    },
+    "certificacao_qualidade_ar_ashrae": "ASHRAE 170 / NBR 7256"
+  },
+  {
+    "codigo_fonte": "FONTE-CHILL-02",
+    "codigo_unidade": "UNID-HOSP-002",
+    "tipo_fonte": "SISTEMA_CLIMATIZACAO_CHILLER",
+    "nome_equipamento": "Sistema HVAC com Filtragem HEPA - Isolamentos Respiratórios",
+    "fabricante": "Carrier Transicold",
+    "ano_fabricacao": 2022,
+    "status_operacional": "OPERANDO",
+    "limite_max_co2_kg_hora": 220.0,
+    "especificacoes_tecnicas": {
+      "fluido_refrigerante": "R-513A (Opteon XP10)",
+      "capacidade_termica_tr": 350,
+      "coeficiente_performance_cop": 5.9,
+      "filtros_absolutos_hepa_pct": 99.97,
+      "pressurizacao_negativa_ativa": true
+    },
+    "certificacao_qualidade_ar_ashrae": "NBR 7256 Grau Cirúrgico"
+  }
+]

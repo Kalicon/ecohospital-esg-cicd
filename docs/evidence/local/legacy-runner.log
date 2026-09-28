@@ -1,0 +1,110 @@
+================================================================================
+>>> [MONGODB TEST RUNNER] Inicializando Simulação e Validação NoSQL ESG...
+>>> Data/Hora da Execução: 2026-09-28T13:55:04.592Z
+>>> Conexão simulada com: mongodb://localhost:27017/esg_hospital_db
+================================================================================
+
+>>> [1. CREATE / INSERÇÃO INICIAL]
+- unidades_hospitalares: 10 documentos inseridos.
+- fontes_emissao:        10 documentos inseridos (Esquema Polimórfico).
+- leituras_carbono_iot:  10 documentos de telemetria inseridos.
+- licencas_ambientais:   10 documentos com condicionantes inseridos.
+- logs_auditoria_esg:    10 logs de governança inseridos.
+Status: TODOS OS 50 DOCUMENTOS INSERIDOS COM SUCESSO!
+
+================================================================================
+>>> [2. OPERAÇÕES DE CONSULTA - READ / FIND]
+================================================================================
+
+--- [2.1] db.unidades_hospitalares.find({ certificacoes_esg: "ISO 14001", leitos_ativos: { $gt: 200 } }) ---
+Resultados encontrados: 5
+  * [UNID-HOSP-001] Hospital Central de Clínicas Sustentáveis | Leitos: 420 | Cidade: São Paulo
+  * [UNID-HOSP-003] Complexo Hospitalar do Vale do Paraíba | Leitos: 310 | Cidade: São José dos Campos
+  * [UNID-HOSP-004] Hospital Universitário BioSaúde Campinas | Leitos: 500 | Cidade: Campinas
+  * [UNID-HOSP-006] Hospital Geral de Santos e Litoral Sustentável | Leitos: 260 | Cidade: Santos
+  * [UNID-HOSP-008] Hospital Metropolitano Zona Leste Verde | Leitos: 380 | Cidade: São Paulo
+
+--- [2.2] db.fontes_emissao.find({ limite_max_co2_kg_hora: { $gte: 500 } }) ---
+Resultados encontrados: 4
+  * [FONTE-CALD-01] Caldeira Aquotubular Principal - Ala Norte | Tipo: CALDEIRA_VAPOR | Limite CO2: 1500 kg/h
+  * [FONTE-CALD-02] Caldeira Flamotubular de Alta Eficiência - Bloco Cirúrgico | Tipo: CALDEIRA_VAPOR | Limite CO2: 1200 kg/h
+  * [FONTE-GER-02] Gerador Backup Subestação Leste | Tipo: GRUPO_GERADOR_DIESEL | Limite CO2: 900 kg/h
+  * [FONTE-GER-01] Grupo Gerador de Emergência UTI / Centros Cirúrgicos | Tipo: GRUPO_GERADOR_DIESEL | Limite CO2: 850 kg/h
+
+--- [2.3] db.fontes_emissao.find({ tipo_fonte: "FROTA_AMBULANCIA_HIBRIDA" }) ---
+Resultados encontrados: 2 (Demonstração de atributos polimórficos de bateria e autonomia)
+  * [FONTE-FROT-01] Placa: ESG-2026 | Propulsão: 100% Elétrica Plug-in (BEV) | Autonomia: 260km
+  * [FONTE-FROT-02] Placa: BIO-9E26 | Propulsão: Híbrida Flex (Etanol / Elétrico) | Autonomia: 120km
+
+--- [2.4] db.leituras_carbono_iot.find({ status_conformidade: { $in: ["ALERTA_PREVENTIVO", "VIOLACAO_BLOQUEANTE"] } }) ---
+Leituras críticas encontradas: 2
+  * [LEIT-2026-0002] Fonte: FONTE-CALD-01 | CO2: 1450 kg/h (Limite: 1500) | Status: ALERTA_PREVENTIVO | Árvores: 29
+  * [LEIT-2026-0003] Fonte: FONTE-CALD-01 | CO2: 1620 kg/h (Limite: 1500) | Status: VIOLACAO_BLOQUEANTE | Árvores: 32
+
+--- [2.5] db.leituras_carbono_iot.aggregate([ { $group: { _id: "$codigo_fonte", total_arvores: { $sum: "$compensacao_ambiental.arvores_sugeridas" } } } ]) ---
+Agregação de Emissões e Compensação por Fonte:
+  * Fonte: FONTE-CALD-01   | Média CO2: 1423.33 kg/h | Total Árvores para Plantio: 85
+  * Fonte: FONTE-CALD-02   | Média CO2:  780.00 kg/h | Total Árvores para Plantio: 16
+  * Fonte: FONTE-GER-01    | Média CO2:  620.00 kg/h | Total Árvores para Plantio: 12
+  * Fonte: FONTE-GER-02    | Média CO2:  710.00 kg/h | Total Árvores para Plantio: 14
+  * Fonte: FONTE-INC-01    | Média CO2:  380.00 kg/h | Total Árvores para Plantio: 8
+  * Fonte: FONTE-INC-02    | Média CO2:  150.00 kg/h | Total Árvores para Plantio: 3
+  * Fonte: FONTE-FROT-01   | Média CO2:    8.50 kg/h | Total Árvores para Plantio: 1
+  * Fonte: FONTE-CHILL-01  | Média CO2:  190.00 kg/h | Total Árvores para Plantio: 4
+
+--- [2.6] db.licencas_ambientais.find({ status: { $in: ["EXPIRA_EM_BREVE", "VENCIDA"] } }) ---
+Licenças em situação crítica encontradas: 3
+  * Processo: CETESB-2024-SP-098234 | Órgão: CETESB | Vencimento: 2026-04-15T00:00:00Z | Status: EXPIRA_EM_BREVE
+  * Processo: CETESB-2023-SJC-04421 | Órgão: CETESB | Vencimento: 2026-05-10T00:00:00Z | Status: EXPIRA_EM_BREVE
+  * Processo: CETESB-2023-STS-07812 | Órgão: CETESB | Vencimento: 2025-11-20T00:00:00Z | Status: VENCIDA
+
+--- [2.7] db.logs_auditoria_esg.find({ nivel_severidade: { $in: ["CRITICAL", "AUDIT"] } }) ---
+Logs de Auditoria Críticos: 4
+  * [LOG-ESG-2026-0003] VIOLACAO_LIMITE_CO2 [CRITICAL]: INCIDENTE BLOQUEANTE: Emissão de 1620kg/h ultrapassou o limite de 1500kg/h na fonte FONTE-CALD-01.
+  * [LOG-ESG-2026-0004] SEGURANCA_PARAMETROS [AUDIT]: SEGURANÇA: Tentativa de alteração de parâmetro regulamentar da fonte FONTE-CALD-01 auditada e validada.
+  * [LOG-ESG-2026-0006] ALERTA_VENCIMENTO_LICENCA [CRITICAL]: GRAVE: A Licença Ambiental CETESB-2023-STS-07812 está VENCIDA.
+  * [LOG-ESG-2026-0010] AUDITORIA_INTEGRIDADE_DADOS [AUDIT]: Auditoria externa periódica de rastreabilidade de dados ESG concluída sem inconformidades.
+
+================================================================================
+>>> [3. OPERAÇÕES DE ATUALIZAÇÃO - UPDATE]
+================================================================================
+>>> [3.1] db.unidades_hospitalares.updateOne({ codigo_unidade: "UNID-HOSP-001" }, { $set: { "metas_esg_anuais.meta_reducao_carbono_pct": 22.0 }, $push: { certificacoes_esg: "Certificado Net Zero Carbon Healthcare 2026" } })
+  -> Unidade atualizada com sucesso! Novas certificações: [
+  'ISO 14001',
+  'ONA Nível 3 - Acreditado com Excelência',
+  'LEED Gold',
+  'Hospital Amigo do Clima',
+  'Certificado Net Zero Carbon Healthcare 2026'
+]
+
+>>> [3.2] db.fontes_emissao.updateOne({ codigo_fonte: "FONTE-CALD-01" }, { $set: { status_operacional: "OPERANDO_OTIMIZADO" } })
+  -> Fonte atualizada: Status = OPERANDO_OTIMIZADO
+
+>>> [3.3] db.leituras_carbono_iot.updateMany({ status_conformidade: "CONFORME" }, { $set: { auditoria_qualidade_validada: true } })
+  -> 8 documentos de leitura atualizados com a flag auditoria_qualidade_validada = true.
+
+>>> [3.4] db.licencas_ambientais.updateOne({ numero_processo: "CETESB-2024-SP-098234" }, { $push: { condicionantes_ambientais: { item: 4, status: "CUMPRIDA" } } })
+  -> Nova condicionante adicionada. Total de condicionantes: 4
+
+>>> [3.5] db.logs_auditoria_esg.updateOne({ codigo_log: "LOG-ESG-2026-0003" }, { $set: { status_resolucao: "RESOLVIDO" } })
+  -> Incidente crítico marcado como RESOLVIDO no log de governança.
+
+================================================================================
+>>> [4. OPERAÇÕES DE EXCLUSÃO - DELETE]
+================================================================================
+>>> [4.1] db.unidades_hospitalares.deleteOne({ codigo_unidade: "UNID-TEMP-999" })
+  -> 1 documento temporário removido. Contagem anterior: 11, Atual: 10
+
+>>> [4.2] db.leituras_carbono_iot.deleteMany({ status_conformidade: "TESTE_CORROMPIDO" })
+  -> 2 leituras temporárias removidas em lote. Contagem atual: 10
+
+================================================================================
+>>> [5. ESTATÍSTICAS FINAIS DE VALIDAÇÃO]
+================================================================================
+- unidades_hospitalares: 10 documentos
+- fontes_emissao:        10 documentos
+- leituras_carbono_iot:  10 documentos
+- licencas_ambientais:   10 documentos
+- logs_auditoria_esg:    10 documentos
+================================================================================
+>>> [SUCESSO] Asserções de consultas e CRUD simulados aprovadas para 50 documentos.

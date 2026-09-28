@@ -1,0 +1,21 @@
+{
+  "environment": "staging",
+  "aluno": "Kalicon Amorim da Cruz Souza - RM: 563172",
+  "storage": "JSON",
+  "kpis": {
+    "totalHospitais": 10,
+    "totalLeitos": 2620,
+    "totalFontes": 10,
+    "totalLeiturasIot": 10,
+    "mediaCo2": "710.9",
+    "totalArvores": 143,
+    "alertasIot": 2,
+    "licencasCriticas": 3,
+    "incidentesCriticos": 2,
+    "dbName": "esg_hospital_db",
+    "uptimeSeconds": 12
+  },
+  "version": "981c75e4d3d7aed96803f575c401992f24867c476780e271385a4bcdac120826",
+  "banco": "esg_hospital_db",
+  "status": "ONLINE"
+}

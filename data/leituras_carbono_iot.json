@@ -1,0 +1,292 @@
+[
+  {
+    "codigo_leitura": "LEIT-2026-0001",
+    "codigo_fonte": "FONTE-CALD-01",
+    "codigo_unidade": "UNID-HOSP-001",
+    "timestamp_leitura": "2026-03-01T08:00:00Z",
+    "sensor_iot": {
+      "sensor_id": "IOT-SENS-CO2-09A",
+      "modelo": "Vaisala GMP252 NDIR",
+      "nivel_bateria_pct": 99
+    },
+    "medicoes": {
+      "co2_kg_hora": 1200.0,
+      "nox_ppm": 82.5,
+      "monoxido_co_ppm": 14.2,
+      "material_particulado_ug_m3": 15.8,
+      "temperatura_chamine_c": 182.4
+    },
+    "limite_regulamentar_kg_hora": 1500.0,
+    "status_conformidade": "CONFORME",
+    "compensacao_ambiental": {
+      "arvores_sugeridas": 24,
+      "formula_calculada": "ROUND(1200 / 50)",
+      "custo_estimado_reflorestamento_brl": 480.0
+    },
+    "qualidade_ar": {
+      "indice_iqar": 42,
+      "classificacao": "Boa"
+    }
+  },
+  {
+    "codigo_leitura": "LEIT-2026-0002",
+    "codigo_fonte": "FONTE-CALD-01",
+    "codigo_unidade": "UNID-HOSP-001",
+    "timestamp_leitura": "2026-03-01T12:00:00Z",
+    "sensor_iot": {
+      "sensor_id": "IOT-SENS-CO2-09A",
+      "modelo": "Vaisala GMP252 NDIR",
+      "nivel_bateria_pct": 98
+    },
+    "medicoes": {
+      "co2_kg_hora": 1450.0,
+      "nox_ppm": 95.0,
+      "monoxido_co_ppm": 22.0,
+      "material_particulado_ug_m3": 24.1,
+      "temperatura_chamine_c": 191.0
+    },
+    "limite_regulamentar_kg_hora": 1500.0,
+    "status_conformidade": "ALERTA_PREVENTIVO",
+    "compensacao_ambiental": {
+      "arvores_sugeridas": 29,
+      "formula_calculada": "ROUND(1450 / 50)",
+      "custo_estimado_reflorestamento_brl": 580.0
+    },
+    "qualidade_ar": {
+      "indice_iqar": 68,
+      "classificacao": "Moderada"
+    }
+  },
+  {
+    "codigo_leitura": "LEIT-2026-0003",
+    "codigo_fonte": "FONTE-CALD-01",
+    "codigo_unidade": "UNID-HOSP-001",
+    "timestamp_leitura": "2026-03-01T16:00:00Z",
+    "sensor_iot": {
+      "sensor_id": "IOT-SENS-CO2-09A",
+      "modelo": "Vaisala GMP252 NDIR",
+      "nivel_bateria_pct": 98
+    },
+    "medicoes": {
+      "co2_kg_hora": 1620.0,
+      "nox_ppm": 135.0,
+      "monoxido_co_ppm": 48.0,
+      "material_particulado_ug_m3": 65.0,
+      "temperatura_chamine_c": 215.0
+    },
+    "limite_regulamentar_kg_hora": 1500.0,
+    "status_conformidade": "VIOLACAO_BLOQUEANTE",
+    "compensacao_ambiental": {
+      "arvores_sugeridas": 32,
+      "formula_calculada": "ROUND(1620 / 50)",
+      "custo_estimado_reflorestamento_brl": 640.0
+    },
+    "qualidade_ar": {
+      "indice_iqar": 125,
+      "classificacao": "Ruim - Intervenção Obrigatória"
+    }
+  },
+  {
+    "codigo_leitura": "LEIT-2026-0004",
+    "codigo_fonte": "FONTE-CALD-02",
+    "codigo_unidade": "UNID-HOSP-004",
+    "timestamp_leitura": "2026-03-01T09:00:00Z",
+    "sensor_iot": {
+      "sensor_id": "IOT-SENS-CO2-14B",
+      "modelo": "Siemens ULTRAMAT 23",
+      "nivel_bateria_pct": 100
+    },
+    "medicoes": {
+      "co2_kg_hora": 780.0,
+      "nox_ppm": 35.0,
+      "monoxido_co_ppm": 8.5,
+      "material_particulado_ug_m3": 8.2,
+      "temperatura_chamine_c": 155.0
+    },
+    "limite_regulamentar_kg_hora": 1200.0,
+    "status_conformidade": "CONFORME",
+    "compensacao_ambiental": {
+      "arvores_sugeridas": 16,
+      "formula_calculada": "ROUND(780 / 50)",
+      "custo_estimado_reflorestamento_brl": 320.0
+    },
+    "qualidade_ar": {
+      "indice_iqar": 28,
+      "classificacao": "Excelente"
+    }
+  },
+  {
+    "codigo_leitura": "LEIT-2026-0005",
+    "codigo_fonte": "FONTE-GER-01",
+    "codigo_unidade": "UNID-HOSP-001",
+    "timestamp_leitura": "2026-03-02T10:00:00Z",
+    "sensor_iot": {
+      "sensor_id": "IOT-SENS-GEN-03",
+      "modelo": "Horiba PG-350",
+      "nivel_bateria_pct": 95
+    },
+    "medicoes": {
+      "co2_kg_hora": 620.0,
+      "nox_ppm": 110.0,
+      "monoxido_co_ppm": 18.0,
+      "material_particulado_ug_m3": 22.0,
+      "temperatura_chamine_c": 340.0
+    },
+    "limite_regulamentar_kg_hora": 850.0,
+    "status_conformidade": "CONFORME",
+    "compensacao_ambiental": {
+      "arvores_sugeridas": 12,
+      "formula_calculada": "ROUND(620 / 50)",
+      "custo_estimado_reflorestamento_brl": 240.0
+    },
+    "qualidade_ar": {
+      "indice_iqar": 48,
+      "classificacao": "Boa"
+    }
+  },
+  {
+    "codigo_leitura": "LEIT-2026-0006",
+    "codigo_fonte": "FONTE-GER-02",
+    "codigo_unidade": "UNID-HOSP-003",
+    "timestamp_leitura": "2026-03-02T11:00:00Z",
+    "sensor_iot": {
+      "sensor_id": "IOT-SENS-GEN-08",
+      "modelo": "Horiba PG-350",
+      "nivel_bateria_pct": 94
+    },
+    "medicoes": {
+      "co2_kg_hora": 710.0,
+      "nox_ppm": 140.0,
+      "monoxido_co_ppm": 25.0,
+      "material_particulado_ug_m3": 31.0,
+      "temperatura_chamine_c": 360.0
+    },
+    "limite_regulamentar_kg_hora": 900.0,
+    "status_conformidade": "CONFORME",
+    "compensacao_ambiental": {
+      "arvores_sugeridas": 14,
+      "formula_calculada": "ROUND(710 / 50)",
+      "custo_estimado_reflorestamento_brl": 280.0
+    },
+    "qualidade_ar": {
+      "indice_iqar": 52,
+      "classificacao": "Moderada"
+    }
+  },
+  {
+    "codigo_leitura": "LEIT-2026-0007",
+    "codigo_fonte": "FONTE-INC-01",
+    "codigo_unidade": "UNID-HOSP-004",
+    "timestamp_leitura": "2026-03-02T14:30:00Z",
+    "sensor_iot": {
+      "sensor_id": "IOT-SENS-INC-01",
+      "modelo": "ABB ACF-NT",
+      "nivel_bateria_pct": 99
+    },
+    "medicoes": {
+      "co2_kg_hora": 380.0,
+      "nox_ppm": 62.0,
+      "monoxido_co_ppm": 11.0,
+      "material_particulado_ug_m3": 9.5,
+      "temperatura_chamine_c": 1195.0
+    },
+    "limite_regulamentar_kg_hora": 450.0,
+    "status_conformidade": "CONFORME",
+    "compensacao_ambiental": {
+      "arvores_sugeridas": 8,
+      "formula_calculada": "ROUND(380 / 50)",
+      "custo_estimado_reflorestamento_brl": 160.0
+    },
+    "qualidade_ar": {
+      "indice_iqar": 35,
+      "classificacao": "Boa"
+    }
+  },
+  {
+    "codigo_leitura": "LEIT-2026-0008",
+    "codigo_fonte": "FONTE-INC-02",
+    "codigo_unidade": "UNID-HOSP-008",
+    "timestamp_leitura": "2026-03-02T16:00:00Z",
+    "sensor_iot": {
+      "sensor_id": "IOT-SENS-INC-04",
+      "modelo": "ABB ACF-NT",
+      "nivel_bateria_pct": 97
+    },
+    "medicoes": {
+      "co2_kg_hora": 150.0,
+      "nox_ppm": 22.0,
+      "monoxido_co_ppm": 4.0,
+      "material_particulado_ug_m3": 3.5,
+      "temperatura_chamine_c": 140.0
+    },
+    "limite_regulamentar_kg_hora": 200.0,
+    "status_conformidade": "CONFORME",
+    "compensacao_ambiental": {
+      "arvores_sugeridas": 3,
+      "formula_calculada": "ROUND(150 / 50)",
+      "custo_estimado_reflorestamento_brl": 60.0
+    },
+    "qualidade_ar": {
+      "indice_iqar": 20,
+      "classificacao": "Excelente"
+    }
+  },
+  {
+    "codigo_leitura": "LEIT-2026-0009",
+    "codigo_fonte": "FONTE-FROT-01",
+    "codigo_unidade": "UNID-HOSP-001",
+    "timestamp_leitura": "2026-03-03T08:15:00Z",
+    "sensor_iot": {
+      "sensor_id": "IOT-GPS-AMB-01",
+      "modelo": "Geotab GO9",
+      "nivel_bateria_pct": 100
+    },
+    "medicoes": {
+      "co2_kg_hora": 8.5,
+      "nox_ppm": 0.0,
+      "monoxido_co_ppm": 0.0,
+      "material_particulado_ug_m3": 0.0,
+      "temperatura_chamine_c": 24.0
+    },
+    "limite_regulamentar_kg_hora": 45.0,
+    "status_conformidade": "CONFORME",
+    "compensacao_ambiental": {
+      "arvores_sugeridas": 1,
+      "formula_calculada": "ROUND(8.5 / 50)",
+      "custo_estimado_reflorestamento_brl": 20.0
+    },
+    "qualidade_ar": {
+      "indice_iqar": 10,
+      "classificacao": "Excelente"
+    }
+  },
+  {
+    "codigo_leitura": "LEIT-2026-0010",
+    "codigo_fonte": "FONTE-CHILL-01",
+    "codigo_unidade": "UNID-HOSP-001",
+    "timestamp_leitura": "2026-03-03T10:00:00Z",
+    "sensor_iot": {
+      "sensor_id": "IOT-SENS-CAG-01",
+      "modelo": "Schneider EcoStruxure",
+      "nivel_bateria_pct": 100
+    },
+    "medicoes": {
+      "co2_kg_hora": 190.0,
+      "nox_ppm": 0.0,
+      "monoxido_co_ppm": 0.0,
+      "material_particulado_ug_m3": 1.2,
+      "temperatura_chamine_c": 12.0
+    },
+    "limite_regulamentar_kg_hora": 350.0,
+    "status_conformidade": "CONFORME",
+    "compensacao_ambiental": {
+      "arvores_sugeridas": 4,
+      "formula_calculada": "ROUND(190 / 50)",
+      "custo_estimado_reflorestamento_brl": 80.0
+    },
+    "qualidade_ar": {
+      "indice_iqar": 15,
+      "classificacao": "Excelente"
+    }
+  }
+]

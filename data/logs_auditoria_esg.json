@@ -1,0 +1,121 @@
+[
+  {
+    "codigo_log": "LOG-ESG-2026-0001",
+    "data_hora": "2026-03-01T08:00:01Z",
+    "categoria_evento": "COMPENSACAO_CARBONO_AUTOMATICA",
+    "nivel_severidade": "INFO",
+    "descricao_evento": "Cálculo de compensação ambiental realizado com sucesso para leitura LEIT-2026-0001.",
+    "detalhes_tecnicos": {
+      "codigo_fonte": "FONTE-CALD-01",
+      "co2_emitido_kg_h": 1200.0,
+      "arvores_calculadas": 24,
+      "custo_compensacao_brl": 480.0
+    }
+  },
+  {
+    "codigo_log": "LOG-ESG-2026-0002",
+    "data_hora": "2026-03-01T12:00:05Z",
+    "categoria_evento": "ALERTA_PREVENTIVO_CO2",
+    "nivel_severidade": "WARNING",
+    "descricao_evento": "ALERTA: Emissão da Caldeira FONTE-CALD-01 atingiu 96.6% do limite máximo regulamentar.",
+    "detalhes_tecnicos": {
+      "codigo_fonte": "FONTE-CALD-01",
+      "valor_medido": 1450.0,
+      "limite_maximo": 1500.0
+    }
+  },
+  {
+    "codigo_log": "LOG-ESG-2026-0003",
+    "data_hora": "2026-03-01T16:00:10Z",
+    "categoria_evento": "VIOLACAO_LIMITE_CO2",
+    "nivel_severidade": "CRITICAL",
+    "descricao_evento": "INCIDENTE BLOQUEANTE: Emissão de 1620kg/h ultrapassou o limite de 1500kg/h na fonte FONTE-CALD-01.",
+    "detalhes_tecnicos": {
+      "codigo_fonte": "FONTE-CALD-01",
+      "valor_medido": 1620.0,
+      "limite_autorizado": 1500.0
+    }
+  },
+  {
+    "codigo_log": "LOG-ESG-2026-0004",
+    "data_hora": "2026-03-01T17:30:00Z",
+    "categoria_evento": "SEGURANCA_PARAMETROS",
+    "nivel_severidade": "AUDIT",
+    "descricao_evento": "SEGURANÇA: Tentativa de alteração de parâmetro regulamentar da fonte FONTE-CALD-01 auditada e validada.",
+    "detalhes_tecnicos": {
+      "codigo_fonte": "FONTE-CALD-01",
+      "campo_alterado": "limite_max_co2_kg_hora",
+      "valor_anterior": 1500.0,
+      "valor_novo": 1500.0
+    }
+  },
+  {
+    "codigo_log": "LOG-ESG-2026-0005",
+    "data_hora": "2026-03-02T07:00:00Z",
+    "categoria_evento": "ALERTA_VENCIMENTO_LICENCA",
+    "nivel_severidade": "WARNING",
+    "descricao_evento": "AVISO: A Licença Ambiental CETESB-2024-SP-098234 expira em menos de 60 dias.",
+    "detalhes_tecnicos": {
+      "numero_processo": "CETESB-2024-SP-098234",
+      "orgao_emissor": "CETESB",
+      "dias_restantes": 45
+    }
+  },
+  {
+    "codigo_log": "LOG-ESG-2026-0006",
+    "data_hora": "2026-03-02T07:00:01Z",
+    "categoria_evento": "ALERTA_VENCIMENTO_LICENCA",
+    "nivel_severidade": "CRITICAL",
+    "descricao_evento": "GRAVE: A Licença Ambiental CETESB-2023-STS-07812 está VENCIDA.",
+    "detalhes_tecnicos": {
+      "numero_processo": "CETESB-2023-STS-07812",
+      "codigo_unidade": "UNID-HOSP-006",
+      "status_atual": "VENCIDA"
+    }
+  },
+  {
+    "codigo_log": "LOG-ESG-2026-0007",
+    "data_hora": "2026-03-02T09:30:00Z",
+    "categoria_evento": "AUDITORIA_CONDICIONANTE",
+    "nivel_severidade": "INFO",
+    "descricao_evento": "Condicionante ambiental 1 da licença CETESB-2024-SP-098234 marcada como CUMPRIDA.",
+    "detalhes_tecnicos": {
+      "numero_processo": "CETESB-2024-SP-098234",
+      "item_condicionante": 1
+    }
+  },
+  {
+    "codigo_log": "LOG-ESG-2026-0008",
+    "data_hora": "2026-03-02T14:40:00Z",
+    "categoria_evento": "TELEMETRIA_INCINERACAO",
+    "nivel_severidade": "INFO",
+    "descricao_evento": "Ciclo de incineração térmica concluído dentro dos padrões CONAMA 316.",
+    "detalhes_tecnicos": {
+      "codigo_fonte": "FONTE-INC-01",
+      "temperatura_maxima_c": 1210.0
+    }
+  },
+  {
+    "codigo_log": "LOG-ESG-2026-0009",
+    "data_hora": "2026-03-03T08:20:00Z",
+    "categoria_evento": "MOBILIDADE_VERDE_TELEMETRIA",
+    "nivel_severidade": "INFO",
+    "descricao_evento": "Ambulância Elétrica FONTE-FROT-01 finalizou rota de urgência com 0kg de emissão direta de CO2.",
+    "detalhes_tecnicos": {
+      "codigo_fonte": "FONTE-FROT-01",
+      "placa": "ESG-2026",
+      "distancia_percorrida_km": 42.5
+    }
+  },
+  {
+    "codigo_log": "LOG-ESG-2026-0010",
+    "data_hora": "2026-03-03T11:00:00Z",
+    "categoria_evento": "AUDITORIA_INTEGRIDADE_DADOS",
+    "nivel_severidade": "AUDIT",
+    "descricao_evento": "Auditoria externa periódica de rastreabilidade de dados ESG concluída sem inconformidades.",
+    "detalhes_tecnicos": {
+      "periodo_auditado": "2025-Q4 / 2026-Q1",
+      "registros_checados": 125400
+    }
+  }
+]

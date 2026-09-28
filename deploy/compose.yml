@@ -1,0 +1,29 @@
+# Servidor remoto: imagem publicada e aprovada; não compila código durante o deploy.
+services:
+  app:
+    image: ${IMAGE:?Defina a imagem GHCR pelo digest}
+    environment:
+      APP_ENV: ${APP_ENV:?Defina staging ou production}
+      STORAGE_FILE: /app/data/state.json
+      PORT: "8080"
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${APP_PORT:?Defina a porta}:8080"
+    volumes:
+      - esg-data:/app/data
+    networks:
+      - esg-network
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:uid=10001,gid=10001,mode=1770
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 512m
+    stop_grace_period: 30s
+volumes:
+  esg-data:
+networks:
+  esg-network:
+    driver: bridge

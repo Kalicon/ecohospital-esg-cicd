@@ -1,0 +1,11 @@
+**
+!pom.xml
+!src/
+!src/main/
+!src/main/**
+!src/test/
+!src/test/**
+!public/
+!public/**
+!data/
+!data/esg_dataset.json
