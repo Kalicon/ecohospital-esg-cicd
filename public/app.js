@@ -4,6 +4,21 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    let operatorKey = '';
+    const keyInput = document.getElementById('operatorKeyInput');
+    const keyButton = document.getElementById('btnOperatorKey');
+    keyButton?.addEventListener('click', () => {
+        operatorKey = keyInput.value.trim();
+        keyInput.value = '';
+        mostrarToast(operatorKey ? 'Token ativado somente nesta aba.' : 'Informe o token do operador.', !operatorKey);
+    });
+    function writeHeaders(extra = {}) {
+        if (!operatorKey) {
+            keyInput.focus();
+            throw new Error('Ative o token do operador para alterar dados.');
+        }
+        return { ...extra, 'X-Operator-Key': operatorKey };
+    }
     // Estado da aplicação
     const state = {
         kpis: {},
@@ -44,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const response = await fetch(path, options);
         const data = await response.json();
         if (!response.ok) {
+            if (response.status === 401) operatorKey = '';
             throw new Error(data.message || data.error || `Falha HTTP ${response.status}`);
         }
         return data;
@@ -65,13 +81,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // =========================================================================
     async function carregarTodosDados() {
         try {
-            const [resHosp, resFontes, resTelem, resLic, resAud, resKpi] = await Promise.all([
+            const [resHosp, resFontes, resTelem, resLic, resAud, resKpi, resInsights] = await Promise.all([
                 apiJson('/api/collections/unidades_hospitalares'),
                 apiJson('/api/collections/fontes_emissao'),
                 apiJson('/api/collections/leituras_carbono_iot'),
                 apiJson('/api/collections/licencas_ambientais'),
                 apiJson('/api/collections/logs_auditoria_esg'),
-                apiJson('/api/kpis')
+                apiJson('/api/kpis'),
+                apiJson('/api/insights')
             ]);
 
             state.hospitais = resHosp.data || [];
@@ -80,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
             state.licencas = resLic.data || [];
             state.auditoria = resAud.data || [];
             state.kpis = resKpi || {};
+            renderizarInsights(resInsights);
 
             atualizarContadoresSideBar();
             atualizarKPIs();
@@ -93,6 +111,22 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.error('Erro ao carregar dados:', err);
             mostrarToast('Erro ao conectar com a API EcoHospital', true);
+        }
+    }
+
+    function renderizarInsights(insights) {
+        document.getElementById('insightSummary').textContent =
+            `${insights.taxaConformidadePct}% de leituras conformes (${insights.conformes}/${insights.totalLeituras}); ` +
+            `${insights.alertasPreventivos} alerta(s), ${insights.violacoes} violação(ões) e ${insights.licencasCriticas} licença(s) crítica(s).`;
+        document.getElementById('insightMethodology').textContent = insights.metodologia;
+        const container = document.getElementById('insightSources');
+        container.replaceChildren();
+        for (const source of insights.fontesPrioritarias) {
+            const row = document.createElement('div');
+            row.className = 'agg-item';
+            row.textContent = `${source.codigoFonte}: média ${source.mediaCo2KgHora} kg/h, ` +
+                `${source.usoDoLimitePct ?? 'n/a'}% do limite, ${source.alertas} alertas (${source.leituras} leituras)`;
+            container.appendChild(row);
         }
     }
 
@@ -475,7 +509,9 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const data = await apiJson('/api/query/preset', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: queryId.startsWith('update_')
+                        ? writeHeaders({ 'Content-Type': 'application/json' })
+                        : { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ queryId })
                 });
 
@@ -514,7 +550,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mostrarToast('Simulando envio de pacote de dados IoT...');
             const data = await apiJson('/api/telemetria/simular', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: writeHeaders({ 'Content-Type': 'application/json' }),
                 body: JSON.stringify({})
             });
 
@@ -523,7 +559,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 carregarTodosDados();
             }
         } catch (err) {
-            mostrarToast('Erro ao simular telemetria IoT', true);
+            mostrarToast(err.message, true);
         }
     }
 
@@ -557,11 +593,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnResetDB) {
         btnResetDB.addEventListener('click', async () => {
             try {
-                const data = await apiJson('/api/reset', { method: 'POST' });
+                if (!window.confirm('Restaurar o dataset original? As alterações deste ambiente serão apagadas.')) return;
+                const data = await apiJson('/api/reset', { method: 'POST', headers: writeHeaders() });
                 mostrarToast(data.mensagem || 'Banco resetado com sucesso!');
                 carregarTodosDados();
             } catch (err) {
-                mostrarToast('Erro ao resetar banco', true);
+                mostrarToast(err.message, true);
             }
         });
     }

@@ -15,4 +15,11 @@ management:
 app:
   environment: ${APP_ENV:local}
   version: ${APP_VERSION:development}
+  storage: ${APP_STORAGE:json}
   storage-file: ${STORAGE_FILE:}
+  write-token: ${APP_WRITE_TOKEN:}
+  write-token-file: ${APP_WRITE_TOKEN_FILE:}
+  postgres:
+    url: ${POSTGRES_JDBC_URL:}
+    user: ${POSTGRES_USER:}
+    password-file: ${POSTGRES_PASSWORD_FILE:}

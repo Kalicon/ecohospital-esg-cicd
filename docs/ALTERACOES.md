@@ -35,3 +35,15 @@ Execução posterior autorizada: repositório público criado, CI/GHCR e demonst
 Retomada concluída: `scripts/lab-runner.ps1` prepara e registra runners Windows efêmeros com checksum oficial; `scripts/verify-docker-environments.ps1` confere ambos os containers, mesmo digest, UID, health, redes/volumes, isolamento e persistência. Workflow local passou a usar pull público por digest, sem login nem DOCKER_CONFIG temporário. Run 36438015592 concluiu staging e production após aprovação obrigatória; evidências reais de ambos foram adicionadas ao PDF de 18 páginas. A descrição acima registra a etapa anterior, não o estado final.
 
 A linguagem original divergia do enunciado. Após a autorização para adotar a solução mais adequada, o backend foi portado para Spring Boot. Não foi criado banco MongoDB sem integração: o sistema recebido já simulava suas operações sobre JSON. O volume agora conserva o estado por ambiente. A atividade anterior de NoSQL continua disponível como material separado.
+
+## Evolução adicional (branch de melhoria)
+
+- `EsgStateStore.java` e `PostgresEsgStore.java`: interface de armazenamento e opção PostgreSQL JSONB transacional, com importação única do snapshot JSON.
+- `WriteAccess.java`, `SecurityHeaders.java`, `EsgController.java`: token para mutações e cabeçalhos de segurança; leituras preservadas.
+- `EsgService.java`, `public/index.html`, `public/app.js`, `public/styles.css`: indicadores ESG com metodologia explícita e controle do operador na interface.
+- `docker-compose.postgres.yml`, `deploy/compose.yml`, `docker-compose.yml`, `.env.example`, `scripts/init-local-secrets.ps1`: banco opcional, volumes e segredos em arquivo.
+- Workflows e scripts de deploy: smoke test PostgreSQL e propagação de token por Environment; `scripts/provision-lab-operator-secrets.ps1` gera tokens distintos fora do repositório.
+- `EsgApiTest.java`, `WriteAccessTest.java`: 30 testes JUnit no total; `docs/evidence/v2` contém XML e prova de persistência/negação HTTP.
+- `scripts/package-delivery.ps1`, `verify-delivery.py`: novo Compose no ZIP e exclusão explícita de snapshots importados.
+
+Os backups de staging e produção foram salvos em `.tools/backups/2026-09-28`, fora do Git/ZIP. O terceiro Compose de teste em `localhost:8083` não substitui os ambientes originais.

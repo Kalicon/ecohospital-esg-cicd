@@ -30,6 +30,8 @@
             </div>
             <div class="db-status-badge" id="environmentLabel">Consultando ambiente…</div>
             <div class="header-actions">
+                <input id="operatorKeyInput" type="password" autocomplete="off" placeholder="Token do operador" aria-label="Token do operador" class="operator-key-input">
+                <button id="btnOperatorKey" class="btn btn-outline" title="Habilita escritas somente nesta aba">🔒 Ativar</button>
                 <button id="btnSimularIoT" class="btn btn-emerald" title="Gera uma leitura de telemetria IoT aleatória">
                     ⚡ Simular IoT
                 </button>
@@ -199,6 +201,12 @@
                     <div class="governance-grid" id="governanceHighlights">
                         <!-- Injetado via JS -->
                     </div>
+                </div>
+                <div class="glass-card mt-4">
+                    <div class="card-title"><span>📈 Indicadores ESG observados</span></div>
+                    <p id="insightSummary">Calculando indicadores...</p>
+                    <div id="insightSources" class="agg-list"></div>
+                    <small id="insightMethodology"></small>
                 </div>
             </div>
 

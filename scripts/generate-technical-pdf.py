@@ -102,6 +102,24 @@ smoke = ROOT / "docs/evidence/local/http-smoke.log"
 if smoke.exists():
     story.append(p(smoke.read_text(encoding="utf-8-sig").strip()))
 story.append(p("Os resultados acima são da primeira demonstração Java local. As próximas capturas mostram o GitHub Actions e os containers Docker reais no PC.", "Evidence"))
+v2_dir = ROOT / "docs/evidence/v2"
+v2_reports = sorted(v2_dir.glob("TEST-*.xml"))
+if v2_reports:
+    story.extend([PageBreak(), p("Anexo — evolução local verificada", "SectionTitle")])
+    v2_rows = [["Suíte", "Testes", "Falhas", "Erros", "Ignorados"]]
+    for report in v2_reports:
+        suite = ElementTree.parse(report).getroot()
+        v2_rows.append([suite.get("name").split(".")[-1], suite.get("tests"), suite.get("failures"), suite.get("errors"), suite.get("skipped")])
+    v2_table = Table(v2_rows, colWidths=[175,65,65,65,85])
+    v2_table.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,0),colors.HexColor("#075847")),
+        ("TEXTCOLOR",(0,0),(-1,0),colors.white), ("GRID",(0,0),(-1,-1),.4,colors.HexColor("#c5ddd4")),
+        ("TOPPADDING",(0,0),(-1,-1),9), ("BOTTOMPADDING",(0,0),(-1,-1),9)]))
+    story.extend([v2_table, Spacer(1, 16)])
+pg_evidence = v2_dir / "postgres-demo.json"
+if pg_evidence.exists():
+    data = json.loads(pg_evidence.read_text(encoding="utf-8-sig"))
+    story.append(p("PostgreSQL isolado no PC: " + json.dumps(data, ensure_ascii=False), "SmallESG"))
+    story.append(p("Esta prova é do ambiente postgres-demo, não da migração de staging/produção.", "Evidence"))
 github_dir = ROOT / "docs/evidence/github"
 for name, caption in [("03-updated-ci-success.png", "Run inicial: verify e image aprovados; naquele momento os deploys ainda estavam desabilitados."),
                       ("02-test-gate-failure.png", "PR descartável: verify falhou; image e deploys bloqueados. PR fechado sem merge.")]:

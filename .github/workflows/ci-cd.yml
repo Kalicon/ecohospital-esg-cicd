@@ -70,7 +70,7 @@ jobs:
         run: |
           set -euo pipefail
           trap 'docker rm -f esg-smoke >/dev/null 2>&1 || true; docker volume rm esg-smoke-data >/dev/null 2>&1 || true' EXIT
-          docker run -d --name esg-smoke -p 127.0.0.1:18080:8080 -e APP_ENV=ci -v esg-smoke-data:/app/data "$IMAGE"
+          docker run -d --name esg-smoke -p 127.0.0.1:18080:8080 -e APP_ENV=ci -e APP_WRITE_TOKEN=ci-only-0123456789abcdef0123456789abcdef -v esg-smoke-data:/app/data "$IMAGE"
           for attempt in $(seq 1 60); do
             state=$(docker inspect --format '{{.State.Health.Status}}' esg-smoke)
             [[ "$state" == healthy ]] && break
@@ -87,7 +87,8 @@ jobs:
               data = json.load(f)
           assert data == {'status': 'UP', 'environment': 'ci', 'version': os.environ['GITHUB_SHA']}, data
           PY
-          curl --fail --silent -X POST http://localhost:18080/api/telemetria/simular >/dev/null
+          [[ "$(curl --silent --output /dev/null --write-out '%{http_code}' -X POST http://localhost:18080/api/telemetria/simular)" == 401 ]]
+          curl --fail --silent -H 'X-Operator-Key: ci-only-0123456789abcdef0123456789abcdef' -X POST http://localhost:18080/api/telemetria/simular >/dev/null
           docker restart esg-smoke
           sleep 5
           for attempt in $(seq 1 30); do
@@ -99,6 +100,47 @@ jobs:
           with open('evidence/container-kpis.json') as f:
               data = json.load(f)
           assert data['totalLeiturasIot'] == 11, data
+          PY
+      - name: Testar PostgreSQL JSONB, autorização e persistência
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .tools/secrets deploy/import
+          printf '%s' 'ci-postgres-password-0123456789abcdef' > .tools/secrets/postgres_password.txt
+          printf '%s' 'ci-operator-token-0123456789abcdef' > .tools/secrets/operator_token.txt
+          python3 - <<'PY'
+          import json
+          source = json.load(open('data/esg_dataset.json'))['collections']
+          copy = dict(source['leituras_carbono_iot'][0])
+          copy['codigo_leitura'] = 'CI-IMPORTED-READING'
+          source['leituras_carbono_iot'].insert(0, copy)
+          with open('deploy/import/state.json', 'w') as file:
+              json.dump(source, file)
+          PY
+          export COMPOSE_PROJECT_NAME=ecohospital-pg-ci APP_PORT=18083 APP_ENV=ci-postgres
+          export POSTGRES_PASSWORD_FILE="$PWD/.tools/secrets/postgres_password.txt"
+          export OPERATOR_TOKEN_FILE="$PWD/.tools/secrets/operator_token.txt"
+          export ESG_IMPORT_DIR="$PWD/deploy/import"
+          trap 'docker compose -f docker-compose.postgres.yml down >/dev/null 2>&1 || true' EXIT
+          docker compose -f docker-compose.postgres.yml up -d --no-build --wait --wait-timeout 180
+          curl --fail --silent http://localhost:18083/api/status > evidence/postgres-status.json
+          python3 - <<'PY'
+          import json
+          data = json.load(open('evidence/postgres-status.json'))
+          assert data['storage'] == 'PostgreSQL JSONB', data
+          assert data['kpis']['totalLeiturasIot'] == 11, data
+          PY
+          [[ "$(curl --silent --output /dev/null --write-out '%{http_code}' -X POST http://localhost:18083/api/telemetria/simular)" == 401 ]]
+          curl --fail --silent -H 'X-Operator-Key: ci-operator-token-0123456789abcdef' -X POST http://localhost:18083/api/telemetria/simular >/dev/null
+          docker compose -f docker-compose.postgres.yml restart app
+          for attempt in $(seq 1 30); do
+            curl --fail --silent http://localhost:18083/api/kpis > evidence/postgres-kpis.json && break
+            sleep 2
+          done
+          python3 - <<'PY'
+          import json
+          data = json.load(open('evidence/postgres-kpis.json'))
+          assert data['totalLeiturasIot'] == 12, data
           PY
       - name: Autenticar no GHCR
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'

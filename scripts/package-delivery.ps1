@@ -6,20 +6,21 @@ $deliveryDir = Join-Path $projectRoot 'delivery'
 New-Item -ItemType Directory -Force -Path $deliveryDir | Out-Null
 $zipPath = Join-Path $deliveryDir $OutputName
 if (Test-Path -LiteralPath $zipPath) { throw 'O ZIP já existe. Renomeie/mova a versão anterior antes de gerar outra.' }
-$requiredFiles = @('pom.xml','Dockerfile','.dockerignore','docker-compose.yml','.env.example',
+$requiredFiles = @('pom.xml','Dockerfile','.dockerignore','docker-compose.yml','docker-compose.postgres.yml','.env.example',
     'README.md','mvnw','mvnw.cmd','.gitignore','.gitattributes','docs/EcoHospital_CICD.pdf')
 foreach ($relative in $requiredFiles) {
     if (-not (Test-Path -LiteralPath (Join-Path $projectRoot $relative))) { throw "Arquivo obrigatório ausente: $relative" }
 }
 $fileEntries = [System.Collections.Generic.List[System.IO.FileInfo]]::new()
-foreach ($relative in @('pom.xml','Dockerfile','.dockerignore','docker-compose.yml','.env.example','README.md','mvnw','mvnw.cmd','.gitignore','.gitattributes')) {
+foreach ($relative in @('pom.xml','Dockerfile','.dockerignore','docker-compose.yml','docker-compose.postgres.yml','.env.example','README.md','mvnw','mvnw.cmd','.gitignore','.gitattributes')) {
     $fileEntries.Add((Get-Item -LiteralPath (Join-Path $projectRoot $relative)))
 }
 foreach ($folder in @('.github','.mvn','src','public','data','deploy','scripts','docs')) {
     foreach ($entry in Get-ChildItem -LiteralPath (Join-Path $projectRoot $folder) -Recurse -File -Force) {
         $name = $entry.Name
         if ($name -eq '.env' -or ($name -match '\.env$') -or ($name -like '.env.*' -and $name -ne '.env.example') `
-            -or $name -match '\.(pem|key|pfx|p12)$' -or $entry.FullName -match '[\\/]__pycache__[\\/]') { continue }
+            -or $name -match '\.(pem|key|pfx|p12)$' -or $entry.FullName -match '[\\/]__pycache__[\\/]' `
+            -or $entry.FullName -match '[\\/]deploy[\\/]import[\\/].*\.json$') { continue }
         $fileEntries.Add($entry)
     }
 }

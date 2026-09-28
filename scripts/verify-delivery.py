@@ -16,7 +16,8 @@ with zipfile.ZipFile(archive) as delivery:
         assert not set(path.parts).intersection({'.git', 'target', '.runtime', '.tools', '__pycache__'}), name
         assert path.name != '.env' and not path.name.endswith('.env'), name
         assert path.suffix not in {'.pem', '.key', '.pfx', '.p12'}, name
-    required = ['pom.xml', 'Dockerfile', '.dockerignore', 'docker-compose.yml', '.env.example',
+        assert not (name.startswith('deploy/import/') and name.endswith('.json')), name
+    required = ['pom.xml', 'Dockerfile', '.dockerignore', 'docker-compose.yml', 'docker-compose.postgres.yml', '.env.example',
                 '.github/workflows/ci-cd.yml', '.github/workflows/deploy.yml', 'README.md',
                 'docs/EcoHospital_CICD.pdf', '.mvn/wrapper/maven-wrapper.properties',
                 'src/server.js', 'src/test_mongodb_runner.js', 'scripts/esg_mongodb_solution.js']

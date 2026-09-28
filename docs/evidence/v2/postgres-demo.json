@@ -1,0 +1,11 @@
+{
+  "checkedAtUtc": "2026-09-28T15:19:55.6166403Z",
+  "environment": "postgres-demo",
+  "storage": "PostgreSQL JSONB",
+  "health": "UP",
+  "readingsBeforeRestart": 12,
+  "unauthorizedResetHttp": 401,
+  "readingsAfterRestart": 12,
+  "databaseContainer": "ecohospital-postgres-demo-db-1",
+  "appContainer": "ecohospital-postgres-demo-app-1"
+}

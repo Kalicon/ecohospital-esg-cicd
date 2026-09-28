@@ -13,11 +13,13 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest(properties = {"app.environment=test", "app.version=test-sha", "app.storage-file="})
+@SpringBootTest(properties = {"app.environment=test", "app.version=test-sha", "app.storage-file=",
+        "app.write-token=0123456789abcdef0123456789abcdef"})
 @AutoConfigureMockMvc
 class EsgApiTest {
     @Autowired MockMvc mvc;
     @Autowired EsgStore store;
+    private static final String KEY = "0123456789abcdef0123456789abcdef";
     @BeforeEach void reset() { store.reset(); }
 
     @Test void servesOriginalFrontend() throws Exception {
@@ -25,6 +27,9 @@ class EsgApiTest {
         mvc.perform(get("/index.html")).andExpect(status().isOk()).andExpect(content().string(containsString("EcoHospital Smart")));
         mvc.perform(get("/app.js")).andExpect(status().isOk()).andExpect(content().string(containsString("carregarTodosDados")));
         mvc.perform(get("/styles.css")).andExpect(status().isOk());
+        mvc.perform(get("/")).andExpect(header().string("X-Frame-Options", "DENY"))
+                .andExpect(header().string("X-Content-Type-Options", "nosniff"));
+        mvc.perform(get("/api/kpis")).andExpect(header().string("Cache-Control", "no-store"));
     }
     @Test void healthIdentifiesEnvironmentAndArtifact() throws Exception {
         mvc.perform(get("/health")).andExpect(status().isOk()).andExpect(jsonPath("$.status").value("UP"))
@@ -36,6 +41,21 @@ class EsgApiTest {
                 .andExpect(jsonPath("$.kpis.totalHospitais").value(10)).andExpect(jsonPath("$.kpis.totalLeitos").value(2620))
                 .andExpect(jsonPath("$.kpis.mediaCo2").value("710.9")).andExpect(jsonPath("$.kpis.totalArvores").value(143))
                 .andExpect(jsonPath("$.kpis.alertasIot").value(2)).andExpect(jsonPath("$.kpis.licencasCriticas").value(3));
+    }
+    @Test void insightsUseObservedDataAndExplainFormula() throws Exception {
+        mvc.perform(get("/api/insights")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalLeituras").value(10))
+                .andExpect(jsonPath("$.conformes").value(8))
+                .andExpect(jsonPath("$.taxaConformidadePct").value(80.0))
+                .andExpect(jsonPath("$.fontesPrioritarias.length()").value(5))
+                .andExpect(jsonPath("$.metodologia").value(containsString("não certificação")));
+    }
+    @Test void mutationsRequireOperatorKeyWithoutChangingState() throws Exception {
+        mvc.perform(post("/api/telemetria/simular")).andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/reset").header("X-Operator-Key", "wrong")).andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/query/preset").contentType("application/json")
+                .content("{\"queryId\":\"update_meta_hosp\"}")).andExpect(status().isUnauthorized());
+        mvc.perform(get("/api/kpis")).andExpect(jsonPath("$.totalLeiturasIot").value(10));
     }
     @ParameterizedTest
     @CsvSource({"unidades_hospitalares", "fontes_emissao", "leituras_carbono_iot", "licencas_ambientais", "logs_auditoria_esg"})
@@ -59,18 +79,18 @@ class EsgApiTest {
     }
     @Test void updatesAreVisibleAndCertificationIsIdempotent() throws Exception {
         for (int i = 0; i < 2; i++) mvc.perform(post("/api/query/preset").contentType("application/json")
-                .content("{\"queryId\":\"update_meta_hosp\"}")).andExpect(status().isOk());
+                .header("X-Operator-Key", KEY).content("{\"queryId\":\"update_meta_hosp\"}")).andExpect(status().isOk());
         mvc.perform(get("/api/collections/unidades_hospitalares"))
                 .andExpect(jsonPath("$.data[0].metas_esg_anuais.meta_reducao_carbono_pct").value(22.0))
                 .andExpect(jsonPath("$.data[0].certificacoes_esg.length()").value(5));
-        mvc.perform(post("/api/query/preset").contentType("application/json").content("{\"queryId\":\"update_status_fonte\"}"))
+        mvc.perform(post("/api/query/preset").contentType("application/json").header("X-Operator-Key", KEY).content("{\"queryId\":\"update_status_fonte\"}"))
                 .andExpect(jsonPath("$.results[0].status_operacional").value("OPERANDO_OTIMIZADO"));
     }
     @Test void telemetryCreatesReadingAndResetRestoresSeed() throws Exception {
-        mvc.perform(post("/api/telemetria/simular").contentType("application/json").content("{\"codigo_fonte\":\"FONTE-CALD-01\"}"))
+        mvc.perform(post("/api/telemetria/simular").contentType("application/json").header("X-Operator-Key", KEY).content("{\"codigo_fonte\":\"FONTE-CALD-01\"}"))
                 .andExpect(status().isCreated()).andExpect(jsonPath("$.leitura.codigo_fonte").value("FONTE-CALD-01"))
                 .andExpect(jsonPath("$.kpisAtualizados.totalLeiturasIot").value(11));
-        mvc.perform(post("/api/reset")).andExpect(status().isOk()).andExpect(jsonPath("$.kpis.totalLeiturasIot").value(10));
+        mvc.perform(post("/api/reset").header("X-Operator-Key", KEY)).andExpect(status().isOk()).andExpect(jsonPath("$.kpis.totalLeiturasIot").value(10));
     }
     @Test void rejectsInvalidRequests() throws Exception {
         mvc.perform(get("/api/collections/missing")).andExpect(status().isNotFound());

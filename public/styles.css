@@ -1030,6 +1030,16 @@ body {
 }
 
 /* Responsive adjustments */
+.operator-key-input {
+    width: 155px;
+    padding: 9px 11px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background: #0b1424;
+    color: #fff;
+}
+#insightSummary { color: var(--text-primary); margin: 4px 0 14px; }
+#insightMethodology { color: var(--text-muted); display: block; margin-top: 12px; }
 @media (max-width: 900px) {
     .app-layout { flex-direction: column; }
     .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-color); }

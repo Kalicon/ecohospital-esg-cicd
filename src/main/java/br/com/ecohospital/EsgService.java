@@ -16,18 +16,61 @@ import java.util.stream.StreamSupport;
 
 @Service
 public class EsgService {
-    private final EsgStore store;
+    private final EsgStateStore store;
     private static final JsonNodeFactory JSON = JsonNodeFactory.instance;
-    public EsgService(EsgStore store) { this.store = store; }
+    public EsgService(EsgStateStore store) { this.store = store; }
 
     public Map<String, Object> collection(String name) {
-        if (!EsgStore.COLLECTIONS.contains(name))
+        if (!EsgStateStore.COLLECTIONS.contains(name))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Coleção não encontrada");
         JsonNode data = store.snapshot().get(name);
         return Map.of("collection", name, "total", data.size(), "data", data);
     }
 
     public Map<String, Object> kpis() { return kpis(store.snapshot()); }
+
+    public String backend() { return store.backend(); }
+
+    /** Descriptive metrics over stored observations, not an external ESG certification. */
+    public Map<String, Object> insights() {
+        ObjectNode db = store.snapshot();
+        List<JsonNode> readings = items(db, "leituras_carbono_iot");
+        long conforming = readings.stream().filter(n -> in(n, "status_conformidade", "CONFORME")).count();
+        long warnings = readings.stream().filter(n -> in(n, "status_conformidade", "ALERTA_PREVENTIVO")).count();
+        long violations = readings.stream().filter(n -> in(n, "status_conformidade", "VIOLACAO_BLOQUEANTE")).count();
+        Map<String, Double> limits = new HashMap<>();
+        items(db, "fontes_emissao").forEach(n -> limits.put(n.path("codigo_fonte").asText(),
+                n.path("limite_max_co2_kg_hora").asDouble()));
+        Map<String, List<JsonNode>> groups = new HashMap<>();
+        readings.forEach(n -> groups.computeIfAbsent(n.path("codigo_fonte").asText(), ignored -> new ArrayList<>()).add(n));
+        List<Map<String, Object>> sourceRanking = groups.entrySet().stream().map(entry -> {
+            String code = entry.getKey();
+            List<JsonNode> values = entry.getValue();
+            double mean = values.stream().mapToDouble(n -> n.path("medicoes").path("co2_kg_hora").asDouble()).average().orElse(0);
+            double limit = limits.getOrDefault(code, 0.0);
+            Map<String, Object> item = new LinkedHashMap<>();
+            item.put("codigoFonte", code);
+            item.put("leituras", values.size());
+            item.put("mediaCo2KgHora", Math.round(mean * 100.0) / 100.0);
+            item.put("limiteKgHora", limit);
+            item.put("usoDoLimitePct", limit > 0 ? Math.round(mean / limit * 10000.0) / 100.0 : null);
+            item.put("alertas", values.stream().filter(n -> !in(n, "status_conformidade", "CONFORME")).count());
+            return item;
+        }).sorted(Comparator.<Map<String, Object>>comparingDouble(n ->
+                n.get("usoDoLimitePct") instanceof Number number ? number.doubleValue() : -1).reversed())
+                .limit(5).toList();
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("totalLeituras", readings.size());
+        result.put("conformes", conforming);
+        result.put("alertasPreventivos", warnings);
+        result.put("violacoes", violations);
+        result.put("taxaConformidadePct", readings.isEmpty() ? 0.0 : Math.round(conforming * 10000.0 / readings.size()) / 100.0);
+        result.put("licencasCriticas", items(db, "licencas_ambientais").stream()
+                .filter(n -> in(n, "status", "EXPIRA_EM_BREVE", "VENCIDA")).count());
+        result.put("fontesPrioritarias", sourceRanking);
+        result.put("metodologia", "Taxa = leituras CONFORME / total; uso do limite = média observada / limite cadastrado; licenças usam o status cadastrado. Indicadores descritivos, não certificação ESG.");
+        return result;
+    }
 
     private Map<String, Object> kpis(ObjectNode db) {
         List<JsonNode> readings = items(db, "leituras_carbono_iot");
@@ -185,11 +228,11 @@ public class EsgService {
     public Map<String, Object> validationReport() {
         ObjectNode db = store.snapshot();
         StringBuilder output = new StringBuilder("EcoHospital — validação de integridade do estado atual\n");
-        for (String name : EsgStore.COLLECTIONS) output.append(name).append(": ").append(db.path(name).size()).append(" documentos\n");
+        for (String name : EsgStateStore.COLLECTIONS) output.append(name).append(": ").append(db.path(name).size()).append(" documentos\n");
         long orphans = items(db, "leituras_carbono_iot").stream().filter(reading -> items(db, "fontes_emissao").stream()
                 .noneMatch(source -> source.path("codigo_fonte").equals(reading.path("codigo_fonte")))).count();
         output.append("Leituras sem fonte: ").append(orphans).append("\n");
-        output.append("Persistência: JSON. Consultas MongoDB exibidas são equivalentes didáticos.\n");
+        output.append("Persistência: ").append(store.backend()).append(". Consultas MongoDB exibidas são equivalentes didáticos.\n");
         output.append("Suíte automatizada: executar ./mvnw verify; este relatório não substitui JUnit nem o runner Node original.");
         return Map.of("status", orphans == 0 ? "OK" : "ERROR", "output", output.toString());
     }
