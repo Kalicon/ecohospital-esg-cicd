@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -16,9 +17,9 @@ import java.util.function.Function;
 
 /** Single-process academic store. Each write commits the complete document atomically. */
 @Component
-public class EsgStore {
-    public static final List<String> COLLECTIONS = List.of("unidades_hospitalares", "fontes_emissao",
-            "leituras_carbono_iot", "licencas_ambientais", "logs_auditoria_esg");
+@ConditionalOnProperty(name = "app.storage", havingValue = "json", matchIfMissing = true)
+public class EsgStore implements EsgStateStore {
+    public static final List<String> COLLECTIONS = EsgStateStore.COLLECTIONS;
     private final ObjectMapper mapper;
     private final Path storage;
     private ObjectNode collections;
@@ -63,6 +64,8 @@ public class EsgStore {
             collections = next;
         } catch (IOException e) { throw new IllegalStateException("Falha ao restaurar dataset", e); }
     }
+
+    public String backend() { return "JSON"; }
 
     private void persist(ObjectNode value) throws IOException {
         if (storage == null) return;

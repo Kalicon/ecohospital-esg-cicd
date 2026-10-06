@@ -9,6 +9,7 @@ deploy/*.env
 *.pfx
 *.p12
 .tools/
+deploy/import/*.json
 .runtime/
 delivery/*.zip
 *.log

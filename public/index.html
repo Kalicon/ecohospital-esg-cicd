@@ -3,93 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoHospital Smart® — Gestão ESG & Monitoramento NoSQL</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>EcoHospital Smart — Gestão ESG</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <svg class="svg-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M20 4c-7 0-13 2-15 8-1 3 1 7 5 7 6 0 10-5 10-15Z"/><path d="M4 21c3-5 7-8 12-11"/></symbol>
+        <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+        <symbol id="i-hospital" viewBox="0 0 24 24"><path d="M4 21V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16"/><path d="M2 21h20M9 21v-5h6v5M12 6v6M9 9h6"/></symbol>
+        <symbol id="i-factory" viewBox="0 0 24 24"><path d="M3 21V10l6 3V9l6 4V5h5v16H3Z"/><path d="M7 17h1m4 0h1m4 0h1"/></symbol>
+        <symbol id="i-activity" viewBox="0 0 24 24"><path d="M2 12h4l3-7 5 14 3-7h5"/></symbol>
+        <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 2h8l4 4v16H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M14 2v5h5M8 12h8M8 16h8"/></symbol>
+        <symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 2 8 4v6c0 5-3 8-8 10-5-2-8-5-8-10V6l8-4Z"/><path d="m9 12 2 2 4-4"/></symbol>
+        <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="m6 8 4 4-4 4m6 0h6"/></symbol>
+        <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+        <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5 9a8 8 0 0 1 14-2l1 1M4 16l1 1a8 8 0 0 0 14-2"/></symbol>
+        <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></symbol>
+        <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6 19h12a4 4 0 0 0 0-8h-1a6 6 0 0 0-11-2 5 5 0 0 0 0 10Z"/></symbol>
+        <symbol id="i-alert" viewBox="0 0 24 24"><path d="m12 3 10 18H2L12 3Z"/><path d="M12 9v5m0 3h.01"/></symbol>
+        <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+        <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18M7 16l4-5 3 2 5-7"/></symbol>
+        <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+    </svg>
+    <section class="landing-hero" id="inicio" aria-labelledby="heroTitle">
+        <img class="hero-landscape" src="hero-landscape-v2.jpg" width="2400" height="1456" alt="" fetchpriority="high" aria-hidden="true">
+        <div class="hero-overlay" aria-hidden="true"></div>
+        <nav class="hero-nav" aria-label="Navegação de apresentação">
+            <a class="hero-wordmark" href="#inicio">EcoHospital <strong>Smart</strong></a>
+            <div class="hero-nav-links">
+                <a href="#painel" data-hero-tab="dashboard">Visão geral</a>
+                <a href="#painel" data-hero-tab="telemetria">Telemetria</a>
+                <a href="#painel" data-hero-tab="licencas">Licenças</a>
+                <a href="#painel" data-hero-tab="console">Consultas</a>
+            </div>
+        </nav>
+        <div class="hero-content">
+            <span class="hero-eyebrow">Gestão ambiental hospitalar · da atenção à ação</span>
+            <h1 id="heroTitle">Saúde que cuida<br>do planeta.</h1>
+            <p>Saiba o que merece atenção, entenda os registros e organize a resposta da equipe. Emissões, licenças e planos de ação em um só lugar.</p>
+            <div class="hero-actions">
+                <a class="hero-button hero-button-primary" href="#painel" data-hero-tab="dashboard">Explorar o painel <span aria-hidden="true">→</span></a>
+                <a class="hero-button hero-button-secondary" href="#painel" data-hero-tab="telemetria">Ver telemetria</a>
+            </div>
+            <small class="hero-disclaimer">Demonstração acadêmica com dados simulados; não representa monitoramento clínico em tempo real.</small>
+        </div>
+        <div class="hero-bottom" aria-label="Tecnologias do projeto">
+            <span class="hero-bottom-label">Do código à operação</span>
+            <div class="hero-technology-list">
+                <span>Spring Boot</span><span>PostgreSQL</span><span>Docker</span><span>GitHub Actions</span>
+            </div>
+            <a class="hero-photo-credit" href="https://unsplash.com/photos/misty-hills-with-trees-at-sunrise-mGp2_4MeGIw" target="_blank" rel="noopener noreferrer">Fotografia: A.T.M. Arafath Ali / Unsplash</a>
+        </div>
+    </section>
+
     <!-- HEADER -->
-    <header class="navbar">
+    <header class="navbar" id="painel">
         <div class="nav-brand">
-            <div class="logo-icon">🌱</div>
+            <div class="logo-icon"><svg class="icon"><use href="#i-leaf"></use></svg></div>
             <div class="brand-text">
-                <span class="brand-title">EcoHospital Smart<sup>®</sup></span>
-                <span class="brand-subtitle">Gestão de Compliance Ambiental & Telemetria ESG — Spring Boot</span>
+                <span class="brand-title">EcoHospital <strong>Smart</strong></span>
+                <span class="brand-subtitle">Inteligência ambiental hospitalar</span>
             </div>
         </div>
         <div class="nav-meta">
             <div class="student-badge">
-                <span class="badge-label">FIAP 2026</span>
-                <span class="student-name">Kalicon Amorim (RM 563172)</span>
+                <span class="badge-label">PROJETO ACADÊMICO</span>
+                <span class="student-name">FIAP · RM 563172</span>
             </div>
             <div class="db-status-badge">
-                <span class="status-dot pulse"></span>
-                <span>DB: <strong>esg_hospital_db</strong></span>
+                <span class="status-dot"></span>
+                <span id="storageLabel">Conectando à API</span>
             </div>
             <div class="db-status-badge" id="environmentLabel">Consultando ambiente…</div>
             <div class="header-actions">
+                <input id="operatorKeyInput" type="password" autocomplete="off" placeholder="Token de edição" aria-label="Token de edição" class="operator-key-input">
+                <button id="btnOperatorKey" class="btn btn-outline" title="Habilita edições somente nesta aba"><svg class="icon"><use href="#i-lock"></use></svg> Ativar edição</button>
                 <button id="btnSimularIoT" class="btn btn-emerald" title="Gera uma leitura de telemetria IoT aleatória">
-                    ⚡ Simular IoT
+                    <svg class="icon"><use href="#i-plus"></use></svg> Simular leitura
                 </button>
                 <button id="btnRunTestRunner" class="btn btn-cyan" title="Exibe o relatório de integridade dos dados atuais">
-                    ▶ Validar Dados ESG
+                    <svg class="icon"><use href="#i-shield"></use></svg> Validar dados
                 </button>
                 <button id="btnResetDB" class="btn btn-outline" title="Recarrega o banco com o dataset original">
-                    🔄 Reset DB
+                    <svg class="icon"><use href="#i-refresh"></use></svg> Restaurar dados
                 </button>
             </div>
         </div>
     </header>
+    <div id="headerFeedback" class="header-feedback" role="status" aria-live="polite" hidden></div>
 
     <!-- MAIN CONTAINER -->
     <div class="app-layout">
         <!-- SIDEBAR NAVIGATION -->
         <aside class="sidebar">
-            <div class="sidebar-section-title">NAVEGAÇÃO ESG</div>
-            <nav class="nav-menu">
-                <button class="nav-item active" data-tab="dashboard">
-                    <span class="nav-icon">📊</span>
-                    <span>Dashboard Geral</span>
+            <div class="sidebar-section-title">PAINEL</div>
+            <nav class="nav-menu" aria-label="Navegação principal">
+                <button class="nav-item active" data-tab="dashboard" aria-current="page">
+                    <span class="nav-icon"><svg class="icon"><use href="#i-grid"></use></svg></span>
+                    <span>Visão geral</span>
                 </button>
                 <button class="nav-item" data-tab="hospitais">
-                    <span class="nav-icon">🏥</span>
-                    <span>Unidades Hospitalares</span>
-                    <span class="badge-count" id="countHospitais">10</span>
+                    <span class="nav-icon"><svg class="icon"><use href="#i-hospital"></use></svg></span>
+                    <span>Unidades</span>
+                    <span class="badge-count" id="countHospitais">—</span>
                 </button>
                 <button class="nav-item" data-tab="fontes">
-                    <span class="nav-icon">🏭</span>
-                    <span>Fontes de Emissão</span>
-                    <span class="badge-count" id="countFontes">10</span>
+                    <span class="nav-icon"><svg class="icon"><use href="#i-factory"></use></svg></span>
+                    <span>Fontes de emissão</span>
+                    <span class="badge-count" id="countFontes">—</span>
                 </button>
                 <button class="nav-item" data-tab="telemetria">
-                    <span class="nav-icon">📡</span>
-                    <span>Telemetria IoT em Tempo Real</span>
-                    <span class="badge-count pulse-badge" id="countTelemetria">10</span>
+                    <span class="nav-icon"><svg class="icon"><use href="#i-activity"></use></svg></span>
+                    <span>Telemetria IoT</span>
+                    <span class="badge-count" id="countTelemetria">—</span>
                 </button>
                 <button class="nav-item" data-tab="licencas">
-                    <span class="nav-icon">📜</span>
-                    <span>Licenças Ambientais</span>
-                    <span class="badge-count" id="countLicencas">10</span>
+                    <span class="nav-icon"><svg class="icon"><use href="#i-file"></use></svg></span>
+                    <span>Licenças</span>
+                    <span class="badge-count" id="countLicencas">—</span>
                 </button>
                 <button class="nav-item" data-tab="auditoria">
-                    <span class="nav-icon">🛡️</span>
-                    <span>Governança & Auditoria</span>
-                    <span class="badge-count" id="countAuditoria">10</span>
+                    <span class="nav-icon"><svg class="icon"><use href="#i-shield"></use></svg></span>
+                    <span>Governança</span>
+                    <span class="badge-count" id="countAuditoria">—</span>
                 </button>
+                <button class="nav-item" data-tab="acoes"><span class="nav-icon"><svg class="icon"><use href="#i-target"></use></svg></span><span>Plano de ação</span><span class="badge-count" id="countActions">—</span></button>
+                <button class="nav-item" data-tab="inventario"><span class="nav-icon"><svg class="icon"><use href="#i-chart"></use></svg></span><span>Inventário GEE</span></button>
+                <button class="nav-item" data-tab="residuos"><span class="nav-icon"><svg class="icon"><use href="#i-target"></use></svg></span><span>Rastrear resíduos</span></button>
                 <div class="sidebar-divider"></div>
-                <div class="sidebar-section-title">MONGODB INTERATIVO</div>
+                <div class="sidebar-section-title">FERRAMENTAS</div>
                 <button class="nav-item" data-tab="console">
-                    <span class="nav-icon">⚡</span>
-                    <span>Console de Consultas CRUD</span>
+                    <span class="nav-icon"><svg class="icon"><use href="#i-terminal"></use></svg></span>
+                    <span>Consultas</span>
                 </button>
             </nav>
 
             <div class="sidebar-footer">
                 <div class="footer-card">
                     <div class="footer-card-header">
-                        <span class="footer-card-title">ODS ONU Atendidos</span>
+                        <span class="footer-card-title">ODS relacionados</span>
                     </div>
                     <div class="ods-tags">
                         <span class="ods-pill ods-3" title="ODS 3: Saúde e Bem-Estar">ODS 3</span>
@@ -103,50 +155,51 @@
 
         <!-- CONTENT AREA -->
         <main class="main-content">
+            <div id="pageError" class="page-error" role="alert" hidden></div>
             <!-- KPI STRIP -->
             <section class="kpi-strip">
                 <div class="kpi-card">
-                    <div class="kpi-icon-wrapper bg-emerald">🏥</div>
+                    <div class="kpi-icon-wrapper"><svg class="icon"><use href="#i-hospital"></use></svg></div>
                     <div class="kpi-info">
                         <span class="kpi-label">Hospitais / Leitos</span>
-                        <span class="kpi-value" id="kpiHospitais">10 / <small id="kpiLeitos">3.430</small></span>
-                        <span class="kpi-sub">Rede Hospitalar Monitorada</span>
+                        <span class="kpi-value" id="kpiHospitais">—</span>
+                        <span class="kpi-sub">Rede monitorada</span>
                     </div>
                 </div>
 
                 <div class="kpi-card">
-                    <div class="kpi-icon-wrapper bg-teal">🏭</div>
+                    <div class="kpi-icon-wrapper"><svg class="icon"><use href="#i-factory"></use></svg></div>
                     <div class="kpi-info">
-                        <span class="kpi-label">Fontes Polimórficas</span>
-                        <span class="kpi-value" id="kpiFontes">10</span>
-                        <span class="kpi-sub">Caldeiras, Frota, Geradores</span>
+                        <span class="kpi-label">Fontes emissoras</span>
+                        <span class="kpi-value" id="kpiFontes">—</span>
+                        <span class="kpi-sub">Equipamentos e frota</span>
                     </div>
                 </div>
 
                 <div class="kpi-card">
-                    <div class="kpi-icon-wrapper bg-blue">☁️</div>
+                    <div class="kpi-icon-wrapper"><svg class="icon"><use href="#i-cloud"></use></svg></div>
                     <div class="kpi-info">
-                        <span class="kpi-label">Média CO2 / Hora</span>
-                        <span class="kpi-value" id="kpiMediaCo2">650 <small>kg/h</small></span>
-                        <span class="kpi-sub">Telemetria de Sensores IoT</span>
+                        <span class="kpi-label">Emissão média</span>
+                        <span class="kpi-value" id="kpiMediaCo2">—</span>
+                        <span class="kpi-sub">Média histórica · não é inventário total</span>
                     </div>
                 </div>
 
                 <div class="kpi-card">
-                    <div class="kpi-icon-wrapper bg-green">🌳</div>
+                    <div class="kpi-icon-wrapper"><svg class="icon"><use href="#i-leaf"></use></svg></div>
                     <div class="kpi-info">
-                        <span class="kpi-label">Compensação Florestal</span>
-                        <span class="kpi-value" id="kpiArvores">148 <small>árvores</small></span>
-                        <span class="kpi-sub">Mata Atlântica Estimada</span>
+                        <span class="kpi-label">Compensação estimada</span>
+                        <span class="kpi-value" id="kpiArvores">—</span>
+                        <span class="kpi-sub">Sugestões acumuladas · não são plantios</span>
                     </div>
                 </div>
 
                 <div class="kpi-card">
-                    <div class="kpi-icon-wrapper bg-amber">⚠️</div>
+                    <div class="kpi-icon-wrapper"><svg class="icon"><use href="#i-alert"></use></svg></div>
                     <div class="kpi-info">
-                        <span class="kpi-label">Alertas & Licenças</span>
-                        <span class="kpi-value" id="kpiAlertas">2 / <small id="kpiLicencasCriticas">3</small></span>
-                        <span class="kpi-sub">Pontos de Atenção ESG</span>
+                        <span class="kpi-label">Alertas / Licenças</span>
+                        <span class="kpi-value" id="kpiAlertas">—</span>
+                        <span class="kpi-sub">Pontos de atenção</span>
                     </div>
                 </div>
             </section>
@@ -154,14 +207,23 @@
             <!-- TAB 1: DASHBOARD GERAL -->
             <div id="tab-dashboard" class="tab-pane active">
                 <div class="content-header">
-                    <h2>Visão Geral do Ecossistema ESG & NoSQL</h2>
-                    <p>Resumo executivo do alinhamento ambiental, social e de governança do EcoHospital Smart®.</p>
+                    <h2>Central de atenção ambiental</h2>
+                    <p>Primeiro entenda a prioridade; depois confira o registro e organize uma ação. Os indicadores acima e as seções históricas abaixo abrangem toda a rede.</p>
                 </div>
+
+                <section class="operations-panel" aria-labelledby="operationsTitle">
+                    <div class="operations-heading"><div><span class="section-eyebrow">O que precisa de atenção?</span><h3 id="operationsTitle">Prioridades e próximos passos</h3></div><label class="field-label">Unidade da central<select id="operationsUnit"><option value="">Toda a rede</option></select></label></div>
+                    <p id="operationsSummary" class="operations-summary" role="status">Consultando registros…</p>
+                    <div id="priorityQueue" class="priority-queue"></div>
+                    <p id="operationsMethodology" class="methodology-note"></p>
+                </section>
+
+                <div class="section-heading"><h3>Contexto histórico da rede</h3><p>Metas são compromissos cadastrados. Não há série de referência para comprovar redução alcançada.</p></div>
 
                 <div class="grid-2-cols">
                     <div class="glass-card">
                         <div class="card-title">
-                            <span>🎯 Metas ESG Anuais por Unidade Hospitalar</span>
+                            <span><svg class="icon"><use href="#i-target"></use></svg> Metas cadastradas · não são resultados</span>
                         </div>
                         <div class="table-responsive">
                             <table class="data-table" id="tableMetasDashboard">
@@ -183,8 +245,8 @@
 
                     <div class="glass-card">
                         <div class="card-title">
-                            <span>🏭 Agregação NoSQL: Emissões e Compensação por Fonte</span>
-                            <span class="tag-pipeline">$group + $sum + $avg</span>
+                            <span><svg class="icon"><use href="#i-chart"></use></svg> Emissões por fonte</span>
+                            <span class="tag-pipeline">média observada</span>
                         </div>
                         <div id="aggChartContainer" class="agg-list">
                             <!-- Injetado via JS -->
@@ -194,19 +256,53 @@
 
                 <div class="glass-card mt-4">
                     <div class="card-title">
-                        <span>🛡️ Resumo de Governança e Severidade dos Incidentes</span>
+                        <span><svg class="icon"><use href="#i-shield"></use></svg> Incidentes e governança</span>
                     </div>
                     <div class="governance-grid" id="governanceHighlights">
                         <!-- Injetado via JS -->
                     </div>
                 </div>
+                <div class="glass-card mt-4">
+                    <div class="card-title"><span><svg class="icon"><use href="#i-chart"></use></svg> Prioridades ambientais</span></div>
+                    <p id="insightSummary">Calculando indicadores...</p>
+                    <div id="insightSources" class="agg-list"></div>
+                    <small id="insightMethodology"></small>
+                </div>
             </div>
 
+            <div id="tab-acoes" class="tab-pane">
+                <div class="content-header"><h2>Plano de ação ambiental</h2><p>Transforme a análise em trabalho acompanhado. Concluir uma ação não remove alertas nem comprova conformidade ambiental.</p></div>
+                <div class="operations-heading"><label class="field-label">Filtrar ações por unidade<select id="actionsUnit"><option value="">Toda a rede</option></select></label><span id="actionSummary" role="status"></span></div>
+                <div class="grid-2-cols">
+                    <form id="actionForm" class="glass-card action-form">
+                        <h3>Registrar uma ação</h3>
+                        <label class="field-label">O que será feito?<input name="title" required maxlength="180" placeholder="Ex.: conferir documentação da licença"></label>
+                        <label class="field-label">Unidade<select name="unit" id="actionUnit" required></select></label>
+                        <label class="field-label">Equipe responsável<input name="owner" required maxlength="100" placeholder="Ex.: equipe de gestão ambiental"></label>
+                        <label class="field-label">Prazo<input name="due" type="date" required></label>
+                        <p class="methodology-note">Use nomes de equipes; não registre dados de pacientes, credenciais ou informações sensíveis. A escrita exige token de operador.</p>
+                        <button class="btn btn-emerald" type="submit">Salvar ação</button>
+                        <p id="actionFeedback" role="status" aria-live="polite" hidden></p>
+                    </form>
+                    <div class="glass-card"><h3>Ações registradas</h3><div id="actionList" class="priority-queue"></div></div>
+                </div>
+            </div>
+
+            <div id="tab-inventario" class="tab-pane">
+                <div class="content-header"><h2>Inventário de gases de efeito estufa</h2><p>Consumo × fator = kgCO₂e. Registros declarados, sem verificação independente. As leituras históricas em kg/h não são convertidas em inventário anual.</p></div>
+                <p class="methodology-note">Informe fator em kgCO₂e por unidade, com GWP já incorporado, fonte e versão. Não multiplique o GWP novamente. Não há fatores oficiais pré-carregados. Gases anestésicos exigem metodologia e fatores específicos, revisados por profissional habilitado.</p>
+                <div id="inventoryJournal"></div>
+            </div>
+            <div id="tab-residuos" class="tab-pane">
+                <div class="content-header"><h2>Rastreabilidade de resíduos</h2><p>Registre a origem, classificação, massa, prestador, destinação e referências documentais de cada lote.</p></div>
+                <p class="methodology-note">A classificação e o manejo devem seguir o PGRSS e as exigências aplicáveis. Grupos A–E não definem sozinhos o tratamento: subgrupos e riscos precisam de avaliação técnica. Autoclavagem não autoriza automaticamente descarte comum. Referência informada não equivale a documento validado; não há redução percentual presumida.</p>
+                <div id="wasteJournal"></div>
+            </div>
             <!-- TAB 2: UNIDADES HOSPITALARES -->
             <div id="tab-hospitais" class="tab-pane">
                 <div class="content-header">
-                    <h2>Unidades Hospitalares Monitoradas</h2>
-                    <p>Estrutura NoSQL com geolocalização GeoJSON (índice <code>2dsphere</code>), leitos ativos e certificações ESG (ISO 14001, LEED, ONA).</p>
+                    <h2>Unidades hospitalares</h2>
+                    <p>Capacidade assistencial, localização, metas e certificações registradas.</p>
                 </div>
                 <div class="hospital-cards-grid" id="hospitalCardsContainer">
                     <!-- Injetado via JS -->
@@ -216,16 +312,16 @@
             <!-- TAB 3: FONTES DE EMISSÃO (POLIMÓRFICO) -->
             <div id="tab-fontes" class="tab-pane">
                 <div class="content-header">
-                    <h2>Fontes de Emissão — Esquema Polimórfico MongoDB</h2>
-                    <p>Demonstração da flexibilidade NoSQL: cada tipo de fonte (caldeira, ambulância elétrica, gerador diesel, incinerador) possui atributos exclusivos sem campos nulos desperdiçados.</p>
+                    <h2>Fontes de emissão</h2>
+                    <p>Equipamentos e frota com especificações próprias, limites de CO₂ e manutenção preventiva.</p>
                 </div>
                 <div class="filter-bar">
-                    <button class="filter-btn active" data-filter="TODOS">Todas (10)</button>
+                    <button class="filter-btn active" data-filter="TODOS">Todas</button>
                     <button class="filter-btn" data-filter="CALDEIRA_VAPOR">Caldeiras a Vapor</button>
                     <button class="filter-btn" data-filter="GRUPO_GERADOR_DIESEL">Geradores Diesel</button>
                     <button class="filter-btn" data-filter="FROTA_AMBULANCIA_HIBRIDA">Frota Híbrida/Elétrica</button>
-                    <button class="filter-btn" data-filter="INCINERADOR_RESIDUOS_HOSP">Incineradores</button>
-                    <button class="filter-btn" data-filter="SISTEMA_HVAC_CHILLER">Sistemas Chiller</button>
+                    <button class="filter-btn" data-filter="INCINERADOR_RESIDUOS">Incineradores</button>
+                    <button class="filter-btn" data-filter="SISTEMA_CLIMATIZACAO_CHILLER">Sistemas Chiller</button>
                 </div>
                 <div class="fontes-cards-grid" id="fontesCardsContainer">
                     <!-- Injetado via JS -->
@@ -236,13 +332,14 @@
             <div id="tab-telemetria" class="tab-pane">
                 <div class="content-header flex-between">
                     <div>
-                        <h2>Telemetria de Carbono IoT em Tempo Real</h2>
-                        <p>Sensores coletando emissão contínua de CO2 (kg/h), temperatura e cálculo automático de árvores para compensação ambiental.</p>
+                        <h2>Telemetria IoT</h2>
+                        <p>Leituras registradas e simulações de emissão. Os dados demonstrativos não representam sensores físicos conectados.</p>
                     </div>
                     <button id="btnNovaLeitura" class="btn btn-emerald">
-                        ➕ Disparar Nova Leitura IoT
+                        <svg class="icon"><use href="#i-plus"></use></svg> Nova simulação
                     </button>
                 </div>
+                <div id="telemetryFeedback" class="inline-feedback" role="status" aria-live="polite" hidden></div>
 
                 <div class="glass-card">
                     <div class="table-responsive">
@@ -269,8 +366,8 @@
             <!-- TAB 5: LICENÇAS AMBIENTAIS -->
             <div id="tab-licencas" class="tab-pane">
                 <div class="content-header">
-                    <h2>Controle de Licenças Ambientais & Prazos Regulatórios</h2>
-                    <p>Órgãos emissores (CETESB, IBAMA, DAEE, ANVISA), acompanhamento de condicionantes e alertas de vencimento.</p>
+                    <h2>Licenças ambientais</h2>
+                    <p>Status cadastrado, órgãos emissores, prazos e condicionantes. Confira a data antes de tomar decisões.</p>
                 </div>
                 <div class="glass-card">
                     <div class="table-responsive">
@@ -297,8 +394,8 @@
             <!-- TAB 6: AUDITORIA ESG -->
             <div id="tab-auditoria" class="tab-pane">
                 <div class="content-header">
-                    <h2>Trilha Imutável de Auditoria & Governança ESG</h2>
-                    <p>Histórico auditável de incidentes, compliance com os ODS da ONU e indicadores GRI.</p>
+                    <h2>Governança e auditoria</h2>
+                    <p>Eventos ESG registrados no dataset e em simulações. O reset restaura os registros originais.</p>
                 </div>
                 <div class="glass-card">
                     <div class="table-responsive">
@@ -325,8 +422,8 @@
             <!-- TAB 7: CONSOLE INTERATIVO MONGODB -->
             <div id="tab-console" class="tab-pane">
                 <div class="content-header">
-                    <h2>Console Interativo de Consultas & Operações ESG</h2>
-                    <p>Execute as operações sobre os documentos JSON e consulte o comando MongoDB equivalente para estudo.</p>
+                    <h2>Consultas e operações</h2>
+                    <p>Execute consultas predefinidas e veja o comando MongoDB equivalente para estudo. Atualizações exigem edição ativada.</p>
                 </div>
 
                 <div class="console-layout">
@@ -380,7 +477,7 @@
                         <div class="query-results-panel mt-3">
                             <div class="panel-header">
                                 <span class="code-title">RESULTADO DA OPERAÇÃO ESG:</span>
-                                <button class="btn btn-sm btn-outline" id="btnCopiarJson">📋 Copiar JSON</button>
+                                <button class="btn btn-sm btn-outline" id="btnCopiarJson"><svg class="icon"><use href="#i-copy"></use></svg> Copiar JSON</button>
                             </div>
                             <pre class="json-viewer" id="jsonResultViewer">{ "status": "Aguardando seleção..." }</pre>
                         </div>
@@ -391,13 +488,13 @@
     </div>
 
     <!-- MODAL TEST RUNNER -->
-    <div class="modal-overlay" id="testRunnerModal">
+    <dialog class="modal-overlay" id="testRunnerModal" aria-labelledby="integrityDialogTitle">
         <div class="modal-window">
             <div class="modal-header">
                 <div class="modal-title">
-                    <span>🖥️ Relatório de Integridade ESG</span>
+                    <span id="integrityDialogTitle"><svg class="icon"><use href="#i-terminal"></use></svg> Relatório de integridade ESG</span>
                 </div>
-                <button class="modal-close" id="btnCloseModal">✕</button>
+                <button class="modal-close" id="btnCloseModal" aria-label="Fechar relatório">×</button>
             </div>
             <div class="modal-body">
                 <div class="terminal-container">
@@ -409,11 +506,24 @@
                 <button class="btn btn-outline" id="btnCloseModalBtn">Fechar</button>
             </div>
         </div>
-    </div>
+    </dialog>
+
+    <dialog id="resetDialog" class="confirm-dialog" aria-labelledby="resetDialogTitle" aria-describedby="resetDialogDescription">
+        <form method="dialog">
+            <h2 id="resetDialogTitle">Restaurar dados deste ambiente?</h2>
+            <p id="resetDialogDescription">As simulações, planos de ação, inventário GEE, registros de resíduos e alterações serão removidos. Faça backup antes. O dataset original será carregado apenas neste ambiente.</p>
+            <div class="dialog-actions">
+                <button class="btn btn-outline" value="cancel">Cancelar</button>
+                <button class="btn btn-danger" value="confirm">Restaurar dados</button>
+            </div>
+        </form>
+    </dialog>
 
     <!-- TOAST NOTIFICATION -->
-    <div id="toast" class="toast"></div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
     <script src="app.js"></script>
+    <script src="operations.js"></script>
+    <script src="journal.js"></script>
 </body>
 </html>

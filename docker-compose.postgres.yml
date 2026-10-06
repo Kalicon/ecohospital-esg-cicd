@@ -1,0 +1,67 @@
+# Ambiente opcional de avaliação da migração; não substitui staging/produção existentes.
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: esg_hospital_db
+      POSTGRES_USER: esg
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    secrets:
+      - postgres_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - esg-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U esg -d esg_hospital_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+  app:
+    image: ${IMAGE:-ecohospital:postgres-local}
+    build:
+      context: .
+      args:
+        APP_VERSION: ${APP_VERSION:-development}
+    environment:
+      APP_ENV: ${APP_ENV:-postgres-demo}
+      APP_STORAGE: postgres
+      POSTGRES_JDBC_URL: jdbc:postgresql://db:5432/esg_hospital_db
+      POSTGRES_USER: esg
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      APP_WRITE_TOKEN_FILE: /run/secrets/operator_token
+      STORAGE_FILE: /app/import/state.json
+      PORT: "8080"
+    secrets:
+      - postgres_password
+      - operator_token
+    volumes:
+      - ${ESG_IMPORT_DIR:-./deploy/import}:/app/import:ro
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${APP_PORT:-8083}:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - esg-network
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:uid=10001,gid=10001,mode=1770
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 512m
+volumes:
+  postgres-data:
+networks:
+  esg-network:
+    driver: bridge
+secrets:
+  postgres_password:
+    file: ${POSTGRES_PASSWORD_FILE:-./.tools/secrets/postgres_password.txt}
+  operator_token:
+    file: ${OPERATOR_TOKEN_FILE:-./.tools/secrets/operator_token.txt}

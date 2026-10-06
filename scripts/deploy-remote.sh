@@ -20,11 +20,13 @@ cp deploy/compose.yml "$release_dir/compose.yml"
 cd "$release_dir"
 export COMPOSE_PROJECT_NAME="ecohospital-$environment"
 export IMAGE="$image" APP_ENV="$environment" APP_PORT="$port" BIND_ADDRESS="$bind"
+[[ -s operator_token.txt ]] || { echo 'Token do operador ausente no servidor.' >&2; exit 2; }
+export OPERATOR_TOKEN_FILE="$release_dir/operator_token.txt"
 # Previous digest is kept for a documented manual rollback, without touching the volume.
 if [[ -f image.txt ]]; then cp image.txt previous-image.txt; fi
 umask 077
-printf 'COMPOSE_PROJECT_NAME=%s\nIMAGE=%s\nAPP_ENV=%s\nAPP_PORT=%s\nBIND_ADDRESS=%s\n' \
-  "$COMPOSE_PROJECT_NAME" "$IMAGE" "$APP_ENV" "$APP_PORT" "$BIND_ADDRESS" > .env
+printf 'COMPOSE_PROJECT_NAME=%s\nIMAGE=%s\nAPP_ENV=%s\nAPP_PORT=%s\nBIND_ADDRESS=%s\nOPERATOR_TOKEN_FILE=%s\n' \
+  "$COMPOSE_PROJECT_NAME" "$IMAGE" "$APP_ENV" "$APP_PORT" "$BIND_ADDRESS" "$OPERATOR_TOKEN_FILE" > .env
 docker compose -f compose.yml pull
 docker compose -f compose.yml up --detach --no-build --wait --wait-timeout 180
 docker compose -f compose.yml exec -T app curl --fail --silent http://localhost:8080/health > health.json

@@ -35,6 +35,7 @@ jobs:
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
           GHCR_USER: ${{ secrets.GHCR_USER }}
           GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+          APP_WRITE_TOKEN: ${{ secrets.APP_WRITE_TOKEN }}
           IMAGE: ${{ inputs.image }}
           APP_VERSION: ${{ inputs.version }}
           APP_ENV: ${{ inputs.environment }}

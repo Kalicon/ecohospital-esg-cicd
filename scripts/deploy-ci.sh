@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 # Secrets are passed as environment variables by the protected GitHub Environment.
-for key in SSH_HOST SSH_USER SSH_PORT SSH_PRIVATE_KEY SSH_KNOWN_HOSTS GHCR_USER GHCR_TOKEN IMAGE APP_ENV APP_PORT APP_VERSION APP_URL; do
+for key in SSH_HOST SSH_USER SSH_PORT SSH_PRIVATE_KEY SSH_KNOWN_HOSTS GHCR_USER GHCR_TOKEN APP_WRITE_TOKEN IMAGE APP_ENV APP_PORT APP_VERSION APP_URL; do
   [[ -n "${!key:-}" ]] || { echo "Configuração obrigatória ausente: $key" >&2; exit 2; }
 done
 [[ "$SSH_HOST" =~ ^[a-zA-Z0-9][a-zA-Z0-9.-]*$ ]] || exit 2
@@ -14,6 +14,7 @@ done
 [[ "$APP_PORT" =~ ^[0-9]+$ && "$APP_PORT" -gt 1024 && "$APP_PORT" -le 65535 ]] || exit 2
 [[ "${BIND_ADDRESS:-127.0.0.1}" == 127.0.0.1 || "${BIND_ADDRESS}" == 0.0.0.0 ]] || exit 2
 [[ "$APP_URL" =~ ^https?:// ]] || exit 2
+[[ ${#APP_WRITE_TOKEN} -ge 32 ]] || { echo 'Token do operador precisa ter 32 caracteres.' >&2; exit 2; }
 task_dir=$(mktemp -d)
 trap 'rm -rf -- "$task_dir"' EXIT
 umask 077
@@ -29,6 +30,9 @@ scp "${ssh_options[@]}" -P "$SSH_PORT" "$task_dir/release.tgz" "$target:$remote_
 # Token travels over stdin encrypted by SSH; it is never a command-line argument.
 printf '%s' "$GHCR_TOKEN" | ssh "${ssh_options[@]}" -p "$SSH_PORT" "$target" \
   "docker login ghcr.io -u '$GHCR_USER' --password-stdin"
+# Operador via arquivo 0600 no servidor, nunca em argumento ou na imagem.
+printf '%s' "$APP_WRITE_TOKEN" | ssh "${ssh_options[@]}" -p "$SSH_PORT" "$target" \
+  "umask 077; mkdir -p '/opt/ecohospital/$APP_ENV'; cat > '/opt/ecohospital/$APP_ENV/operator_token.txt'"
 ssh "${ssh_options[@]}" -p "$SSH_PORT" "$target" \
   "cd '$remote_dir' && tar -xzf release.tgz && bash scripts/deploy-remote.sh '$APP_ENV' '$IMAGE' '$APP_VERSION' '$APP_PORT' '${BIND_ADDRESS:-127.0.0.1}'"
 mkdir -p evidence

@@ -1,5 +1,12 @@
 # Inventário da adaptação CI/CD
 
+## Incremento operacional e rastreabilidade
+
+- Novos Java: `EsgOperations.java`, `OperationsController.java`, `EnvironmentalJournal.java`, `JournalController.java`; novas suítes `EsgOperationsTest.java`, `EnvironmentalJournalTest.java` e casos MockMvc em `EsgApiTest.java`.
+- Frontend: novas `public/operations.js` e `public/journal.js`; `index.html`, `app.js`, `styles.css` adaptados para central de atenção, ações, inventário GEE e lotes de resíduos, com histórico, filtros e exportação JSON.
+- Workflow e `scripts/verify.ps1`: sintaxe dos novos scripts verificada. `scripts/verify-journal-local.ps1` testa escrita protegida, cálculo, duplicata, pendência e persistência apenas em postgres-demo.
+- README, documentação técnica/PDF e `docs/evidence/v3`: metodologia, referências oficiais, evidências e limitações. Sem alteração do seed, das cinco coleções originais ou dos volumes de staging/produção.
+
 ## Criados
 
 - `pom.xml`, `mvnw`, `mvnw.cmd`, `.mvn/wrapper/maven-wrapper.properties`: Java 17, Spring Boot 3.5.16, dependências e Maven reproduzível com checksum.
@@ -35,3 +42,33 @@ Execução posterior autorizada: repositório público criado, CI/GHCR e demonst
 Retomada concluída: `scripts/lab-runner.ps1` prepara e registra runners Windows efêmeros com checksum oficial; `scripts/verify-docker-environments.ps1` confere ambos os containers, mesmo digest, UID, health, redes/volumes, isolamento e persistência. Workflow local passou a usar pull público por digest, sem login nem DOCKER_CONFIG temporário. Run 36438015592 concluiu staging e production após aprovação obrigatória; evidências reais de ambos foram adicionadas ao PDF de 18 páginas. A descrição acima registra a etapa anterior, não o estado final.
 
 A linguagem original divergia do enunciado. Após a autorização para adotar a solução mais adequada, o backend foi portado para Spring Boot. Não foi criado banco MongoDB sem integração: o sistema recebido já simulava suas operações sobre JSON. O volume agora conserva o estado por ambiente. A atividade anterior de NoSQL continua disponível como material separado.
+
+## Evolução adicional (branch de melhoria)
+
+- `EsgStateStore.java` e `PostgresEsgStore.java`: interface de armazenamento e opção PostgreSQL JSONB transacional, com importação única do snapshot JSON.
+- `WriteAccess.java`, `SecurityHeaders.java`, `EsgController.java`: token para mutações e cabeçalhos de segurança; leituras preservadas.
+- `EsgService.java`, `public/index.html`, `public/app.js`, `public/styles.css`: indicadores ESG com metodologia explícita e controle do operador na interface.
+- `docker-compose.postgres.yml`, `deploy/compose.yml`, `docker-compose.yml`, `.env.example`, `scripts/init-local-secrets.ps1`: banco opcional, volumes e segredos em arquivo.
+- Workflows e scripts de deploy: smoke test PostgreSQL e propagação de token por Environment; `scripts/provision-lab-operator-secrets.ps1` gera tokens distintos fora do repositório.
+- `EsgApiTest.java`, `WriteAccessTest.java`: 30 testes JUnit no total; `docs/evidence/v2` contém XML e prova de persistência/negação HTTP.
+- `scripts/package-delivery.ps1`, `verify-delivery.py`: novo Compose no ZIP e exclusão explícita de snapshots importados.
+
+Os backups de staging e produção foram salvos em `.tools/backups/2026-09-28`, fora do Git/ZIP. O terceiro Compose de teste em `localhost:8083` não substitui os ambientes originais.
+
+## Revisão UI/UX — referência Monsoon
+
+- `public/index.html`: abertura editorial, navegação em cápsula e atalhos para o painel; SVG substituem emojis; dialogs nativos para integridade e confirmação de reset.
+- `public/styles.css`: tema claro, hierarquia, contraste, layout responsivo e foco acessível. A preservação do CSS citada acima se refere à entrega original; nesta revisão ele foi redesenhado.
+- `public/app.js`: campos de especificações e datas corrigidos conforme dataset, filtros de incineradores/chillers, feedback próximo às ações, respeito à preferência de movimento reduzido e navegação da abertura para abas reais.
+- `public/hero-landscape-v2.jpg`: fotografia licenciada de A.T.M. Arafath Ali / Unsplash; fonte e licença no README. O vídeo restrito da referência foi descartado antes de publicação.
+
+O redesenho preserva as funcionalidades ESG e a stack Java/HTML/CSS/JavaScript; não afirma execução de testes ou deploys apenas pela aparência da interface.
+
+## Central de atenção e planos de ação
+
+- `EsgOperations.java`, `OperationsController.java`: prioridades descritivas pela última leitura válida, atualidade e calendário de licenças; cadastro/atualização persistente de ações com proteção de escrita.
+- `EsgOperationsTest.java`, `EsgApiTest.java`: casos para persistência, evidência obrigatória, rejeição de unidade/data/status inválidos, proteção HTTP e distinção entre última leitura e histórico.
+- `public/operations.js`, `public/index.html`, `public/styles.css`, `public/app.js`: central filtrada por unidade, sugestões conectadas ao formulário, histórico e andamento, KPIs com limites explícitos.
+- `ci-cd.yml`, `verify.ps1`: verificação de sintaxe do novo controlador de interface.
+
+Ações ocupam uma lista opcional no documento persistente, sem apagar ou exigir migração das coleções originais. Reset remove também essa lista; o diálogo foi atualizado. Não foi criada certificação ESG, identidade individual ou integração com sensores reais.

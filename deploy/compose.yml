@@ -5,7 +5,10 @@ services:
     environment:
       APP_ENV: ${APP_ENV:?Defina staging ou production}
       STORAGE_FILE: /app/data/state.json
+      APP_WRITE_TOKEN_FILE: /run/secrets/operator_token
       PORT: "8080"
+    secrets:
+      - operator_token
     ports:
       - "${BIND_ADDRESS:-127.0.0.1}:${APP_PORT:?Defina a porta}:8080"
     volumes:
@@ -27,3 +30,6 @@ volumes:
 networks:
   esg-network:
     driver: bridge
+secrets:
+  operator_token:
+    file: ${OPERATOR_TOKEN_FILE:?Defina o arquivo do token do operador}
