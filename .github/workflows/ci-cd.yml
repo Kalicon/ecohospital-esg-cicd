@@ -169,6 +169,7 @@ jobs:
     needs: image
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.DEPLOY_ENABLED == 'true'
     uses: ./.github/workflows/deploy.yml
+    secrets: inherit
     with:
       environment: staging
       image: ${{ needs.image.outputs.reference }}
@@ -177,6 +178,7 @@ jobs:
     needs: [image, staging]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.PRODUCTION_DEPLOY_ENABLED == 'true'
     uses: ./.github/workflows/deploy.yml
+    secrets: inherit
     with:
       environment: production
       image: ${{ needs.image.outputs.reference }}
@@ -188,6 +190,7 @@ jobs:
       contents: read
       packages: read
     uses: ./.github/workflows/deploy-pc.yml
+    secrets: inherit
     with:
       environment: staging
       image: ${{ needs.image.outputs.reference }}
@@ -199,6 +202,7 @@ jobs:
       contents: read
       packages: read
     uses: ./.github/workflows/deploy-pc.yml
+    secrets: inherit
     with:
       environment: production
       image: ${{ needs.image.outputs.reference }}
