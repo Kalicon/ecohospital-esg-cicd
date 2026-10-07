@@ -53,8 +53,17 @@ try {
     $baseUrl = "http://localhost:$port"
     $health = Invoke-RestMethod "$baseUrl/health"
     if ($health.status -ne 'UP' -or $health.environment -ne $EnvironmentName -or $health.version -ne $Version) { throw 'Health/versão/ambiente divergente.' }
-    $firstUser = @(Get-Content -LiteralPath $usersFile -Raw | ConvertFrom-Json | Where-Object role -eq 'OPERATOR')[0]
-    $identity = Invoke-RestMethod "$baseUrl/api/access/me" -Headers @{'X-Operator-Key'=$firstUser.token}
+    $configuredUsers = Get-Content -LiteralPath $usersFile -Raw | ConvertFrom-Json
+    $firstUser = @($configuredUsers) | Where-Object { $_.role -eq 'OPERATOR' } | Select-Object -First 1
+    if (-not $firstUser -or [string]::IsNullOrWhiteSpace($firstUser.token)) { throw 'Credencial OPERATOR ausente.' }
+    Add-Type -AssemblyName System.Net.Http
+    $identityClient = [System.Net.Http.HttpClient]::new()
+    try {
+        $identityClient.DefaultRequestHeaders.Add('X-Operator-Key', [string]$firstUser.token)
+        $identityResponse = $identityClient.GetAsync("$baseUrl/api/access/me").GetAwaiter().GetResult()
+        if (-not $identityResponse.IsSuccessStatusCode) { throw "Verificação da identidade falhou: HTTP $([int]$identityResponse.StatusCode)." }
+        $identity = $identityResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult() | ConvertFrom-Json
+    } finally { $identityClient.Dispose() }
     if ($identity.id -ne $firstUser.id -or $identity.role -ne 'OPERATOR') { throw 'Identidade individual não habilitada no ambiente.' }
     $page = Invoke-WebRequest $baseUrl -UseBasicParsing
     if ($page.StatusCode -ne 200 -or $page.Content -notmatch 'EcoHospital Smart') { throw 'Página ESG não disponível.' }
