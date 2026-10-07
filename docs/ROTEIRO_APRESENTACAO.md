@@ -16,13 +16,13 @@ Integrante: Kalicon Amorim da Cruz Souza — RM 563172. Duração sugerida: 5 mi
 |---|---|---|
 | Build e testes Java/Node | Run 37620162391, jobs `verify` e `image`; artefato `build-and-tests` | Comprovado para `3a2cbf4` |
 | Falha bloqueia deploy | Run 36433472858, `verify` falho e deploys skipped | Comprovado |
-| Dockerfile, usuário não root e health | `Dockerfile`, job `image`, run 37620162391 | Comprovado para `3a2cbf4` |
+| Dockerfile, usuário não root e health | `Dockerfile`, job `image`, [run 37620162391](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37620162391) | Comprovado para `3a2cbf4` |
 | Compose, rede e volume separados | `docker-compose.yml`, `docs/evidence/v5/staging-artifact` e `production-artifact` | Comprovado para `3a2cbf4` |
 | Deploy staging/produção por mesmo digest | Run 37620162391 e health nos dois ambientes | Comprovado para `3a2cbf4` |
 | README, documentação técnica e ZIP | Raiz do projeto, `docs/EcoHospital_CICD.pdf`, `delivery/EcoHospital_CICD_Auditoria_2026-10-07.zip` | Regenerados para a evolução |
 | Catálogo de fatores, papéis e cadeia de resíduos | 43 testes no CI; Compose isolado em 8084; identidade nos dois deploys | Código promovido; dados sintéticos não promovidos |
 | SBOM e teste de restauração no CI | [Run do PR #5](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37617424794), job `image` | Comprovado no PR; deploys pulados |
-| Atestado GHCR | Run 37620162391; `gh attestation verify` do digest em execução | Comprovado |
+| Atestado GHCR | Run 37620162391; `gh attestation verify` do digest implantado | Comprovado |
 | Hospedagem pública e documentos ambientais reais | Não disponíveis | Não concluído |
 
 ## Perguntas prováveis
