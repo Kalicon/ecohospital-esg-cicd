@@ -28,6 +28,18 @@ class EsgApiTest {
         mvc.perform(post("/api/journal/inventory").header("X-Operator-Key",KEY).contentType("application/json").content("{}")) .andExpect(status().isBadRequest());
         mvc.perform(post("/api/journal/inventory/missing/void").contentType("application/json").content("{}")) .andExpect(status().isUnauthorized());
     }
+    @Test void factorAndCustodyApisEnforceAccessAndSequence() throws Exception {
+        mvc.perform(get("/api/journal/factors")).andExpect(status().isOk()).andExpect(content().json("[]"));
+        String factor="{\"name\":\"Fator sintético\",\"scope\":\"2\",\"method\":\"LOCATION\",\"activityUnit\":\"kWh\",\"value\":\"0.1\",\"source\":\"Teste\",\"version\":\"v1\",\"year\":\"2026\",\"basis\":\"Teste\"}";
+        mvc.perform(post("/api/journal/factors").contentType("application/json").content(factor)).andExpect(status().isUnauthorized());
+        String response=mvc.perform(post("/api/journal/factors").header("X-Operator-Key",KEY).contentType("application/json").content(factor))
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.status").value("DECLARADO_NAO_REVISADO")).andReturn().getResponse().getContentAsString();
+        String id=new com.fasterxml.jackson.databind.ObjectMapper().readTree(response).path("id").asText();
+        mvc.perform(post("/api/journal/factors/"+id+"/review").header("X-Operator-Key",KEY).contentType("application/json")
+                .content("{\"decision\":\"REVISADO_INTERNAMENTE\",\"note\":\"Teste\"}")).andExpect(status().isForbidden());
+        mvc.perform(get("/api/access/me")).andExpect(status().isUnauthorized());
+        mvc.perform(get("/api/access/me").header("X-Operator-Key",KEY)).andExpect(jsonPath("$.role").value("LEGACY"));
+    }
 
     @Test void servesOriginalFrontend() throws Exception {
         mvc.perform(get("/")).andExpect(status().isOk()).andExpect(forwardedUrl("index.html"));

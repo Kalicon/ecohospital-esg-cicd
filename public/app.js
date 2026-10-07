@@ -7,16 +7,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let operatorKey = '';
     const keyInput = document.getElementById('operatorKeyInput');
     const keyButton = document.getElementById('btnOperatorKey');
-    keyButton?.addEventListener('click', () => {
-        operatorKey = keyInput.value.trim();
+    keyButton?.addEventListener('click', async () => {
+        const candidate = keyInput.value.trim();
         keyInput.value = '';
-        setActionFeedback(operatorKey ? 'Edição ativada nesta aba.' : 'Informe o token de edição.', !operatorKey);
-        mostrarToast(operatorKey ? 'Token ativado somente nesta aba.' : 'Informe o token do operador.', !operatorKey);
+        if (!candidate) {setActionFeedback('Informe uma credencial.', true);return;}
+        try {
+            const actor=await apiJson('/api/access/me',{headers:{'X-Operator-Key':candidate}});
+            operatorKey=candidate;
+            setActionFeedback(`Acesso ativo nesta aba: ${actor.id} (${actor.role}).`,false);
+            mostrarToast(`Acesso ativo: ${actor.id} (${actor.role}).`,false);
+        } catch(error) {operatorKey='';setActionFeedback(error.message,true);mostrarToast(error.message,true);}
     });
     function writeHeaders(extra = {}) {
         if (!operatorKey) {
             keyInput.focus();
-            throw new Error('Ative o token do operador para alterar dados.');
+            throw new Error('Ative sua credencial para alterar dados.');
         }
         return { ...extra, 'X-Operator-Key': operatorKey };
     }

@@ -48,6 +48,8 @@ jobs:
     permissions:
       contents: read
       packages: write
+      id-token: write
+      attestations: write
     outputs:
       reference: ${{ steps.publish.outputs.reference }}
     steps:
@@ -71,7 +73,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          trap 'docker rm -f esg-smoke >/dev/null 2>&1 || true; docker volume rm esg-smoke-data >/dev/null 2>&1 || true' EXIT
+          trap 'docker rm -f esg-smoke esg-restore >/dev/null 2>&1 || true; docker volume rm esg-smoke-data esg-restore-data >/dev/null 2>&1 || true; rm -f /tmp/esg-smoke-backup.json' EXIT
           docker run -d --name esg-smoke -p 127.0.0.1:18080:8080 -e APP_ENV=ci -e APP_WRITE_TOKEN=ci-only-0123456789abcdef0123456789abcdef -v esg-smoke-data:/app/data "$IMAGE"
           for attempt in $(seq 1 60); do
             state=$(docker inspect --format '{{.State.Health.Status}}' esg-smoke)
@@ -103,6 +105,28 @@ jobs:
               data = json.load(f)
           assert data['totalLeiturasIot'] == 11, data
           PY
+          docker cp esg-smoke:/app/data/state.json /tmp/esg-smoke-backup.json
+          docker create --name esg-restore -e APP_ENV=ci-restore -v esg-restore-data:/app/data "$IMAGE" >/dev/null
+          docker cp /tmp/esg-smoke-backup.json esg-restore:/app/data/state.json
+          docker start esg-restore >/dev/null
+          for attempt in $(seq 1 60); do
+            state=$(docker inspect --format '{{.State.Health.Status}}' esg-restore)
+            [[ "$state" == healthy ]] && break
+            [[ "$state" == unhealthy ]] && { docker logs esg-restore; exit 1; }
+            sleep 2
+          done
+          [[ "$(docker inspect --format '{{.State.Health.Status}}' esg-restore)" == healthy ]]
+          docker exec esg-restore curl --fail --silent http://localhost:8080/api/kpis > evidence/restore-kpis.json
+          python3 - <<'PY'
+          import json
+          data = json.load(open('evidence/restore-kpis.json'))
+          assert data['totalLeiturasIot'] == 11, data
+          PY
+      - name: Inventário de componentes da imagem (SBOM)
+        uses: anchore/sbom-action@v0
+        with:
+          image: ${{ env.IMAGE }}
+          artifact-name: sbom-${{ github.sha }}
       - name: Testar PostgreSQL JSONB, autorização e persistência
         shell: bash
         run: |
@@ -159,6 +183,15 @@ jobs:
           reference=$(docker inspect --format '{{index .RepoDigests 0}}' "$IMAGE")
           [[ "$reference" == ghcr.io/*@sha256:* ]]
           echo "reference=$reference" >> "$GITHUB_OUTPUT"
+          echo "name=${reference%@*}" >> "$GITHUB_OUTPUT"
+          echo "digest=${reference##*@}" >> "$GITHUB_OUTPUT"
+      - name: Atestar origem da imagem publicada
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/attest@v4
+        with:
+          subject-name: ${{ steps.publish.outputs.name }}
+          subject-digest: ${{ steps.publish.outputs.digest }}
+          push-to-registry: true
       - uses: actions/upload-artifact@v7
         if: always()
         with:

@@ -26,15 +26,23 @@ if (-not [string]::IsNullOrWhiteSpace($env:APP_WRITE_TOKEN)) {
     [IO.File]::WriteAllText($tokenFile, $env:APP_WRITE_TOKEN, [Text.UTF8Encoding]::new($false))
     Remove-Item Env:APP_WRITE_TOKEN
 } elseif (-not (Test-Path -LiteralPath $tokenFile)) { throw 'Defina APP_WRITE_TOKEN (segredo do ambiente) antes do primeiro deploy.' }
-Copy-Item -LiteralPath (Join-Path $projectRoot 'deploy/compose.yml') -Destination (Join-Path $deployDir 'compose.yml')
+$usersFile = Join-Path $deployDir 'operator_users.json'
+if (-not [string]::IsNullOrWhiteSpace($env:APP_USERS_JSON)) {
+    $users = $env:APP_USERS_JSON | ConvertFrom-Json
+    if (@($users).Count -lt 3) { throw 'APP_USERS_JSON deve conter operador, revisor e administrador.' }
+    [IO.File]::WriteAllText($usersFile, $env:APP_USERS_JSON, [Text.UTF8Encoding]::new($false))
+    Remove-Item Env:APP_USERS_JSON
+} elseif (-not (Test-Path -LiteralPath $usersFile)) { throw 'Defina APP_USERS_JSON (segredo do Environment) antes do deploy desta revisão.' }
+Copy-Item -LiteralPath (Join-Path $projectRoot 'deploy/compose-pc.yml') -Destination (Join-Path $deployDir 'compose.yml')
 $env:COMPOSE_PROJECT_NAME = "ecohospital-$EnvironmentName"
 $env:APP_ENV = $EnvironmentName
 $env:APP_PORT = "$port"
 $env:BIND_ADDRESS = '127.0.0.1'
 $env:IMAGE = $Image
 $env:OPERATOR_TOKEN_FILE = $tokenFile.Replace('\','/')
+$env:OPERATOR_USERS_FILE = $usersFile.Replace('\','/')
 $configPath = Join-Path $deployDir '.env'
-@("COMPOSE_PROJECT_NAME=$($env:COMPOSE_PROJECT_NAME)","APP_ENV=$EnvironmentName","APP_PORT=$port","BIND_ADDRESS=127.0.0.1","IMAGE=$Image","OPERATOR_TOKEN_FILE=$($env:OPERATOR_TOKEN_FILE)") |
+@("COMPOSE_PROJECT_NAME=$($env:COMPOSE_PROJECT_NAME)","APP_ENV=$EnvironmentName","APP_PORT=$port","BIND_ADDRESS=127.0.0.1","IMAGE=$Image","OPERATOR_TOKEN_FILE=$($env:OPERATOR_TOKEN_FILE)","OPERATOR_USERS_FILE=$($env:OPERATOR_USERS_FILE)") |
     Set-Content -LiteralPath $configPath -Encoding utf8
 Push-Location $deployDir
 try {
@@ -45,11 +53,15 @@ try {
     $baseUrl = "http://localhost:$port"
     $health = Invoke-RestMethod "$baseUrl/health"
     if ($health.status -ne 'UP' -or $health.environment -ne $EnvironmentName -or $health.version -ne $Version) { throw 'Health/versão/ambiente divergente.' }
+    $firstUser = @(Get-Content -LiteralPath $usersFile -Raw | ConvertFrom-Json | Where-Object role -eq 'OPERATOR')[0]
+    $identity = Invoke-RestMethod "$baseUrl/api/access/me" -Headers @{'X-Operator-Key'=$firstUser.token}
+    if ($identity.id -ne $firstUser.id -or $identity.role -ne 'OPERATOR') { throw 'Identidade individual não habilitada no ambiente.' }
     $page = Invoke-WebRequest $baseUrl -UseBasicParsing
     if ($page.StatusCode -ne 200 -or $page.Content -notmatch 'EcoHospital Smart') { throw 'Página ESG não disponível.' }
     $evidenceDir = Join-Path $projectRoot 'evidence'
     New-Item -ItemType Directory -Force -Path $evidenceDir | Out-Null
     $health | ConvertTo-Json | Set-Content -Encoding utf8 (Join-Path $evidenceDir "$EnvironmentName-health.json")
+    [pscustomobject]@{id=$identity.id;role=$identity.role;environment=$EnvironmentName} | ConvertTo-Json | Set-Content -Encoding utf8 (Join-Path $evidenceDir "$EnvironmentName-identity.json")
     & $dockerBin compose -f compose.yml ps --format json | Set-Content -Encoding utf8 (Join-Path $evidenceDir "$EnvironmentName-containers.json")
     if ($LASTEXITCODE -ne 0) { throw 'Falha ao registrar containers.' }
     Write-Output "Deploy local concluído: $baseUrl | $EnvironmentName | $Version"

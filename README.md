@@ -1,10 +1,16 @@
 # EcoHospital Smart — ESG com Java Spring Boot e CI/CD
 
+[![CI/CD — main](https://github.com/Kalicon/ecohospital-esg-cicd/actions/workflows/ci-cd.yml/badge.svg?branch=main&event=push)](https://github.com/Kalicon/ecohospital-esg-cicd/actions/workflows/ci-cd.yml)
+
+Os badges refletem apenas execuções reais do GitHub Actions; não representam certificação ESG nem uma conquista do perfil GitHub.
+
 Atividade acadêmica: build, testes e deploy separado em staging e produção.
 
 Integrante identificado nos arquivos originais: **Kalicon Amorim da Cruz Souza — RM 563172**. Outros integrantes: não informados; preencher antes da entrega, se houver.
 
 ## Estado comprovado desta entrega
+
+**Evolução de auditoria em validação (branch `codex/auditable-esg-workflow`):** catálogo versionado de fatores, vínculo que congela o fator usado em cada lançamento, sequência de custódia dos resíduos e credenciais individuais opcionais com papéis `OPERATOR`, `REVIEWER` e `ADMIN`. Localmente, 43 testes JUnit passaram no Maven e no build Docker Java 17. Um quarto Compose isolado em `http://localhost:8084` comprovou fator sintético revisado internamente, 123 kgCO₂e calculados, lote passando de geração a destinação, preservação após reinício e HTTP 403 por papel insuficiente. Nada disso é fator oficial, validação documental ou novo deploy de staging/produção. O pipeline com SBOM, atestado de imagem e teste de restauração ainda precisa de um run aprovado para ser marcado como comprovado. Veja [roteiro e matriz de evidências](docs/ROTEIRO_APRESENTACAO.md).
 
 **Atualização de 07/10/2026 (revisão `f240024`):** o [pipeline da revisão atual](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37496607415) concluiu `verify`, `image`, `staging-pc` e `production-pc` com sucesso, após aprovação humana do Environment production. Os dois ambientes Docker responderam `UP` na versão `f240024d0808c06bc8424309c5e81cdd6abb0cae` e usam a mesma imagem imutável `ghcr.io/kalicon/ecohospital-esg-cicd@sha256:23e69b3e5f37c4a297869f55aa73cb441e47f151bae961f59f193f340c2cb01f`. Staging em `http://localhost:8081` preservou 11 leituras; produção em `http://localhost:8082` preservou 10. Cada ambiente tem seu próprio volume e rede. Evidências desta revisão: `docs/evidence/v4`. As seções históricas abaixo descrevem etapas anteriores. Não há servidor público: ambos os endereços são deste PC.
 
@@ -89,7 +95,11 @@ docker compose logs app
 
 Abra `http://localhost:8080`. Para encerrar preservando dados: `docker compose down`. Não utilize `down -v` se quiser manter o estado, pois essa opção remove o volume.
 
-Para alterar dados no painel, leia o token local em `.tools/secrets/operator_token.txt`, digite-o no campo “Token do operador” e clique “Ativar”. Ele fica somente na memória da aba; não é salvo no navegador. O arquivo é ignorado pelo Git e não entra no ZIP. Sem token, leituras e consultas continuam disponíveis, mas simulação, reset e os dois presets `update_` retornam 401 (ou 503 se o servidor foi iniciado sem token configurado). Cada ambiente deve usar token diferente. Não publique o serviço sem TLS e controle de acesso de rede.
+No Compose local desta evolução, `scripts/init-local-secrets.ps1` cria `.tools/secrets/operator_users.json` com três credenciais aleatórias e distintas. Consulte esse arquivo **somente no seu PC** e use o token correspondente a `operador-demo`, `revisor-demo` ou `admin-demo` no campo “Credencial de acesso”. O painel valida o papel e guarda a credencial apenas na memória da aba; não a salva no navegador. Operador registra fatores, consumos, lotes e etapas; revisor registra revisão interna do fator; admin pode ambos e restaurar o dataset. Um operador recebe HTTP 403 ao tentar resetar. O arquivo é ignorado pelo Git e não entra no ZIP. Staging/produção já implantados ainda usam o token compartilhado anterior por compatibilidade, identificado como `LEGACY`, que **não** pode revisar fatores. Não publique o serviço sem TLS, controle de rede e autenticação institucional.
+
+O cadastro de fator exige fonte, versão, ano, unidade e metodologia; o sistema **não** pré-carrega fatores oficiais. A revisão é apenas interna e não certifica a fonte. Ao selecionar um fator no inventário, o lançamento copia valor e metadados para preservar o cálculo histórico. O lote de resíduos avança por eventos `GERADO → SEGREGADO → COLETADO → TRATADO/DESTINADO`; tratamento pode não se aplicar. Uma referência de destinação continua “informada, não validada”, sem upload nem integração MTR/SINIR. Estados antigos são lidos sem migração destrutiva.
+
+Para experimentar essa evolução sem tocar em staging/produção, em PowerShell execute `scripts/init-local-secrets.ps1`, defina `$env:COMPOSE_PROJECT_NAME='ecohospital-next-demo'`, `$env:APP_ENV='next-demo'`, `$env:APP_PORT='8084'` e `$env:IMAGE='ecohospital:next-demo'`, depois `docker compose up -d --build --wait`. Abra `http://localhost:8084`. Para parar sem apagar o volume: `docker compose down` com as mesmas variáveis. Não use `down -v` para dados que queira conservar. O teste de papel pode ser visto em `GET /api/access/me` com `X-Operator-Key`; nenhuma API revela o token em resposta.
 
 ### PostgreSQL opcional e migração segura
 
@@ -187,6 +197,7 @@ flowchart LR
 
 1. `verify`: checa sintaxe JavaScript, executa o runner Node, compila Java, executa JUnit e empacota o JAR. Guarda relatórios mesmo em falha.
 2. `image` usa `needs: verify`, constrói a imagem e executa um container JSON para verificar usuário sem root, health, ambiente/versão, autorização e persistência após reinício. Também sobe PostgreSQL real em Compose e verifica autorização e persistência. Falha em qualquer teste impede o push e o deploy. O build Docker também roda JUnit.
+   Na evolução em validação, o mesmo job também restaura um backup JSON em outro volume, gera SBOM e, após publicar na `main`, tenta atestar a origem da imagem no GHCR. Esses passos só serão declarados executados quando houver run verde da nova revisão.
 3. Somente execuções na `main`, que não sejam pull requests, publicam a imagem testada no GHCR com tag do commit e obtêm o digest real. PRs fazem build/testes, sem deploy.
 4. `staging` exige `image` bem-sucedido e variável de repositório `DEPLOY_ENABLED=true`. Faz pull via SSH, sobe Compose, aguarda health e verifica a URL externa (status, ambiente e SHA).
 5. `production` exige `image` e `staging` bem-sucedidos e `PRODUCTION_DEPLOY_ENABLED=true`. Usa **o mesmo digest**. O Environment `production` precisa ter revisores obrigatórios configurados na interface do GitHub.
@@ -283,13 +294,18 @@ O pacote da revisão atual usa `delivery/EcoHospital_CICD_Entrega_2026-10-07.zip
 
 ## Checklist do enunciado
 
-Checklist adicional desta evolução:
+Checklist da evolução em validação e da revisão já implantada:
+
+- [x] Catálogo de fatores, snapshots no inventário e etapas de resíduos implementados e testados em Compose isolado.
+- [x] Credenciais individuais opcionais e separação de papéis testadas; segredos locais fora do ZIP.
+- [ ] SBOM, atestado de imagem e restauração de backup aprovados no GitHub Actions da nova revisão.
+- [ ] Nova revisão promovida para staging e produção após aprovação obrigatória.
 
 - [x] Central operacional e plano de ação implementados e verificados localmente.
 - [x] Inventário parcial por escopo com fator documentado e resíduos rastreáveis implementados.
 - [x] 39 testes aprovados, proteção de escrita, persistência e dados originais preservados no ambiente demo.
-- [x] Nova revisão promovida pelo pipeline para staging, com health e versão conferidos.
-- [x] Nova revisão promovida para produção após aprovação obrigatória, com health e versão conferidos.
+- [x] Revisão `f240024` promovida pelo pipeline para staging, com health e versão conferidos.
+- [x] Revisão `f240024` promovida para produção após aprovação obrigatória, com health e versão conferidos.
 - [ ] Fatores oficiais aplicáveis e documentos reais validados por responsável técnico.
 - [ ] Inventário completo, auditoria independente e integração MTR/SINIR (não implementados).
 

@@ -26,13 +26,16 @@ class EsgOperationsTest {
         Path file = dir.resolve("state.json");
         EsgStore store = new EsgStore(new ObjectMapper(), file.toString());
         EsgOperations service = new EsgOperations(store);
-        JsonNode action = service.create(Map.of("title", "Revisar caldeira", "unit", "UNID-HOSP-001", "owner", "Equipe ambiental", "due", "2026-12-01"));
+        var actor=new WriteAccess.Actor("operator-1","OPERATOR");
+        JsonNode action = service.create(Map.of("title", "Revisar caldeira", "unit", "UNID-HOSP-001", "owner", "Equipe ambiental", "due", "2026-12-01"),actor);
+        assertEquals("operator-1",action.path("createdBy").asText());
         assertThrows(ResponseStatusException.class, () -> service.update(action.path("id").asText(), Map.of("status", "CONCLUIDA")));
         assertEquals("PLANEJADA", service.actions().get(0).path("status").asText());
-        service.update(action.path("id").asText(), Map.of("status", "CONCLUIDA", "evidence", "Análise documentada em relatório de laboratório."));
+        service.update(action.path("id").asText(), Map.of("status", "CONCLUIDA", "evidence", "Análise documentada em relatório de laboratório."),actor);
         EsgOperations restarted = new EsgOperations(new EsgStore(new ObjectMapper(), file.toString()));
         assertEquals("CONCLUIDA", restarted.actions().get(0).path("status").asText());
         assertEquals(2, restarted.actions().get(0).path("history").size());
+        assertEquals("operator-1",restarted.actions().get(0).path("history").get(1).path("actorId").asText());
         assertEquals(10, store.snapshot().path("leituras_carbono_iot").size());
     }
     @Test void rejectsInvalidUnitStatusAndDateWithoutWriting() throws Exception {

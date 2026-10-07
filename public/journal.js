@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const feedback = el('p', 'Carregando registros…'); feedback.setAttribute('role','status'); mount.append(feedback);
         try {
             const hospitals = (await read('/api/collections/unidades_hospitalares')).data;
+            let factorCatalog = kind === 'inventory' ? await read('/api/journal/factors') : [];
             let records = [];
             const filters = el('div',null,'operations-heading');
             const unitLabel = el('label','Recorte por unidade','field-label'), unit = el('select');
@@ -34,20 +35,58 @@ document.addEventListener('DOMContentLoaded', () => {
             exportButton.addEventListener('click',()=>{const selected=records.filter(r=>(!unit.value||r.unit===unit.value)&&(r.period||r.date).slice(0,4)===year.value);const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),kind,year:year.value,unit:unit.value,verification:'DECLARADO_NAO_VERIFICADO',records:selected},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),link=el('a');link.href=url;link.download=`ecohospital-${kind}-${year.value}.json`;link.click();URL.revokeObjectURL(url);});
             const grid = el('div',null,'grid-2-cols'), form = el('form',null,'glass-card action-form');
             form.append(el('h3',kind==='inventory'?'Registrar consumo e fator':'Registrar lote de resíduos'));
-            const formFields = [['unit','Unidade',hospitals.map(h=>[h.codigo_unidade,h.nome_unidade])],...fields[kind],['reference',kind==='inventory'?'Identificador único da evidência de consumo':'Identificador único / manifesto de transporte','text',200],['responsible','Equipe responsável pelo lançamento','text',100]];
+            const factorField = ['factorId','Fator do catálogo (opcional; congela os dados no lançamento)',[['','Fator livre / ainda não catalogado'],...factorCatalog.filter(f=>f.status!=='REJEITADO').map(f=>[f.id,`${f.name} · ${f.year} · ${f.activityUnit} · ${f.status}`])]];
+            const dataFields = kind==='inventory' ? fields[kind].flatMap(f=>f[0]==='factor'?[factorField,f]:[f]) : fields[kind];
+            const formFields = [['unit','Unidade',hospitals.map(h=>[h.codigo_unidade,h.nome_unidade])],...dataFields,['reference',kind==='inventory'?'Identificador único da evidência de consumo':'Identificador único / manifesto de transporte','text',200],['responsible','Equipe responsável pelo lançamento','text',100]];
             formFields.forEach(([name,title,type,max])=> {
                 const label=el('label',title,'field-label'); let input;
                 if(Array.isArray(type)) { input=el('select'); type.forEach(value=>input.append(Array.isArray(value)?new Option(value[1],value[0]):new Option(labels[value]||value,value))); }
                 else {input=el('input'); input.type=type; if(max)input.maxLength=max; if(type==='number'){input.min=name==='factor'?'0':'0.000000001';input.step='0.000000001';input.max='999999999999';}}
-                input.name=name; input.required=name!=='destinationProof'; label.append(input); form.append(label);
+                input.name=name; input.required=!['destinationProof','factorId'].includes(name); label.append(input); form.append(label);
             });
             if(kind==='inventory') {
-                const update=()=>{form.elements.method.disabled=form.elements.scope.value!=='2';}; form.elements.scope.addEventListener('change',update);update();
+                const update=()=>{
+                    form.elements.method.disabled=form.elements.scope.value!=='2';
+                    const selected=factorCatalog.find(f=>f.id===form.elements.factorId.value), catalogued=Boolean(selected);
+                    for(const name of ['factor','factorSource','factorVersion']) {form.elements[name].required=!catalogued;form.elements[name].disabled=catalogued;}
+                    if(selected) {form.elements.scope.value=selected.scope;form.elements.method.value=selected.method==='NOT_APPLICABLE'?'LOCATION':selected.method;form.elements.activityUnit.value=selected.activityUnit;form.elements.method.disabled=selected.scope!=='2';}
+                };
+                form.elements.scope.addEventListener('change',update);form.elements.factorId.addEventListener('change',update);update();
             }
             const save=el('button','Salvar registro','btn btn-emerald');save.type='submit';
             const result=el('p');result.setAttribute('role','status');result.setAttribute('aria-live','polite');
             form.append(el('p','Referências são texto, não upload de documentos. Use apenas identificadores não sensíveis. Escrita exige token de operador. Corrija lançamentos por anulação e novo registro; o original fica preservado.','methodology-note'),save,result);
             const list=el('div',null,'glass-card priority-queue');grid.append(form,list);mount.append(filters,summary,grid);
+            if(kind==='inventory') {
+                const details=el('details',null,'glass-card');details.append(el('summary','Catálogo versionado de fatores de emissão'));
+                details.append(el('p','Fatores são declarados por operadores; somente um revisor identificado pode marcá-los como revisados internamente. Nenhum fator oficial é carregado automaticamente.','methodology-note'));
+                const factorForm=el('form',null,'action-form');
+                const definitions=[['name','Nome / atividade','text'],['scope','Escopo',['1','2','3']],['method','Método do escopo 2',['LOCATION','MARKET']],['activityUnit','Unidade',['L','kWh','kg','km','unidade']],['value','kgCO₂e por unidade','number'],['source','Fonte / referência','text'],['version','Versão / base GWP','text'],['year','Ano','number'],['basis','Metodologia e limites','text'],['category','Categoria do escopo 3 (se aplicável)','text']];
+                for(const [name,title,type] of definitions){const label=el('label',title,'field-label'),input=Array.isArray(type)?el('select'):el('input');if(Array.isArray(type))type.forEach(value=>input.append(new Option(value,value)));else input.type=type;input.name=name;input.required=name!=='category';if(name==='year'){input.min='1900';input.max='9999';input.value=new Date().getFullYear();}if(name==='value'){input.min='0';input.step='0.000000001';}label.append(input);factorForm.append(label);}
+                const factorMessage=el('p');factorMessage.setAttribute('role','status');factorForm.append(el('button','Cadastrar fator declarado','btn btn-outline'),factorMessage);
+                factorForm.addEventListener('submit',async event=>{event.preventDefault();try{await window.esgOperatorWrite('/api/journal/factors','POST',Object.fromEntries(new FormData(factorForm)));factorCatalog=await read('/api/journal/factors');const select=form.elements.factorId;select.replaceChildren(new Option('Fator livre / ainda não catalogado',''));factorCatalog.filter(f=>f.status!=='REJEITADO').forEach(f=>select.append(new Option(`${f.name} · ${f.year} · ${f.activityUnit} · ${f.status}`,f.id)));factorMessage.textContent='Fator cadastrado como declarado. Solicite revisão antes de usá-lo como evidência técnica.';renderFactors();}catch(error){factorMessage.textContent=error.message;}});
+                const factorList=el('div',null,'priority-queue');
+                function renderFactors(){
+                    factorList.replaceChildren();
+                    factorCatalog.forEach(f=>{
+                        const card=el('article',null,'priority-item');
+                        card.append(el('h4',`${f.name} · ${f.year}`),el('p',`Escopo ${f.scope} · ${f.method} · ${number(f.value)} kgCO₂e/${f.activityUnit} · ${f.status}`),el('p',`${f.source} · ${f.version} · criado por ${f.createdBy}`));
+                        if(f.reviewedBy)card.append(el('p',`Revisão interna por ${f.reviewedBy}: ${f.reviewNote}`));
+                        if(f.status==='DECLARADO_NAO_REVISADO'){
+                            const review=el('form',null,'action-form');
+                            const noteLabel=el('label','Nota da revisão interna','field-label'),note=el('input');note.name='note';note.required=true;note.maxLength=500;noteLabel.append(note);
+                            const decisionLabel=el('label','Decisão','field-label'),decision=el('select');decision.name='decision';
+                            decision.append(new Option('Revisado internamente','REVISADO_INTERNAMENTE'),new Option('Rejeitado','REJEITADO'));decisionLabel.append(decision);
+                            const button=el('button','Registrar decisão','btn btn-outline'),feedback=el('p');feedback.setAttribute('role','status');
+                            review.append(noteLabel,decisionLabel,button,feedback);
+                            review.addEventListener('submit',async event=>{event.preventDefault();button.disabled=true;try{await window.esgOperatorWrite(`/api/journal/factors/${f.id}/review`,'POST',Object.fromEntries(new FormData(review)));factorCatalog=await read('/api/journal/factors');renderFactors();}catch(error){feedback.textContent=error.message;button.disabled=false;}});
+                            card.append(review);
+                        }
+                        factorList.append(card);
+                    });
+                }
+                details.append(factorForm,factorList);mount.insertBefore(details,grid);renderFactors();
+            }
             function render() {
                 const scoped=records.filter(r=>(!unit.value||r.unit===unit.value)&&(r.period||r.date).slice(0,4)===year.value);
                 const active=scoped.filter(r=>!r.voidedAt); list.replaceChildren();
@@ -60,7 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 scoped.slice().reverse().forEach(r=> {
                     const card=el('article',null,'priority-item');card.append(el('h4',r.reference),el('p',`${hospitals.find(h=>h.codigo_unidade===r.unit)?.nome_unidade||r.unit} · ${r.period||r.date}`));
                     if(kind==='inventory') card.append(el('p',`Escopo ${r.scope}${r.scope==='2'?` · ${labels[r.method]}`:''} · ${r.activity}: ${number(r.quantity)} ${r.activityUnit} × ${number(r.factor)} kgCO₂e/${r.activityUnit} = ${number(r.kgCO2e)} kgCO₂e`),el('p',`Fator preservado: ${r.factorSource} · ${r.factorVersion}`),el('p',`Limite / método: ${r.boundary}`));
-                    else card.append(el('p',`Grupo ${r.group} · ${number(r.kg)} kg · origem: ${r.sector}`),el('p',`Manejo declarado: ${r.handling} · prestador: ${r.provider} · destino: ${r.destination}`),el('p',r.destinationProof?`Referência de destinação não validada: ${r.destinationProof}`:'Pendente: referência do comprovante de destinação.'));
+                    else {
+                        card.append(el('p',`Grupo ${r.group} · ${number(r.kg)} kg · origem: ${r.sector}`),el('p',`Manejo declarado: ${r.handling} · prestador: ${r.provider} · destino: ${r.destination}`),el('p',`Etapa atual: ${r.currentStage||'GERADO'} · ${r.destinationProof?'referência de destinação não validada: '+r.destinationProof:'pendente: referência do comprovante de destinação.'}`));
+                        (r.events||[]).forEach(event=>card.append(el('p',`${event.stage} · ${new Date(event.at).toLocaleString('pt-BR')} · ${event.reference} · por ${event.actorId||event.responsible}`)));
+                        const next={GERADO:['SEGREGADO'],SEGREGADO:['COLETADO'],COLETADO:['TRATADO','DESTINADO'],TRATADO:['DESTINADO']}[r.currentStage||'GERADO'];
+                        if(next&&!r.voidedAt){const advance=el('form',null,'action-form');advance.append(el('h5','Registrar próxima etapa'));const stage=el('select');stage.name='stage';next.forEach(value=>stage.append(new Option(value,value)));const stageLabel=el('label','Etapa','field-label');stageLabel.append(stage);advance.append(stageLabel);for(const [name,title] of [['reference','Referência do evento / documento'],['note','O que foi conferido?'],['responsible','Equipe responsável']]){const label=el('label',title,'field-label'),input=el('input');input.name=name;input.required=true;input.maxLength=name==='note'?500:200;label.append(input);advance.append(label);}const msg=el('p');msg.setAttribute('role','status');advance.append(el('button','Registrar etapa','btn btn-outline'),msg);advance.addEventListener('submit',async event=>{event.preventDefault();try{await window.esgOperatorWrite(`/api/journal/waste/${r.id}/advance`,'POST',Object.fromEntries(new FormData(advance)));await reload();}catch(error){msg.textContent=error.message;}});card.append(advance);}
+                    }
                     card.append(el('p',`Equipe declarante: ${r.responsible} · registrado em ${new Date(r.createdAt).toLocaleString('pt-BR')} · ID ${r.id}`));
                     if(r.voidedAt)card.append(el('p',`ANULADO em ${r.voidedAt} por ${r.voidResponsible}: ${r.voidReason}`));
                     else {

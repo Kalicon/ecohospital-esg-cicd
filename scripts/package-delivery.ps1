@@ -6,7 +6,7 @@ $deliveryDir = Join-Path $projectRoot 'delivery'
 New-Item -ItemType Directory -Force -Path $deliveryDir | Out-Null
 $zipPath = Join-Path $deliveryDir $OutputName
 if (Test-Path -LiteralPath $zipPath) { throw 'O ZIP já existe. Renomeie/mova a versão anterior antes de gerar outra.' }
-$requiredFiles = @('pom.xml','Dockerfile','.dockerignore','docker-compose.yml','docker-compose.postgres.yml','.env.example',
+$requiredFiles = @('pom.xml','Dockerfile','.dockerignore','docker-compose.yml','docker-compose.postgres.yml','deploy/compose-pc.yml','.env.example',
     'README.md','mvnw','mvnw.cmd','.gitignore','.gitattributes','docs/EcoHospital_CICD.pdf')
 foreach ($relative in $requiredFiles) {
     if (-not (Test-Path -LiteralPath (Join-Path $projectRoot $relative))) { throw "Arquivo obrigatório ausente: $relative" }

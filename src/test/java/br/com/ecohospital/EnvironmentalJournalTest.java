@@ -39,4 +39,36 @@ class EnvironmentalJournalTest {
         body.put("reference","TEST-2");body.put("date","2026-02-30");assertThrows(ResponseStatusException.class,()->j.create("waste",body));
         assertEquals(1,j.list("waste").size());
     }
+    @Test void catalogFactorIsVersionedReviewedAndFrozenInInventory() throws Exception {
+        EnvironmentalJournal journal=new EnvironmentalJournal(new EsgStore(new ObjectMapper(),""));
+        var operator=new WriteAccess.Actor("operator-1","OPERATOR");
+        var reviewer=new WriteAccess.Actor("reviewer-1","REVIEWER");
+        var factor=journal.addFactor(Map.of("name","Energia de teste","scope","2","method","LOCATION","activityUnit","kWh",
+                "value","0.123","source","Fonte sintética de teste","version","v1","year","2026","basis","Somente teste"),operator);
+        assertEquals("DECLARADO_NAO_REVISADO",factor.path("status").asText());
+        var reviewed=journal.reviewFactor(factor.path("id").asText(),Map.of("decision","REVISADO_INTERNAMENTE","note","Conferência sintética"),reviewer);
+        assertEquals("reviewer-1",reviewed.path("reviewedBy").asText());
+        var body=inventory();body.remove("factor");body.remove("factorSource");body.remove("factorVersion");body.put("factorId",factor.path("id").asText());
+        var entry=journal.create("inventory",body,operator);
+        assertEquals(0,new BigDecimal("123").compareTo(entry.path("kgCO2e").decimalValue()));
+        assertEquals("REVISADO_INTERNAMENTE",entry.path("factorStatus").asText());
+        assertEquals("2026",entry.path("factorYear").asText());
+        assertEquals("operator-1",entry.path("createdBy").asText());
+        body.put("activityUnit","kg");body.put("reference","OTHER");
+        assertThrows(ResponseStatusException.class,()->journal.create("inventory",body,operator));
+    }
+    @Test void wasteCustodyEnforcesSequenceAndRetainsEvents() throws Exception {
+        EnvironmentalJournal journal=new EnvironmentalJournal(new EsgStore(new ObjectMapper(),""));
+        var actor=new WriteAccess.Actor("operator-1","OPERATOR");
+        var body=new HashMap<>(Map.of("unit","UNID-HOSP-001","reference","LOT-1","responsible","Equipe","date","2026-09-28","group","A","kg","12.5","sector","Laboratório","handling","Declarado","provider","Prestador","destination","Destino"));
+        var lot=journal.create("waste",body,actor);String id=lot.path("id").asText();
+        assertEquals("GERADO",lot.path("currentStage").asText());
+        var step=new HashMap<>(Map.of("stage","COLETADO","reference","DOC-1","note","Teste","responsible","Equipe"));
+        assertThrows(ResponseStatusException.class,()->journal.advanceWaste(id,step,actor));
+        for(String stage:List.of("SEGREGADO","COLETADO","DESTINADO")){step.put("stage",stage);journal.advanceWaste(id,step,actor);}
+        var saved=journal.list("waste").get(0);
+        assertEquals(4,saved.path("events").size());assertEquals("DESTINADO",saved.path("currentStage").asText());
+        assertEquals("REFERENCIA_INFORMADA_NAO_VALIDADA",saved.path("documentation").asText());
+        assertThrows(ResponseStatusException.class,()->journal.advanceWaste(id,step,actor));
+    }
 }

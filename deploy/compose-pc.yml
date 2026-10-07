@@ -1,12 +1,9 @@
+# PC do laboratório: imagem aprovada, credenciais individuais por Environment.
 services:
   app:
-    image: ${IMAGE:-ecohospital:local}
-    build:
-      context: .
-      args:
-        APP_VERSION: ${APP_VERSION:-development}
+    image: ${IMAGE:?Defina a imagem GHCR pelo digest}
     environment:
-      APP_ENV: ${APP_ENV:-local}
+      APP_ENV: ${APP_ENV:?Defina staging ou production}
       STORAGE_FILE: /app/data/state.json
       APP_WRITE_TOKEN_FILE: /run/secrets/operator_token
       APP_USERS_FILE: /run/secrets/operator_users
@@ -15,7 +12,7 @@ services:
       - operator_token
       - operator_users
     ports:
-      - "${BIND_ADDRESS:-127.0.0.1}:${APP_PORT:-8080}:8080"
+      - "${BIND_ADDRESS:-127.0.0.1}:${APP_PORT:?Defina a porta}:8080"
     volumes:
       - esg-data:/app/data
     networks:
@@ -37,6 +34,6 @@ networks:
     driver: bridge
 secrets:
   operator_token:
-    file: ${OPERATOR_TOKEN_FILE:-./.tools/secrets/operator_token.txt}
+    file: ${OPERATOR_TOKEN_FILE:?Defina o token legado para rollback}
   operator_users:
-    file: ${OPERATOR_USERS_FILE:-./.tools/secrets/operator_users.json}
+    file: ${OPERATOR_USERS_FILE:?Defina o arquivo de credenciais individuais}
