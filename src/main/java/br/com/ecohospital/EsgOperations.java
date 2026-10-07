@@ -86,7 +86,8 @@ public class EsgOperations {
     }
     public JsonNode actions() { JsonNode n = store.snapshot().path("planos_acao"); return n.isArray() ? n : com.fasterxml.jackson.databind.node.JsonNodeFactory.instance.arrayNode(); }
 
-    public JsonNode create(Map<String, String> body) {
+    public JsonNode create(Map<String, String> body) { return create(body,new WriteAccess.Actor("legacy-test","LEGACY")); }
+    public JsonNode create(Map<String, String> body, WriteAccess.Actor actor) {
         String title = required(body, "title", 180), unit = required(body, "unit", 80), owner = required(body, "owner", 100);
         String due = required(body, "due", 10);
         try { LocalDate.parse(due); } catch (Exception e) { throw bad("Prazo inválido"); }
@@ -99,13 +100,14 @@ public class EsgOperations {
             ObjectNode action = actions.addObject();
             action.put("id", UUID.randomUUID().toString()); action.put("title", title); action.put("unit", unit);
             action.put("owner", owner); action.put("due", due); action.put("status", "PLANEJADA");
-            action.put("createdAt", Instant.now().toString()); action.put("updatedAt", action.path("createdAt").asText());
+            action.put("createdAt", Instant.now().toString()); action.put("updatedAt", action.path("createdAt").asText());action.put("createdBy",actor.id());
             action.put("evidence", "");
-            action.putArray("history").addObject().put("status", "PLANEJADA").put("at", action.path("createdAt").asText()).put("evidence", "");
+            action.putArray("history").addObject().put("status", "PLANEJADA").put("at", action.path("createdAt").asText()).put("evidence", "").put("actorId",actor.id());
             return action.deepCopy();
         });
     }
-    public JsonNode update(String id, Map<String, String> body) {
+    public JsonNode update(String id, Map<String, String> body) { return update(id,body,new WriteAccess.Actor("legacy-test","LEGACY")); }
+    public JsonNode update(String id, Map<String, String> body, WriteAccess.Actor actor) {
         String status = required(body, "status", 30);
         if (!List.of("PLANEJADA", "EM_ANDAMENTO", "CONCLUIDA").contains(status)) throw bad("Status inválido");
         String evidence = body.getOrDefault("evidence", "").trim();
@@ -115,7 +117,7 @@ public class EsgOperations {
                 ObjectNode action = (ObjectNode) n;
                 action.put("status", status); action.put("evidence", evidence); action.put("updatedAt", Instant.now().toString());
                 ArrayNode history = action.has("history") ? (ArrayNode) action.get("history") : action.putArray("history");
-                history.addObject().put("status", status).put("at", action.path("updatedAt").asText()).put("evidence", evidence);
+                history.addObject().put("status", status).put("at", action.path("updatedAt").asText()).put("evidence", evidence).put("actorId",actor.id());
                 return action.deepCopy();
             }
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ação não encontrada");

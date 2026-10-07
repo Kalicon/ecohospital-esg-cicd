@@ -15,10 +15,10 @@ public class OperationsController {
     @GetMapping("/actions") public JsonNode actions() { return operations.actions(); }
     @PostMapping("/actions") @ResponseStatus(HttpStatus.CREATED)
     public JsonNode create(@RequestBody Map<String, String> body, @RequestHeader(value="X-Operator-Key", required=false) String key) {
-        access.require(key); return operations.create(body);
+        return operations.create(body,access.require(key));
     }
     @PatchMapping("/actions/{id}")
     public JsonNode update(@PathVariable String id, @RequestBody Map<String, String> body, @RequestHeader(value="X-Operator-Key", required=false) String key) {
-        access.require(key); return operations.update(id, body);
+        return operations.update(id, body,access.require(key));
     }
 }

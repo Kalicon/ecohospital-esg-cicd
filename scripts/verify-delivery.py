@@ -17,10 +17,11 @@ with zipfile.ZipFile(archive) as delivery:
         assert path.name != '.env' and not path.name.endswith('.env'), name
         assert path.suffix not in {'.pem', '.key', '.pfx', '.p12'}, name
         assert not (name.startswith('deploy/import/') and name.endswith('.json')), name
-    required = ['pom.xml', 'Dockerfile', '.dockerignore', 'docker-compose.yml', 'docker-compose.postgres.yml', '.env.example',
+    required = ['pom.xml', 'Dockerfile', '.dockerignore', 'docker-compose.yml', 'docker-compose.postgres.yml', 'deploy/compose-pc.yml', '.env.example',
                 '.github/workflows/ci-cd.yml', '.github/workflows/deploy.yml', 'README.md',
                 'docs/EcoHospital_CICD.pdf', '.mvn/wrapper/maven-wrapper.properties',
-                'src/server.js', 'src/test_mongodb_runner.js', 'scripts/esg_mongodb_solution.js']
+                'src/server.js', 'src/test_mongodb_runner.js', 'scripts/esg_mongodb_solution.js',
+                'docs/ROTEIRO_APRESENTACAO.md', 'docs/evidence/v5/README.md']
     for name in required:
         assert name in names, f'Missing required entry: {name}'
     manifest = delivery.read('MANIFEST-SHA256.txt').decode('utf-8').splitlines()

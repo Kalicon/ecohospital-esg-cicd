@@ -34,6 +34,7 @@ jobs:
           IMAGE: ${{ inputs.image }}
           APP_VERSION: ${{ inputs.version }}
           APP_WRITE_TOKEN: ${{ secrets.APP_WRITE_TOKEN }}
+          APP_USERS_JSON: ${{ secrets.APP_USERS_JSON }}
         run: .\scripts\deploy-local.ps1 -EnvironmentName $env:APP_ENV -Image $env:IMAGE -Version $env:APP_VERSION
       - name: Guardar evidências reais
         if: always()

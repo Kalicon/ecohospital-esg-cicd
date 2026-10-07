@@ -19,6 +19,7 @@ app:
   storage-file: ${STORAGE_FILE:}
   write-token: ${APP_WRITE_TOKEN:}
   write-token-file: ${APP_WRITE_TOKEN_FILE:}
+  users-file: ${APP_USERS_FILE:}
   postgres:
     url: ${POSTGRES_JDBC_URL:}
     user: ${POSTGRES_USER:}

@@ -11,8 +11,21 @@ public class JournalController {
     private final WriteAccess access;
     public JournalController(EnvironmentalJournal journal,WriteAccess access) {this.journal=journal;this.access=access;}
     @GetMapping("/{kind}") public JsonNode list(@PathVariable String kind) {return journal.list(kind);}
+    @GetMapping("/factors") public JsonNode factors() {return journal.factors();}
+    @PostMapping("/factors") @ResponseStatus(HttpStatus.CREATED)
+    public JsonNode addFactor(@RequestBody Map<String,String> body,@RequestHeader(value="X-Operator-Key",required=false)String key) {
+        return journal.addFactor(body,access.require(key));
+    }
+    @PostMapping("/factors/{id}/review")
+    public JsonNode reviewFactor(@PathVariable String id,@RequestBody Map<String,String> body,@RequestHeader(value="X-Operator-Key",required=false)String key) {
+        return journal.reviewFactor(id,body,access.requireRole(key,"REVIEWER"));
+    }
     @PostMapping("/{kind}") @ResponseStatus(HttpStatus.CREATED)
-    public JsonNode create(@PathVariable String kind,@RequestBody Map<String,String> body,@RequestHeader(value="X-Operator-Key",required=false)String key) {access.require(key);return journal.create(kind,body);}
+    public JsonNode create(@PathVariable String kind,@RequestBody Map<String,String> body,@RequestHeader(value="X-Operator-Key",required=false)String key) {return journal.create(kind,body,access.require(key));}
+    @PostMapping("/waste/{id}/advance")
+    public JsonNode advanceWaste(@PathVariable String id,@RequestBody Map<String,String> body,@RequestHeader(value="X-Operator-Key",required=false)String key) {
+        return journal.advanceWaste(id,body,access.require(key));
+    }
     @PostMapping("/{kind}/{id}/void")
-    public JsonNode cancel(@PathVariable String kind,@PathVariable String id,@RequestBody Map<String,String> body,@RequestHeader(value="X-Operator-Key",required=false)String key) {access.require(key);return journal.cancel(kind,id,body);}
+    public JsonNode cancel(@PathVariable String kind,@PathVariable String id,@RequestBody Map<String,String> body,@RequestHeader(value="X-Operator-Key",required=false)String key) {return journal.cancel(kind,id,body,access.require(key));}
 }

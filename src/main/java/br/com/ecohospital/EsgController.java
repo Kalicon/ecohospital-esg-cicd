@@ -30,6 +30,9 @@ public class EsgController {
                 "aluno", "Kalicon Amorim da Cruz Souza - RM: 563172", "kpis", service.kpis());
     }
     @GetMapping("/api/kpis") public Map<String, Object> kpis() { return service.kpis(); }
+    @GetMapping("/api/access/me") public Map<String,String> identity(@RequestHeader(value="X-Operator-Key",required=false) String key) {
+        var actor=writeAccess.identify(key);return Map.of("id",actor.id(),"role",actor.role());
+    }
     @GetMapping("/api/insights") public Map<String, Object> insights() { return service.insights(); }
     @GetMapping("/api/collections/{name}")
     public Map<String, Object> collection(@PathVariable String name) { return service.collection(name); }
@@ -47,7 +50,7 @@ public class EsgController {
         return service.simulate(body == null ? null : body.get("codigo_fonte"));
     }
     @PostMapping("/api/reset") public Map<String, Object> reset(@RequestHeader(value = "X-Operator-Key", required = false) String key) {
-        writeAccess.require(key);
+        writeAccess.requireRole(key,"ADMIN");
         return service.reset();
     }
     @GetMapping("/api/test-runner") public Map<String, Object> validation() { return service.validationReport(); }

@@ -80,3 +80,12 @@ Ações ocupam uma lista opcional no documento persistente, sem apagar ou exigir
 - `docs/evidence/v4`: artefatos reais de imagem, staging e produção, JSON de health, digest, estado final do pipeline e capturas da página. Os ambientes Docker usam o mesmo digest e volumes separados.
 - `README.md`, `docs/documentacao-tecnica.md`, `docs/EcoHospital_CICD.pdf`: estado final e limitações atualizados. `scripts/generate-technical-pdf.py` usa data e número de testes atuais.
 - Os gatilhos locais foram devolvidos a `false` após os deploys; runners efêmeros foram removidos. Backups pré-deploy ficam fora do repositório e do pacote ZIP.
+
+## Evolução de auditoria (branch em validação)
+
+- `EnvironmentalJournal.java` e `JournalController.java`: catálogo versionado de fatores, revisão interna por credencial, snapshot dos metadados no inventário e eventos sequenciais de custódia dos resíduos.
+- `WriteAccess.java`, `EsgController.java`, `EsgOperations.java`, `OperationsController.java`: credenciais locais individuais opcionais, papéis, consulta da identidade e IDs de ator em lançamentos/ações. O token legado permanece quando o arquivo de usuários não é configurado, mas não pode revisar fatores.
+- `public/journal.js`, `public/app.js`, `public/index.html`: seleção/cadastro de fator, trilha dos lotes, próximo estágio e identificação do papel ativo no navegador.
+- `scripts/init-local-secrets.ps1`, `docker-compose.yml`, `application.yml`, `.env.example`: geração e montagem do arquivo de usuários fora do Git.
+- `.github/workflows/ci-cd.yml`: teste de restauração JSON em volume separado, SBOM e atestado de procedência após publicação; execução remota ainda precisa ser comprovada.
+- `docs/ROTEIRO_APRESENTACAO.md`, `docs/evidence/v5`: roteiro, matriz requisito-evidência e registro do smoke local. Não incluir credenciais ou dados privados no ZIP.
