@@ -72,3 +72,11 @@ O redesenho preserva as funcionalidades ESG e a stack Java/HTML/CSS/JavaScript; 
 - `ci-cd.yml`, `verify.ps1`: verificação de sintaxe do novo controlador de interface.
 
 Ações ocupam uma lista opcional no documento persistente, sem apagar ou exigir migração das coleções originais. Reset remove também essa lista; o diálogo foi atualizado. Não foi criada certificação ESG, identidade individual ou integração com sensores reais.
+
+## Fechamento da revisão de rastreabilidade (07/10/2026)
+
+- `src/main/java` e `public/journal.js`/`operations.js`: inventário GEE parcial por escopo e método, lotes de resíduos, anulações rastreáveis e plano de ação. O conjunto atual contém 39 testes JUnit aprovados.
+- `.github/workflows/ci-cd.yml`: `secrets: inherit` encaminha os segredos dos Environments aos workflows reutilizáveis de staging e produção. O primeiro run falhou em staging por falta do token; o run corrigido 37496607415 aprovou verify, image, staging-pc e production-pc.
+- `docs/evidence/v4`: artefatos reais de imagem, staging e produção, JSON de health, digest, estado final do pipeline e capturas da página. Os ambientes Docker usam o mesmo digest e volumes separados.
+- `README.md`, `docs/documentacao-tecnica.md`, `docs/EcoHospital_CICD.pdf`: estado final e limitações atualizados. `scripts/generate-technical-pdf.py` usa data e número de testes atuais.
+- Os gatilhos locais foram devolvidos a `false` após os deploys; runners efêmeros foram removidos. Backups pré-deploy ficam fora do repositório e do pacote ZIP.
