@@ -106,8 +106,8 @@ jobs:
           assert data['totalLeiturasIot'] == 11, data
           PY
           docker cp esg-smoke:/app/data/state.json /tmp/esg-smoke-backup.json
+          docker run --rm --user 0 --entrypoint sh -v esg-restore-data:/app/data -v /tmp/esg-smoke-backup.json:/tmp/backup.json:ro "$IMAGE" -c 'cp /tmp/backup.json /app/data/state.json && chown 10001:10001 /app/data/state.json'
           docker create --name esg-restore -e APP_ENV=ci-restore -v esg-restore-data:/app/data "$IMAGE" >/dev/null
-          docker cp /tmp/esg-smoke-backup.json esg-restore:/app/data/state.json
           docker start esg-restore >/dev/null
           for attempt in $(seq 1 60); do
             state=$(docker inspect --format '{{.State.Health.Status}}' esg-restore)
