@@ -47,15 +47,15 @@ def footer(canvas, doc):
     canvas.line(42, 37, A4[0]-42, 37)
     canvas.setFont("Helvetica", 8)
     canvas.setFillColor(colors.HexColor("#47665d"))
-    canvas.drawString(42, 24, "EcoHospital | CI/CD acadêmico | Preparação: 28/09/2026")
+    canvas.drawString(42, 24, "EcoHospital | CI/CD acadêmico | Atualização: 07/10/2026")
     canvas.drawRightString(A4[0]-42, 24, str(doc.page))
     canvas.restoreState()
 
 story = [Spacer(1, 72), p("EcoHospital Smart", "CoverTitle"),
          p("Ciclo CI/CD com Java Spring Boot", "SectionTitle"),
-         p("Kalicon Amorim da Cruz Souza — RM 563172"), p("FIAP | Atividade acadêmica | 28/09/2026"),
+         p("Kalicon Amorim da Cruz Souza — RM 563172"), p("FIAP | Atividade acadêmica | 07/10/2026"),
          Spacer(1, 25), p("Código, testes, containerização e configuração de staging/produção."),
-         p("CI/CD completo verificado: 25 testes JUnit, imagem GHCR, staging e produção Docker no PC com aprovação obrigatória e mesmo digest. Evidências reais anexadas.", "Evidence"),
+         p("Revisão atual: 39 testes JUnit, imagem GHCR e dois deploys Docker no PC comprovados. Produção foi promovida após aprovação humana; ambos os ambientes usam a mesma imagem por digest. Evidências reais e limitações anexadas.", "Evidence"),
          p("Documento gerado a partir de docs/documentacao-tecnica.md. Outros integrantes: preencher se houver.", "SmallESG")]
 lines = (ROOT / "docs/documentacao-tecnica.md").read_text(encoding="utf-8").splitlines()
 paragraph = []

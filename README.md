@@ -6,11 +6,13 @@ Integrante identificado nos arquivos originais: **Kalicon Amorim da Cruz Souza �
 
 ## Estado comprovado desta entrega
 
-**Revisão operacional e rastreabilidade:** central de atenção por unidade, plano de ação com histórico, inventário parcial de GEE por escopo e método, lotes de resíduos e exportação JSON. Build Maven e Docker: **39 testes aprovados**. Smoke PostgreSQL-demo comprovou HTTP 401 sem token, 400 para duplicata, cálculo sintético identificado, anulações persistentes e preservação das 12 leituras após reinício. Registros sintéticos foram anulados e não entram nos totais. Evidências em `docs/evidence/v3`. Abra `http://localhost:8083` e escolha **Inventário GEE**, **Rastrear resíduos** ou **Plano de ação**. Staging/produção abaixo continuam da versão anterior.
+**Atualização de 07/10/2026 (revisão `f240024`):** o [pipeline da revisão atual](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37496607415) concluiu `verify`, `image`, `staging-pc` e `production-pc` com sucesso, após aprovação humana do Environment production. Os dois ambientes Docker responderam `UP` na versão `f240024d0808c06bc8424309c5e81cdd6abb0cae` e usam a mesma imagem imutável `ghcr.io/kalicon/ecohospital-esg-cicd@sha256:23e69b3e5f37c4a297869f55aa73cb441e47f151bae961f59f193f340c2cb01f`. Staging em `http://localhost:8081` preservou 11 leituras; produção em `http://localhost:8082` preservou 10. Cada ambiente tem seu próprio volume e rede. Evidências desta revisão: `docs/evidence/v4`. As seções históricas abaixo descrevem etapas anteriores. Não há servidor público: ambos os endereços são deste PC.
+
+**Revisão operacional e rastreabilidade:** central de atenção por unidade, plano de ação com histórico, inventário parcial de GEE por escopo e método, lotes de resíduos e exportação JSON. Build Maven e Docker: **39 testes aprovados**. Smoke PostgreSQL-demo comprovou HTTP 401 sem token, 400 para duplicata, cálculo sintético identificado, anulações persistentes e preservação das 12 leituras após reinício. Registros sintéticos foram anulados e não entram nos totais. Evidências em `docs/evidence/v3`. Abra `http://localhost:8083` e escolha **Inventário GEE**, **Rastrear resíduos** ou **Plano de ação**. Staging e produção também receberam esta revisão pelo pipeline, conforme evidências `v4`.
 
 O projeto recebido era Node.js sem framework, com frontend estático e cinco coleções JSON em memória. Para atender à linguagem da atividade, foi acrescentado um backend Java 17 / Spring Boot 3.5.16. O frontend, o dataset e as funções ESG foram preservados. O servidor Node original permanece em `src/server.js` como referência; o backend padrão de entrega é Java.
 
-**Evolução adicional (branch de melhoria):** rotas de escrita protegidas por token de operador, cabeçalhos de segurança, painel com taxa de conformidade e fontes prioritárias calculadas sobre as leituras, e PostgreSQL JSONB opcional. Em teste local desta revisão, 30 testes JUnit passaram; um terceiro Compose em `localhost:8083` importou uma cópia do staging (11 leituras), negou escrita sem token (HTTP 401) e preservou a 12ª leitura após reinício. Isso **não** significa que o CI/CD ou os dois ambientes já tenham sido atualizados: os deploys documentados abaixo ainda são da revisão anterior até a nova promoção ser comprovada.
+**Evolução adicional:** rotas de escrita protegidas por token de operador, cabeçalhos de segurança, painel com indicadores calculados e PostgreSQL JSONB opcional. O terceiro Compose em `localhost:8083` importou uma cópia isolada do staging para teste, negou escrita sem token e preservou uma nova leitura após reinício. O CI/CD da revisão atual aprovou build, 39 testes e ambos os deploys locais.
 
 Em 28/09/2026, foram executados o build Maven, **25 testes JUnit aprovados** e o runner Node original com asserções de CRUD. Dois processos Java locais identificaram `staging` e `production`, serviram a página e o health com HTTP 200, usaram o mesmo JAR e demonstraram isolamento e persistência após reinício. Logs e relatórios estão em [docs/evidence/local](docs/evidence/local).
 
@@ -50,11 +52,11 @@ O **Plano de ação** permite registrar título, unidade, equipe responsável e 
 
 As rotas `GET /api/operations` e `GET /api/actions` são de leitura; `POST /api/actions` e `PATCH /api/actions/{id}` exigem o token de operador. A lista opcional `planos_acao` fica no mesmo estado JSON/JSONB, sem modificar as cinco coleções originais e sem migrar os volumes existentes. Restaurar o dataset **apaga também os planos de ação desse ambiente**. Faça backup antes de usar reset.
 
-Metas de redução/energia/árvores são compromissos cadastrados, não resultados alcançados. A média de CO₂ das leituras não é o total emitido pela rede; sugestões acumuladas de árvores não são plantios nem créditos certificados. A aplicação continua acadêmica, com dados simulados. Esta revisão é avaliada em localhost:8083; sua promoção pelo CI/CD ainda precisa ser comprovada.
+Metas de redução/energia/árvores são compromissos cadastrados, não resultados alcançados. A média de CO₂ das leituras não é o total emitido pela rede; sugestões acumuladas de árvores não são plantios nem créditos certificados. A aplicação continua acadêmica, com dados simulados. A revisão atual está em staging e produção; o terceiro ambiente em localhost:8083 é somente uma demonstração isolada do PostgreSQL.
 
 A abertura traz paisagem clara, navegação translúcida em cápsula, título editorial e atalhos para as abas reais do painel. O painel usa ícones SVG no lugar de emojis, hierarquia de informações, foco visível, mensagens de erro junto às ações e confirmação nativa antes de restaurar dados. A stack HTML/CSS/JavaScript foi mantida para preservar as APIs e o build Java. Não é uma reprodução pixel a pixel nem migração para React.
 
-A fotografia `public/hero-landscape-v2.jpg` é de [A.T.M. Arafath Ali no Unsplash](https://unsplash.com/photos/misty-hills-with-trees-at-sunrise-mGp2_4MeGIw), sob a [licença Unsplash](https://unsplash.com/license). A filmagem do exemplo Monsoon não integra a entrega: os [termos Scrolltide](https://www.scrolltide.co/terms) restringem reutilização de filmagens de demonstração. A referência fornecida foi adaptada para o domínio ESG, sem patrocinadores fictícios ou métricas inventadas. Esta revisão está no ambiente de avaliação `http://localhost:8083`; staging e produção não devem ser considerados atualizados até nova evidência de promoção.
+A fotografia `public/hero-landscape-v2.jpg` é de [A.T.M. Arafath Ali no Unsplash](https://unsplash.com/photos/misty-hills-with-trees-at-sunrise-mGp2_4MeGIw), sob a [licença Unsplash](https://unsplash.com/license). A filmagem do exemplo Monsoon não integra a entrega: os [termos Scrolltide](https://www.scrolltide.co/terms) restringem reutilização de filmagens de demonstração. A referência fornecida foi adaptada para o domínio ESG, sem patrocinadores fictícios ou métricas inventadas. A revisão atual está em staging, produção e no ambiente isolado PostgreSQL `http://localhost:8083`.
 
 ### Inventário GEE e resíduos rastreáveis
 
@@ -195,10 +197,9 @@ Não há `continue-on-error` em etapas críticas nem `always()` em deploy. `alwa
 
 1. Recurso WSL concluído e Docker Desktop iniciado: `docker info --format '{{.OSType}}'` retornou `linux` nesta execução.
 2. Use um runner GitHub Actions Windows x64 com a label `ecohospital-lab`, na conta Windows que executa Docker Desktop. **Repositório público: use runner efêmero somente durante deploys confiáveis da main; nunca execute PRs externos nesse PC.** O CI de PR roda em runners GitHub. O workflow local também exige repository/actor `Kalicon` e branch `main`. A aprovação de todos os PRs externos foi habilitada no repositório. Esses filtros reduzem risco, mas não tornam seguro executar código de terceiros no PC.
-3. Variables `LOCAL_DEPLOY_ENABLED=true` e `LOCAL_PRODUCTION_DEPLOY_ENABLED=true` foram habilitadas após o Docker funcionar. Runners efêmeros separados executaram um job cada e se removeram do GitHub.
-   Durante o desenvolvimento desta revisão, ambas foram temporariamente definidas como `false`; reabilite-as somente quando os novos runners e os segredos de cada Environment estiverem prontos.
-4. O CI/CD executado na main promoveu o digest para `staging-pc`, aguardou a revisão no Environment production e promoveu a mesma imagem para `production-pc`. Para repetir, registre dois novos runners efêmeros com `scripts/lab-runner.ps1 -Mode Start -EnvironmentName staging` e `production`, depois dispare o workflow. Não remova a aprovação obrigatória.
-5. `scripts/deploy-local.ps1` mantém Compose/configurações fora do checkout, em `%LOCALAPPDATA%\EcoHospital\deploy\<ambiente>`. Projetos, volumes e redes ficam separados. URLs planejadas: `http://localhost:8081` e `http://localhost:8082`; não são serviços públicos nem deploys concluídos.
+3. Variables `LOCAL_DEPLOY_ENABLED=true` e `LOCAL_PRODUCTION_DEPLOY_ENABLED=true` foram habilitadas durante este run. Runners efêmeros separados executaram um job cada e se removeram do GitHub. **Após a comprovação, ambas foram devolvidas a `false`** para impedir deploys automáticos inesperados neste PC.
+4. O CI/CD executado na main promoveu o digest para `staging-pc`, aguardou a revisão no Environment production e promoveu a mesma imagem para `production-pc`. Para repetir, reabilite as duas variables, registre runners efêmeros com `scripts/lab-runner.ps1 -Mode Start -EnvironmentName staging` e `production`, depois dispare o workflow. Não remova a aprovação obrigatória.
+5. `scripts/deploy-local.ps1` mantém Compose/configurações fora do checkout, em `%LOCALAPPDATA%\EcoHospital\deploy\<ambiente>`. Projetos, volumes e redes ficam separados. Staging atual em `http://localhost:8081` e produção atual em `http://localhost:8082`. Não são serviços públicos.
 
 O pacote GHCR é público; o deploy local faz pull anônimo pelo digest, sem PAT, senha ou login persistente. O `GITHUB_TOKEN` é usado apenas pelas actions normais de checkout/publicação. O deploy remoto opcional abaixo usa secrets por Environment. Não versionar credenciais ou configuração do runner. Uma aprovação de produção pode ser feita pelo próprio integrante nesta demonstração individual; separação de responsabilidades exigiria outro revisor.
 
@@ -268,6 +269,8 @@ Registro das evidências:
 
 Não reutilizar os prints MongoDB anteriores como prova do pipeline. Os JSON locais são resultados HTTP reais, mas não screenshots de servidores remotos.
 
+**Revisão atual:** [run 37496607415](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37496607415) com `verify`, `image`, `staging-pc` e `production-pc` aprovados. `docs/evidence/v4/staging-artifact/` e `production-artifact/` contêm health e estado dos containers publicados pelos jobs; ambos indicam a nova versão e o mesmo digest. As capturas `v4/*-dashboard.png` mostram a página real, mas a identificação do ambiente/versão vem dos JSON de health. Não utilizar os prints `docs/evidence/pc` da versão anterior como prova da promoção atual. O [primeiro run da revisão](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37495567019) registrou falha por segredo não encaminhado ao workflow reutilizável; o [PR 3](https://github.com/Kalicon/ecohospital-esg-cicd/pull/3) incluiu `secrets: inherit` e o novo run passou.
+
 ## Entrega ZIP
 
 Pacote desta evolução: `delivery/EcoHospital_CICD_Rastreabilidade.zip`. Gerar com `.\scripts\package-delivery.ps1 -OutputName EcoHospital_CICD_Rastreabilidade.zip` e verificar com `python scripts/verify-delivery.py delivery/EcoHospital_CICD_Rastreabilidade.zip`. Inclui novos módulos, testes, documentação/PDF e evidências v3; não inclui tokens nem o estado privado importado. Pacotes anteriores são preservados. A geração do PDF requer Python com reportlab; no Codex, use o runtime de dependências disponibilizado pelo aplicativo.
@@ -276,7 +279,7 @@ Execute `.\scripts\package-delivery.ps1` no PowerShell. Ele inclui Java/testes, 
 
 O ZIP é criado em `delivery/EcoHospital_CICD.zip`, com manifesto de arquivos e SHA256. Não sobrescreve um ZIP anterior silenciosamente: mova/renomeie a versão antiga antes de regenerar. Após novos prints ou revisão de integrantes, regenere o PDF e o pacote. O PDF pode ser regenerado com Python + `reportlab` 4.x: `python scripts/generate-technical-pdf.py`.
 
-Esta revisão final com os dois deploys usa `delivery/EcoHospital_CICD-final.zip`. Reproduzir: `.\scripts\package-delivery.ps1 -OutputName EcoHospital_CICD-final.zip`, seguido de `python scripts/verify-delivery.py delivery/EcoHospital_CICD-final.zip`. O pacote anterior `EcoHospital_CICD-executado.zip` foi preservado. [docs/RETOMADA.md](docs/RETOMADA.md) explica como repetir a demonstração em outro momento.
+O pacote da revisão atual usa `delivery/EcoHospital_CICD_Entrega_2026-10-07.zip`. Reproduzir: `.\scripts\package-delivery.ps1 -OutputName EcoHospital_CICD_Entrega_2026-10-07.zip`, seguido de `python scripts/verify-delivery.py delivery/EcoHospital_CICD_Entrega_2026-10-07.zip`. Pacotes anteriores são preservados. [docs/RETOMADA.md](docs/RETOMADA.md) explica como repetir a demonstração em outro momento.
 
 ## Checklist do enunciado
 
@@ -285,7 +288,8 @@ Checklist adicional desta evolução:
 - [x] Central operacional e plano de ação implementados e verificados localmente.
 - [x] Inventário parcial por escopo com fator documentado e resíduos rastreáveis implementados.
 - [x] 39 testes aprovados, proteção de escrita, persistência e dados originais preservados no ambiente demo.
-- [ ] Nova revisão promovida pelo pipeline para staging e produção.
+- [x] Nova revisão promovida pelo pipeline para staging, com health e versão conferidos.
+- [x] Nova revisão promovida para produção após aprovação obrigatória, com health e versão conferidos.
 - [ ] Fatores oficiais aplicáveis e documentos reais validados por responsável técnico.
 - [ ] Inventário completo, auditoria independente e integração MTR/SINIR (não implementados).
 
