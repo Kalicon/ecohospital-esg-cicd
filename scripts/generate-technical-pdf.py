@@ -55,7 +55,7 @@ story = [Spacer(1, 72), p("EcoHospital Smart", "CoverTitle"),
          p("Ciclo CI/CD com Java Spring Boot", "SectionTitle"),
          p("Kalicon Amorim da Cruz Souza — RM 563172"), p("FIAP | Atividade acadêmica | 07/10/2026"),
          Spacer(1, 25), p("Código, testes, containerização e configuração de staging/produção."),
-         p("Revisão implantada f240024: 39 testes JUnit e dois deploys Docker no PC comprovados. Evolução de auditoria: 43 testes e Compose isolado aprovados localmente; SBOM e restauração aprovados no PR #5. Atestado da imagem e promoção desta evolução ainda pendentes. Evidências e limites anexados.", "Evidence"),
+         p("Revisão 3a2cbf4: 43 testes JUnit, SBOM, restauração, atestado de imagem e dois deploys Docker neste PC comprovados no run 37620162391. Produção foi aprovada por humano. Fatores e documentos ambientais reais, auditoria externa e hospedagem pública continuam pendentes.", "Evidence"),
          p("Documento gerado a partir de docs/documentacao-tecnica.md. Outros integrantes: preencher se houver.", "SmallESG")]
 lines = (ROOT / "docs/documentacao-tecnica.md").read_text(encoding="utf-8").splitlines()
 paragraph = []
