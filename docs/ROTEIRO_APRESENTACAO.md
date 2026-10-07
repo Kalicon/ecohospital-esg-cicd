@@ -21,7 +21,8 @@ Integrante: Kalicon Amorim da Cruz Souza — RM 563172. Duração sugerida: 5 mi
 | Deploy staging/produção por mesmo digest | Run 37496607415 e health nos dois ambientes | Comprovado para `f240024` |
 | README, documentação técnica e ZIP | Raiz do projeto, `docs/EcoHospital_CICD.pdf`, `delivery/` | Comprovado para a entrega anterior; regenerar após a evolução |
 | Catálogo de fatores, papéis e cadeia de resíduos | 43 testes locais; Compose isolado em 8084 | Comprovado localmente; não promovido |
-| SBOM, atestado GHCR e teste de restauração no CI | Novo workflow `ci-cd.yml` | Pendente de run aprovado |
+| SBOM e teste de restauração no CI | [Run do PR #5](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37617424794), job `image` | Comprovado no PR; deploys pulados |
+| Atestado GHCR | Workflow `ci-cd.yml`, job `image` na `main` | Pendente da publicação |
 | Hospedagem pública e documentos ambientais reais | Não disponíveis | Não concluído |
 
 ## Perguntas prováveis

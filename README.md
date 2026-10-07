@@ -10,7 +10,7 @@ Integrante identificado nos arquivos originais: **Kalicon Amorim da Cruz Souza �
 
 ## Estado comprovado desta entrega
 
-**Evolução de auditoria em validação (branch `codex/auditable-esg-workflow`):** catálogo versionado de fatores, vínculo que congela o fator usado em cada lançamento, sequência de custódia dos resíduos e credenciais individuais opcionais com papéis `OPERATOR`, `REVIEWER` e `ADMIN`. Localmente, 43 testes JUnit passaram no Maven e no build Docker Java 17. Um quarto Compose isolado em `http://localhost:8084` comprovou fator sintético revisado internamente, 123 kgCO₂e calculados, lote passando de geração a destinação, preservação após reinício e HTTP 403 por papel insuficiente. Nada disso é fator oficial, validação documental ou novo deploy de staging/produção. O pipeline com SBOM, atestado de imagem e teste de restauração ainda precisa de um run aprovado para ser marcado como comprovado. Veja [roteiro e matriz de evidências](docs/ROTEIRO_APRESENTACAO.md).
+**Evolução de auditoria em validação (branch `codex/auditable-esg-workflow`):** catálogo versionado de fatores, vínculo que congela o fator usado em cada lançamento, sequência de custódia dos resíduos e credenciais individuais opcionais com papéis `OPERATOR`, `REVIEWER` e `ADMIN`. Localmente, 43 testes JUnit passaram no Maven e no build Docker Java 17. Um quarto Compose isolado em `http://localhost:8084` comprovou fator sintético revisado internamente, 123 kgCO₂e calculados, lote passando de geração a destinação, preservação após reinício e HTTP 403 por papel insuficiente. O [run do PR #5](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37617424794) aprovou `verify` e `image`, incluindo SBOM e restauração de backup; deploys foram pulados. Nada disso é fator oficial, validação documental ou novo deploy de staging/produção. O atestado da imagem publicada ainda depende de um run na `main`. Veja [roteiro e matriz de evidências](docs/ROTEIRO_APRESENTACAO.md).
 
 **Atualização de 07/10/2026 (revisão `f240024`):** o [pipeline da revisão atual](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37496607415) concluiu `verify`, `image`, `staging-pc` e `production-pc` com sucesso, após aprovação humana do Environment production. Os dois ambientes Docker responderam `UP` na versão `f240024d0808c06bc8424309c5e81cdd6abb0cae` e usam a mesma imagem imutável `ghcr.io/kalicon/ecohospital-esg-cicd@sha256:23e69b3e5f37c4a297869f55aa73cb441e47f151bae961f59f193f340c2cb01f`. Staging em `http://localhost:8081` preservou 11 leituras; produção em `http://localhost:8082` preservou 10. Cada ambiente tem seu próprio volume e rede. Evidências desta revisão: `docs/evidence/v4`. As seções históricas abaixo descrevem etapas anteriores. Não há servidor público: ambos os endereços são deste PC.
 
@@ -298,7 +298,8 @@ Checklist da evolução em validação e da revisão já implantada:
 
 - [x] Catálogo de fatores, snapshots no inventário e etapas de resíduos implementados e testados em Compose isolado.
 - [x] Credenciais individuais opcionais e separação de papéis testadas; segredos locais fora do ZIP.
-- [ ] SBOM, atestado de imagem e restauração de backup aprovados no GitHub Actions da nova revisão.
+- [x] SBOM e restauração de backup aprovados no GitHub Actions da nova revisão ([run do PR #5](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37617424794)).
+- [ ] Atestado de imagem publicada aprovado em run da `main`.
 - [ ] Nova revisão promovida para staging e produção após aprovação obrigatória.
 
 - [x] Central operacional e plano de ação implementados e verificados localmente.

@@ -9,4 +9,6 @@ Smoke HTTP real com tokens aleatórios gerados fora do repositório:
 - Após reiniciar o container, o lote ainda estava em `DESTINADO` com quatro eventos.
 - Tentativas de reset pelo operador e de cadastro de fator pelo revisor retornaram HTTP 403; `admin-demo` foi identificado como ADMIN.
 
-Nenhum token, arquivo de usuários, estado JSON privado ou fator oficial está incluído aqui. O atestado/SBOM e a restauração de backup no GitHub Actions ainda dependem de um run verde desta branch; não são evidências executadas neste momento.
+O [run do PR #5](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37617424794) aprovou os jobs `verify` e `image`: 43 testes Java, build Docker, smoke da imagem, geração de SBOM e teste de restauração em volume separado com PostgreSQL. Os jobs de deploy foram pulados porque se trata de um pull request. O atestado de procedência da imagem só pode ser executado após a publicação na `main`; não está comprovado por este run.
+
+Nenhum token, arquivo de usuários, estado JSON privado ou fator oficial está incluído aqui. A primeira tentativa do PR falhou justamente no teste de restauração por permissão do arquivo restaurado; o workflow foi corrigido para atribuir o arquivo ao UID 10001 antes de iniciar a aplicação. A falha e a correção permanecem visíveis no histórico do PR.
