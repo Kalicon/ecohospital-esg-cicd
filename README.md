@@ -10,7 +10,7 @@ Integrante identificado nos arquivos originais: **Kalicon Amorim da Cruz Souza �
 
 ## Estado comprovado desta entrega
 
-**Evolução de auditoria em validação (branch `codex/auditable-esg-workflow`):** catálogo versionado de fatores, vínculo que congela o fator usado em cada lançamento, sequência de custódia dos resíduos e credenciais individuais opcionais com papéis `OPERATOR`, `REVIEWER` e `ADMIN`. Localmente, 43 testes JUnit passaram no Maven e no build Docker Java 17. Um quarto Compose isolado em `http://localhost:8084` comprovou fator sintético revisado internamente, 123 kgCO₂e calculados, lote passando de geração a destinação, preservação após reinício e HTTP 403 por papel insuficiente. O [run do PR #5](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37617424794) aprovou `verify` e `image`, incluindo SBOM e restauração de backup; deploys foram pulados. Nada disso é fator oficial, validação documental ou novo deploy de staging/produção. O atestado da imagem publicada ainda depende de um run na `main`. Veja [roteiro e matriz de evidências](docs/ROTEIRO_APRESENTACAO.md).
+**Evolução de auditoria implantada (revisão `3a2cbf4`):** catálogo versionado de fatores, vínculo que congela o fator usado em cada lançamento, sequência de custódia dos resíduos e credenciais individuais com papéis `OPERATOR`, `REVIEWER` e `ADMIN`. O [run completo](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37620162391) aprovou `verify`, `image`, `staging-pc` e `production-pc` após aprovação humana de produção. Incluiu 43 testes JUnit, restauração de backup, SBOM e [atestado de procedência](https://github.com/Kalicon/ecohospital-esg-cicd/attestations). Ambos os ambientes respondem `UP` na versão `3a2cbf4ce28f75e8d8cda0136a9889ccca09df21` e usam o mesmo digest `ghcr.io/kalicon/ecohospital-esg-cicd@sha256:8a09c7459a4c5fb0c450e12a4022f6a8686df1046060cd8ec255440425ab3ff8`. Staging preservou 11 leituras e produção, 10. São ambientes neste PC, não URLs públicas. O teste sintético local em `http://localhost:8084` permanece isolado: nenhum fator dele foi promovido como oficial. Veja [evidências v5](docs/evidence/v5/README.md) e [roteiro](docs/ROTEIRO_APRESENTACAO.md).
 
 **Atualização de 07/10/2026 (revisão `f240024`):** o [pipeline da revisão atual](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37496607415) concluiu `verify`, `image`, `staging-pc` e `production-pc` com sucesso, após aprovação humana do Environment production. Os dois ambientes Docker responderam `UP` na versão `f240024d0808c06bc8424309c5e81cdd6abb0cae` e usam a mesma imagem imutável `ghcr.io/kalicon/ecohospital-esg-cicd@sha256:23e69b3e5f37c4a297869f55aa73cb441e47f151bae961f59f193f340c2cb01f`. Staging em `http://localhost:8081` preservou 11 leituras; produção em `http://localhost:8082` preservou 10. Cada ambiente tem seu próprio volume e rede. Evidências desta revisão: `docs/evidence/v4`. As seções históricas abaixo descrevem etapas anteriores. Não há servidor público: ambos os endereços são deste PC.
 
@@ -95,7 +95,7 @@ docker compose logs app
 
 Abra `http://localhost:8080`. Para encerrar preservando dados: `docker compose down`. Não utilize `down -v` se quiser manter o estado, pois essa opção remove o volume.
 
-No Compose local desta evolução, `scripts/init-local-secrets.ps1` cria `.tools/secrets/operator_users.json` com três credenciais aleatórias e distintas. Consulte esse arquivo **somente no seu PC** e use o token correspondente a `operador-demo`, `revisor-demo` ou `admin-demo` no campo “Credencial de acesso”. O painel valida o papel e guarda a credencial apenas na memória da aba; não a salva no navegador. Operador registra fatores, consumos, lotes e etapas; revisor registra revisão interna do fator; admin pode ambos e restaurar o dataset. Um operador recebe HTTP 403 ao tentar resetar. O arquivo é ignorado pelo Git e não entra no ZIP. Staging/produção já implantados ainda usam o token compartilhado anterior por compatibilidade, identificado como `LEGACY`, que **não** pode revisar fatores. Não publique o serviço sem TLS, controle de rede e autenticação institucional.
+No Compose local, `scripts/init-local-secrets.ps1` cria `.tools/secrets/operator_users.json` com três credenciais aleatórias e distintas. Consulte esse arquivo **somente no seu PC** e use o token correspondente a `operador-demo`, `revisor-demo` ou `admin-demo` no campo “Credencial de acesso”. O painel valida o papel e guarda a credencial apenas na memória da aba; não a salva no navegador. Operador registra fatores, consumos, lotes e etapas; revisor registra revisão interna do fator; admin pode ambos e restaurar o dataset. Um operador recebe HTTP 403 ao tentar resetar. O arquivo é ignorado pelo Git e não entra no ZIP. Staging/produção usam arquivos de credenciais distintos fora do repositório, publicados como secrets dos Environments; as rotas mutáveis novas usam os papéis individuais. Não publique o serviço sem TLS, controle de rede e autenticação institucional.
 
 O cadastro de fator exige fonte, versão, ano, unidade e metodologia; o sistema **não** pré-carrega fatores oficiais. A revisão é apenas interna e não certifica a fonte. Ao selecionar um fator no inventário, o lançamento copia valor e metadados para preservar o cálculo histórico. O lote de resíduos avança por eventos `GERADO → SEGREGADO → COLETADO → TRATADO/DESTINADO`; tratamento pode não se aplicar. Uma referência de destinação continua “informada, não validada”, sem upload nem integração MTR/SINIR. Estados antigos são lidos sem migração destrutiva.
 
@@ -197,7 +197,7 @@ flowchart LR
 
 1. `verify`: checa sintaxe JavaScript, executa o runner Node, compila Java, executa JUnit e empacota o JAR. Guarda relatórios mesmo em falha.
 2. `image` usa `needs: verify`, constrói a imagem e executa um container JSON para verificar usuário sem root, health, ambiente/versão, autorização e persistência após reinício. Também sobe PostgreSQL real em Compose e verifica autorização e persistência. Falha em qualquer teste impede o push e o deploy. O build Docker também roda JUnit.
-   Na evolução em validação, o mesmo job também restaura um backup JSON em outro volume, gera SBOM e, após publicar na `main`, tenta atestar a origem da imagem no GHCR. Esses passos só serão declarados executados quando houver run verde da nova revisão.
+   Na revisão implantada, o mesmo job também restaura um backup JSON em outro volume, gera SBOM e atesta a origem da imagem publicada no GHCR. O [run final](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37620162391) aprovou esses passos; o atestado do digest foi verificado separadamente.
 3. Somente execuções na `main`, que não sejam pull requests, publicam a imagem testada no GHCR com tag do commit e obtêm o digest real. PRs fazem build/testes, sem deploy.
 4. `staging` exige `image` bem-sucedido e variável de repositório `DEPLOY_ENABLED=true`. Faz pull via SSH, sobe Compose, aguarda health e verifica a URL externa (status, ambiente e SHA).
 5. `production` exige `image` e `staging` bem-sucedidos e `PRODUCTION_DEPLOY_ENABLED=true`. Usa **o mesmo digest**. O Environment `production` precisa ter revisores obrigatórios configurados na interface do GitHub.
@@ -214,7 +214,7 @@ Não há `continue-on-error` em etapas críticas nem `always()` em deploy. `alwa
 
 O pacote GHCR é público; o deploy local faz pull anônimo pelo digest, sem PAT, senha ou login persistente. O `GITHUB_TOKEN` é usado apenas pelas actions normais de checkout/publicação. O deploy remoto opcional abaixo usa secrets por Environment. Não versionar credenciais ou configuração do runner. Uma aprovação de produção pode ser feita pelo próprio integrante nesta demonstração individual; separação de responsabilidades exigiria outro revisor.
 
-Para a revisão com autorização de escrita, execute `./scripts/provision-lab-operator-secrets.ps1 -PublishToGitHub` no PowerShell autenticado no `gh`. O script gera tokens distintos fora do repositório, em `%LOCALAPPDATA%\EcoHospital\operator-keys`, e publica `APP_WRITE_TOKEN` nos Environments staging e production sem exibir valores. O workflow grava cada segredo como arquivo local ao fazer o deploy. Para operar o painel, use o token do arquivo correspondente ao ambiente.
+Para a revisão com autorização de escrita, execute `./scripts/provision-lab-operator-secrets.ps1 -PublishToGitHub` no PowerShell autenticado no `gh`. O script gera tokens distintos fora do repositório, em `%LOCALAPPDATA%\EcoHospital\operator-keys`, e publica `APP_WRITE_TOKEN` e `APP_USERS_JSON` nos Environments staging e production sem exibir valores. O workflow grava cada segredo como arquivo local ao fazer o deploy. Para operar o painel, use o token do arquivo correspondente ao ambiente.
 
 ### Alternativa: o que configurar para deploy remoto por SSH
 
@@ -280,27 +280,27 @@ Registro das evidências:
 
 Não reutilizar os prints MongoDB anteriores como prova do pipeline. Os JSON locais são resultados HTTP reais, mas não screenshots de servidores remotos.
 
-**Revisão atual:** [run 37496607415](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37496607415) com `verify`, `image`, `staging-pc` e `production-pc` aprovados. `docs/evidence/v4/staging-artifact/` e `production-artifact/` contêm health e estado dos containers publicados pelos jobs; ambos indicam a nova versão e o mesmo digest. As capturas `v4/*-dashboard.png` mostram a página real, mas a identificação do ambiente/versão vem dos JSON de health. Não utilizar os prints `docs/evidence/pc` da versão anterior como prova da promoção atual. O [primeiro run da revisão](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37495567019) registrou falha por segredo não encaminhado ao workflow reutilizável; o [PR 3](https://github.com/Kalicon/ecohospital-esg-cicd/pull/3) incluiu `secrets: inherit` e o novo run passou.
+**Revisão atual:** [run 37620162391](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37620162391) com `verify`, `image`, `staging-pc` e `production-pc` aprovados. `docs/evidence/v5/staging-artifact/` e `production-artifact/` contêm health, identidade sem token e estado dos containers publicados pelos jobs. As capturas `v4/*-dashboard.png` pertencem à revisão anterior e não provam o visual da promoção atual. O [run 37618794856](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37618794856) registrou a falha de verificação PowerShell; o [PR 6](https://github.com/Kalicon/ecohospital-esg-cicd/pull/6) corrigiu o script antes do run aprovado.
 
 ## Entrega ZIP
 
-Pacote desta evolução: `delivery/EcoHospital_CICD_Rastreabilidade.zip`. Gerar com `.\scripts\package-delivery.ps1 -OutputName EcoHospital_CICD_Rastreabilidade.zip` e verificar com `python scripts/verify-delivery.py delivery/EcoHospital_CICD_Rastreabilidade.zip`. Inclui novos módulos, testes, documentação/PDF e evidências v3; não inclui tokens nem o estado privado importado. Pacotes anteriores são preservados. A geração do PDF requer Python com reportlab; no Codex, use o runtime de dependências disponibilizado pelo aplicativo.
+Pacote desta evolução: `delivery/EcoHospital_CICD_Auditoria_2026-10-07.zip`. Gerar com `.\scripts\package-delivery.ps1 -OutputName EcoHospital_CICD_Auditoria_2026-10-07.zip` e verificar com `python scripts/verify-delivery.py delivery/EcoHospital_CICD_Auditoria_2026-10-07.zip`. Inclui módulos, testes, documentação/PDF e evidências v5; não inclui tokens nem estado privado. Pacotes anteriores são preservados. A geração do PDF requer Python com `reportlab` 4.x.
 
 Execute `.\scripts\package-delivery.ps1` no PowerShell. Ele inclui Java/testes, backend Node original, frontend, dados, scripts MongoDB, arquivos Docker, workflows, Wrapper, configurações de exemplo, README, documentação PDF e evidências disponíveis. Não inclui `.env` reais, `.git`, `target`, `.runtime`, ferramentas temporárias nem ZIPs anteriores. Os modelos SQL/XML e documentos da atividade NoSQL anterior permanecem na pasta original; não são dependências da aplicação e não integram este pacote CI/CD.
 
 O ZIP é criado em `delivery/EcoHospital_CICD.zip`, com manifesto de arquivos e SHA256. Não sobrescreve um ZIP anterior silenciosamente: mova/renomeie a versão antiga antes de regenerar. Após novos prints ou revisão de integrantes, regenere o PDF e o pacote. O PDF pode ser regenerado com Python + `reportlab` 4.x: `python scripts/generate-technical-pdf.py`.
 
-O pacote da revisão atual usa `delivery/EcoHospital_CICD_Entrega_2026-10-07.zip`. Reproduzir: `.\scripts\package-delivery.ps1 -OutputName EcoHospital_CICD_Entrega_2026-10-07.zip`, seguido de `python scripts/verify-delivery.py delivery/EcoHospital_CICD_Entrega_2026-10-07.zip`. Pacotes anteriores são preservados. [docs/RETOMADA.md](docs/RETOMADA.md) explica como repetir a demonstração em outro momento.
+O pacote da revisão anterior permanece em `delivery/EcoHospital_CICD_Entrega_2026-10-07.zip`. [docs/RETOMADA.md](docs/RETOMADA.md) explica como repetir a demonstração em outro momento.
 
 ## Checklist do enunciado
 
-Checklist da evolução em validação e da revisão já implantada:
+Checklist da evolução implantada e da revisão anterior:
 
 - [x] Catálogo de fatores, snapshots no inventário e etapas de resíduos implementados e testados em Compose isolado.
 - [x] Credenciais individuais opcionais e separação de papéis testadas; segredos locais fora do ZIP.
 - [x] SBOM e restauração de backup aprovados no GitHub Actions da nova revisão ([run do PR #5](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37617424794)).
-- [ ] Atestado de imagem publicada aprovado em run da `main`.
-- [ ] Nova revisão promovida para staging e produção após aprovação obrigatória.
+- [x] Atestado de imagem publicado e verificado pelo `gh attestation verify` no digest usado pelos dois ambientes ([run](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37620162391)).
+- [x] Nova revisão promovida para staging e produção após aprovação obrigatória, com health e dados preservados.
 
 - [x] Central operacional e plano de ação implementados e verificados localmente.
 - [x] Inventário parcial por escopo com fator documentado e resíduos rastreáveis implementados.
@@ -310,7 +310,7 @@ Checklist da evolução em validação e da revisão já implantada:
 - [ ] Fatores oficiais aplicáveis e documentos reais validados por responsável técnico.
 - [ ] Inventário completo, auditoria independente e integração MTR/SINIR (não implementados).
 
-O checklist acadêmico abaixo refere-se às evidências da entrega anterior, não à promoção automática desta evolução.
+O checklist acadêmico abaixo também permanece comprovado pelas evidências da entrega anterior e do run completo da revisão atual.
 
 - [x] Estrutura, linguagem, framework original, testes e configurações examinados; plano apresentado antes das alterações.
 - [x] Backend Java Spring Boot implementado com funcionalidades ESG preservadas e health check HTTP verificado.

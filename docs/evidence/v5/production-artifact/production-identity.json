@@ -1,0 +1,5 @@
+﻿{
+    "id":  "production-operator",
+    "role":  "OPERATOR",
+    "environment":  "production"
+}

@@ -1,0 +1,5 @@
+﻿{
+    "id":  "staging-operator",
+    "role":  "OPERATOR",
+    "environment":  "staging"
+}
