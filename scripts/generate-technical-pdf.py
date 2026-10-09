@@ -47,13 +47,13 @@ def footer(canvas, doc):
     canvas.line(42, 37, A4[0]-42, 37)
     canvas.setFont("Helvetica", 8)
     canvas.setFillColor(colors.HexColor("#47665d"))
-    canvas.drawString(42, 24, "EcoHospital | CI/CD acadêmico | Atualização: 07/10/2026")
+    canvas.drawString(42, 24, "EcoHospital | CI/CD acadêmico | Atualização: 09/10/2026")
     canvas.drawRightString(A4[0]-42, 24, str(doc.page))
     canvas.restoreState()
 
 story = [Spacer(1, 72), p("EcoHospital Smart", "CoverTitle"),
          p("Ciclo CI/CD com Java Spring Boot", "SectionTitle"),
-         p("Kalicon Amorim da Cruz Souza — RM 563172"), p("FIAP | Atividade acadêmica | 07/10/2026"),
+         p("Kalicon Amorim da Cruz Souza — RM 563172"), p("FIAP | Atividade acadêmica | 09/10/2026"),
          Spacer(1, 25), p("Código, testes, containerização e configuração de staging/produção."),
          p("Revisão 3a2cbf4: 43 testes JUnit, SBOM, restauração, atestado de imagem e dois deploys Docker neste PC comprovados no run 37620162391. Produção foi aprovada por humano. Fatores e documentos ambientais reais, auditoria externa e hospedagem pública continuam pendentes.", "Evidence"),
          p("Documento gerado a partir de docs/documentacao-tecnica.md. Outros integrantes: preencher se houver.", "SmallESG")]
@@ -155,10 +155,10 @@ for name, caption in [("03-updated-ci-success.png", "Run inicial: verify e image
         story.append(picture)
         story.append(p(f"Origem: docs/evidence/github/{name}. Captura da página real, sem montagem de status.", "SmallESG"))
 pc_dir = ROOT / "docs/evidence/pc"
-for name, caption in [("github-two-deploys-approved.png", "Run final aprovado: verify, image, staging-pc e production-pc."),
-                      ("github-production-approval.png", "Histórico real: Kalicon aprovou production antes do deploy."),
-                      ("staging-dashboard.png", "Dashboard real de staging no container Docker deste PC, porta 8081."),
-                      ("production-dashboard.png", "Dashboard real de produção no container Docker deste PC, porta 8082.")]:
+for name, caption in [("github-two-deploys-approved.png", "Captura histórica: run anterior com verify, image, staging-pc e production-pc aprovados."),
+                      ("github-production-approval.png", "Captura histórica: aprovação humana de production em run anterior."),
+                      ("staging-dashboard.png", "Captura histórica do painel Docker em staging; não é print da revisão 3a2cbf4."),
+                      ("production-dashboard.png", "Captura histórica do painel Docker em produção; não é print da revisão 3a2cbf4.")]:
     screenshot = pc_dir / name
     if screenshot.exists():
         story.extend([PageBreak(), p("Anexo — ambiente Docker no PC", "SectionTitle"), p(caption)])
@@ -168,6 +168,34 @@ for name, caption in [("github-two-deploys-approved.png", "Run final aprovado: v
         picture.drawHeight = picture.imageHeight * scale
         story.append(picture)
         story.append(p(f"Origem: docs/evidence/pc/{name}. Captura real; URLs localhost não são servidores públicos.", "SmallESG"))
+story.extend([PageBreak(), p("Evidência da revisão implantada 3a2cbf4", "SectionTitle")])
+story.append(p("Run completo: https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37620162391 . Jobs verify, image, staging-pc e production-pc aprovados, com aprovação humana do Environment production. O run e os artefatos GitHub são a prova da revisão atual; as capturas visuais anteriores foram rotuladas como históricas.", "Evidence"))
+for env in ("staging", "production"):
+    evidence_dir = ROOT / "docs/evidence/v5" / f"{env}-artifact"
+    health = json.loads((evidence_dir / f"{env}-health.json").read_text(encoding="utf-8-sig"))
+    container = json.loads((evidence_dir / f"{env}-containers.json").read_text(encoding="utf-8-sig"))
+    story.extend([p(f"{env.capitalize()}: health={health['status']}; versão={health['version']}; imagem={container['Image']}; estado={container['State']}; porta={container['Ports']}.", "BodyESG")])
+story.append(p("Em 09/10/2026, as duas URLs locais de health voltaram a responder UP com a versão 3a2cbf4. Esta conferência textual não é apresentada como screenshot. Os dados sintéticos de teste não foram promovidos como fatores oficiais.", "SmallESG"))
+story.extend([PageBreak(), p("Checklist obrigatório da entrega final", "SectionTitle")])
+story.append(p("Checklist da atividade DevOps. Os prints dos painéis incluídos são históricos e identificados; o deploy da revisão final é comprovado pelo run 37620162391 e por seus artefatos de health.", "SmallESG"))
+checklist = [
+    ("Projeto compactado em ZIP com estrutura organizada", "OK", "Pasta EcoHospital-ESG; manifesto SHA-256"),
+    ("Dockerfile funcional", "OK", "Build e job image aprovados"),
+    ("docker-compose.yml ou Kubernetes", "OK", "Compose, rede, volume e variáveis"),
+    ("Pipeline com build, teste e deploy", "OK", "Run 37620162391"),
+    ("README com instruções e prints", "OK", "Execução, Dockerfile, prints históricos rotulados"),
+    ("Documentação técnica com evidências", "OK", "Este PDF, run e anexos reais"),
+    ("Deploy em staging e produção", "OK", "Jobs e health dos dois ambientes"),
+]
+table = Table([[p("Item", "SmallESG"), p("OK", "SmallESG"), p("Comprovação", "SmallESG")]] +
+              [[p(item, "SmallESG"), p(ok, "SmallESG"), p(proof, "SmallESG")] for item, ok, proof in checklist],
+              colWidths=[235, 35, 220], repeatRows=1)
+table.setStyle(TableStyle([("BACKGROUND", (0,0), (-1,0), colors.HexColor("#e4f1ea")),
+                           ("GRID", (0,0), (-1,-1), 0.4, colors.HexColor("#c5ddd4")),
+                           ("VALIGN", (0,0), (-1,-1), "TOP"),
+                           ("LEFTPADDING", (0,0), (-1,-1), 6),
+                           ("RIGHTPADDING", (0,0), (-1,-1), 6)]))
+story.append(table)
 OUT.parent.mkdir(parents=True, exist_ok=True)
 SimpleDocTemplate(str(OUT), pagesize=A4, rightMargin=42, leftMargin=42, topMargin=45, bottomMargin=52,
                   title="EcoHospital Smart — CI/CD", author="Kalicon Amorim da Cruz Souza").build(story, onFirstPage=footer, onLaterPages=footer)
