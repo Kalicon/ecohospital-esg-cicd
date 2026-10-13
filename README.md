@@ -121,6 +121,36 @@ O `docker cp` é apenas exemplo para este PC; em outro host, copie um backup val
 
 O estágio de build usa `maven:3.9-eclipse-temurin-17`, compila, executa JUnit e produz `target/esg-app.jar`. O estágio final usa `eclipse-temurin:17-jre-jammy`, inclui somente o runtime, o JAR e `curl` para healthcheck. Executa como UID/GID 10001, sem Maven, código-fonte ou Node no runtime. A porta interna é 8080. O healthcheck consulta `/health`; uma aplicação saudável retorna `UP`.
 
+Conteúdo completo do `Dockerfile` entregue:
+
+```dockerfile
+# syntax=docker/dockerfile:1
+FROM maven:3.9-eclipse-temurin-17 AS build
+WORKDIR /build
+COPY pom.xml ./
+COPY src/main ./src/main
+COPY src/test ./src/test
+COPY public ./public
+COPY data/esg_dataset.json ./data/esg_dataset.json
+RUN mvn -B -ntp verify
+
+FROM eclipse-temurin:17-jre-jammy AS runtime
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --gid 10001 esg \
+    && useradd --uid 10001 --gid esg --no-create-home esg \
+    && mkdir -p /app/data && chown -R esg:esg /app
+WORKDIR /app
+COPY --from=build --chown=esg:esg /build/target/esg-app.jar /app/app.jar
+ARG APP_VERSION=development
+ENV PORT=8080 APP_ENV=local APP_VERSION=${APP_VERSION} STORAGE_FILE=/app/data/state.json
+USER 10001:10001
+EXPOSE 8080
+HEALTHCHECK --interval=15s --timeout=5s --start-period=60s --retries=5 \
+  CMD curl --fail --silent http://localhost:8080/health || exit 1
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-jar", "/app/app.jar"]
+```
+
 ```powershell
 docker build --build-arg APP_VERSION=academic-local -t ecohospital:local .
 docker run --rm -p 127.0.0.1:8080:8080 -e APP_ENV=local --mount source=ecohospital-manual-data,target=/app/data ecohospital:local
@@ -282,13 +312,23 @@ Não reutilizar os prints MongoDB anteriores como prova do pipeline. Os JSON loc
 
 **Revisão atual:** [run 37620162391](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37620162391) com `verify`, `image`, `staging-pc` e `production-pc` aprovados. `docs/evidence/v5/staging-artifact/` e `production-artifact/` contêm health, identidade sem token e estado dos containers publicados pelos jobs. As capturas `v4/*-dashboard.png` pertencem à revisão anterior e não provam o visual da promoção atual. O [run 37618794856](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37618794856) registrou a falha de verificação PowerShell; o [PR 6](https://github.com/Kalicon/ecohospital-esg-cicd/pull/6) corrigiu o script antes do run aprovado.
 
+## Prints do funcionamento
+
+O [run final da revisão implantada](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37620162391) mostra build, testes e os dois jobs de deploy aprovados. Seus artefatos de [staging](docs/evidence/v5/staging-artifact/staging-health.json) e [produção](docs/evidence/v5/production-artifact/production-health.json) registram `UP`, ambiente e commit `3a2cbf4`. Os JSON dos containers registram o mesmo digest em ambos. Em 09/10/2026, a consulta HTTP local voltou a confirmar `UP` nos dois ambientes; essa conferência não substitui print.
+
+Os prints abaixo são **reais, mas históricos**: mostram os painéis Docker de staging e produção da revisão anterior `f240024`, não a interface da revisão `3a2cbf4`. Foram mantidos como evidência visual do funcionamento; para a revisão final, prevalecem o run e os artefatos acima. Nenhum print foi gerado artificialmente.
+
+![Painel histórico de staging no Docker, revisão f240024](docs/evidence/v4/staging-dashboard.png)
+
+![Painel histórico de produção no Docker, revisão f240024](docs/evidence/v4/production-dashboard.png)
+
 ## Entrega ZIP
 
-Pacote desta evolução: `delivery/EcoHospital_CICD_Auditoria_2026-10-07.zip`. Gerar com `.\scripts\package-delivery.ps1 -OutputName EcoHospital_CICD_Auditoria_2026-10-07.zip` e verificar com `python scripts/verify-delivery.py delivery/EcoHospital_CICD_Auditoria_2026-10-07.zip`. Inclui módulos, testes, documentação/PDF e evidências v5; não inclui tokens nem estado privado. Pacotes anteriores são preservados. A geração do PDF requer Python com `reportlab` 4.x.
+**Arquivo final para upload:** `delivery/EcoHospital_CICD_Entrega_FINAL_2026-10-09.zip`. Ele contém uma única pasta `EcoHospital-ESG/` com código-fonte, Dockerfile, Compose, workflows, scripts, `.env.example`, README, PDF e evidências. Gerar com `.\scripts\package-delivery.ps1 -OutputName EcoHospital_CICD_Entrega_FINAL_2026-10-09.zip -RootFolder EcoHospital-ESG` e verificar com `python scripts/verify-delivery.py delivery/EcoHospital_CICD_Entrega_FINAL_2026-10-09.zip`. Não inclui tokens nem estado privado. Pacotes anteriores são preservados. O PDF pode ser regenerado com Python e `reportlab` 4.x.
 
 Execute `.\scripts\package-delivery.ps1` no PowerShell. Ele inclui Java/testes, backend Node original, frontend, dados, scripts MongoDB, arquivos Docker, workflows, Wrapper, configurações de exemplo, README, documentação PDF e evidências disponíveis. Não inclui `.env` reais, `.git`, `target`, `.runtime`, ferramentas temporárias nem ZIPs anteriores. Os modelos SQL/XML e documentos da atividade NoSQL anterior permanecem na pasta original; não são dependências da aplicação e não integram este pacote CI/CD.
 
-O ZIP é criado em `delivery/EcoHospital_CICD.zip`, com manifesto de arquivos e SHA256. Não sobrescreve um ZIP anterior silenciosamente: mova/renomeie a versão antiga antes de regenerar. Após novos prints ou revisão de integrantes, regenere o PDF e o pacote. O PDF pode ser regenerado com Python + `reportlab` 4.x: `python scripts/generate-technical-pdf.py`.
+O script, sem parâmetros, cria `delivery/EcoHospital_CICD.zip`; com os parâmetros acima, cria o arquivo final e adiciona a pasta raiz exigida no exemplo do enunciado. Há manifesto de arquivos e SHA-256. Ele não sobrescreve um ZIP anterior silenciosamente. Após novos prints ou revisão de integrantes, regenere o PDF (`python scripts/generate-technical-pdf.py`) e o pacote.
 
 O pacote da revisão anterior permanece em `delivery/EcoHospital_CICD_Entrega_2026-10-07.zip`. [docs/RETOMADA.md](docs/RETOMADA.md) explica como repetir a demonstração em outro momento.
 
@@ -331,3 +371,17 @@ O checklist acadêmico abaixo também permanece comprovado pelas evidências da 
 ## Referências oficiais
 
 [Requisitos Spring Boot 3.5](https://docs.spring.io/spring-boot/3.5/system-requirements.html), [Environments e proteção de deploy no GitHub](https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments), [Disponibilidade de aprovação por plano/visibilidade](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/review-deployments). As versões Maven/Spring foram confirmadas no Maven Central durante a preparação.
+
+## Checklist obrigatório da entrega final
+
+Este checklist é da atividade DevOps (não equivale a certificação ambiental). Os prints visuais dos painéis são históricos, identificados acima; o deploy da revisão atual é comprovado pelo run e pelos artefatos de health.
+
+| Item do enunciado | OK | Evidência |
+|---|:---:|---|
+| Projeto compactado em ZIP com estrutura organizada | ☑ | `EcoHospital_CICD_Entrega_FINAL_2026-10-09.zip`, pasta `EcoHospital-ESG/` e manifesto SHA-256 |
+| Dockerfile funcional | ☑ | `Dockerfile`, build da imagem e job `image` aprovado |
+| `docker-compose.yml` ou Kubernetes | ☑ | Compose, rede, volume e variáveis de ambiente no pacote |
+| Pipeline com build, teste e deploy | ☑ | [Run 37620162391](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37620162391) |
+| README com instruções e prints | ☑ | Seções de execução, pipeline, Dockerfile e prints históricos identificados |
+| Documentação técnica com evidências (PDF ou PPT) | ☑ | `docs/EcoHospital_CICD.pdf`, links do run e capturas históricas identificadas |
+| Deploy realizado em staging e produção | ☑ | Jobs `staging-pc` e `production-pc`, health `UP` e mesmo digest |

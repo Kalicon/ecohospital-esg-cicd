@@ -1,6 +1,7 @@
-param([string]$OutputName = 'EcoHospital_CICD.zip')
+param([string]$OutputName = 'EcoHospital_CICD.zip', [string]$RootFolder = '')
 $ErrorActionPreference = 'Stop'
 if ($OutputName -notmatch '^EcoHospital_CICD([a-zA-Z0-9_-]*)?\.zip$') { throw 'Nome de ZIP inválido' }
+if ($RootFolder -and $RootFolder -notmatch '^[A-Za-z0-9][A-Za-z0-9._-]*$') { throw 'Nome da pasta raiz inválido' }
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $deliveryDir = Join-Path $projectRoot 'delivery'
 New-Item -ItemType Directory -Force -Path $deliveryDir | Out-Null
@@ -31,11 +32,13 @@ $manifest = [System.Collections.Generic.List[string]]::new()
 try {
     foreach ($entry in ($fileEntries | Sort-Object FullName)) {
         $relative = [System.IO.Path]::GetRelativePath($projectRoot, $entry.FullName).Replace('\','/')
-        [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive, $entry.FullName, $relative, [System.IO.Compression.CompressionLevel]::Optimal) | Out-Null
+        $archiveName = if ($RootFolder) { "$RootFolder/$relative" } else { $relative }
+        [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive, $entry.FullName, $archiveName, [System.IO.Compression.CompressionLevel]::Optimal) | Out-Null
         $sha = (Get-FileHash -LiteralPath $entry.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
-        $manifest.Add("$sha  $relative")
+        $manifest.Add("$sha  $archiveName")
     }
-    $manifestEntry = $archive.CreateEntry('MANIFEST-SHA256.txt')
+    $manifestName = if ($RootFolder) { "$RootFolder/MANIFEST-SHA256.txt" } else { 'MANIFEST-SHA256.txt' }
+    $manifestEntry = $archive.CreateEntry($manifestName)
     $writer = [System.IO.StreamWriter]::new($manifestEntry.Open(), [System.Text.UTF8Encoding]::new($false))
     try { foreach ($line in $manifest) { $writer.WriteLine($line) } } finally { $writer.Dispose() }
 } finally { $archive.Dispose(); $stream.Dispose() }
