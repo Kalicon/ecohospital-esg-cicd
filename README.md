@@ -322,6 +322,8 @@ O [run final da revisão implantada](https://github.com/Kalicon/ecohospital-esg-
 
 Os prints **atuais** abaixo foram capturados após o deploy do [run 40319759255](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/40319759255), na revisão `871a9b6`:
 
+![Pipeline atual com build, testes, deploys e aprovação de produção](docs/evidence/sprint-2026-10-26/github-actions-run-current.png)
+
 ![Inventário atual em staging, revisão 871a9b6](docs/evidence/sprint-2026-10-26/staging-inventory-current.png)
 
 ![Inventário atual em produção, revisão 871a9b6](docs/evidence/sprint-2026-10-26/production-inventory-current.png)
@@ -334,7 +336,7 @@ Os prints seguintes são **históricos**: mostram os painéis Docker da revisão
 
 ## Entrega ZIP
 
-**Pacote atualizado desta sprint (26/10/2026):** `delivery/EcoHospital_CICD_Sprint_Rastreabilidade_FINAL_2026-10-26.zip`. Contém a pasta raiz `EcoHospital-ESG/` com código, testes BDD/contratos, Dockerfile, Compose, workflows, scripts, `.env.example`, este README, os dois PDFs acadêmicos e evidências atuais do [run 40319759255](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/40319759255). O PDF específico da sprint é `docs/sprint-2026-10-26/EcoHospital_Sprint_Rastreabilidade.pdf`; os prints de staging/produção desta versão estão em `docs/evidence/sprint-2026-10-26/`. O ZIP não contém tokens ou volumes. **Confira com `python scripts/verify-delivery.py delivery/EcoHospital_CICD_Sprint_Rastreabilidade_FINAL_2026-10-26.zip` antes do upload.** Os arquivos de 13/10 e 22/10 permanecem preservados para as respectivas atividades.
+**Pacote atualizado desta sprint (26/10/2026):** `delivery/EcoHospital_CICD_Sprint_Rastreabilidade_ENTREGA_FINAL_2026-10-26.zip`. Contém a pasta raiz `EcoHospital-ESG/` com código, testes BDD/contratos, Dockerfile, Compose, workflows, scripts, `.env.example`, este README, os dois PDFs acadêmicos e evidências atuais do [run 40319759255](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/40319759255), inclusive print do pipeline aprovado. O PDF específico da sprint é `docs/sprint-2026-10-26/EcoHospital_Sprint_Rastreabilidade.pdf`; os prints de staging/produção desta versão estão em `docs/evidence/sprint-2026-10-26/`. O ZIP não contém tokens ou volumes. **Confira com `python scripts/verify-delivery.py delivery/EcoHospital_CICD_Sprint_Rastreabilidade_ENTREGA_FINAL_2026-10-26.zip` antes do upload.** Os arquivos de 13/10 e 22/10 permanecem preservados para as respectivas atividades.
 
 **Arquivo final para upload (13/10/2026):** `delivery/EcoHospital_CICD_Entrega_FINAL_2026-10-13.zip`. Ele contém uma única pasta `EcoHospital-ESG/` com código-fonte, Dockerfile, Compose, workflows, scripts, `.env.example`, README, PDF e evidências. Gerar com `.\scripts\package-delivery.ps1 -OutputName EcoHospital_CICD_Entrega_FINAL_2026-10-13.zip -RootFolder EcoHospital-ESG` e verificar com `python scripts/verify-delivery.py delivery/EcoHospital_CICD_Entrega_FINAL_2026-10-13.zip`. Não inclui tokens nem estado privado. Pacotes anteriores são preservados. O PDF pode ser regenerado com Python e `reportlab` 4.x. Os prints dos painéis permanecem históricos e rotulados; não há captura visual da revisão `3a2cbf4` neste pacote.
 
@@ -402,7 +404,7 @@ Este checklist registra a atividade DevOps histórica (não equivale a certifica
 
 | Item | Status | Evidência |
 |---|:---:|---|
-| Projeto Java Spring ESG e código-fonte completo em ZIP novo | ☑ | `EcoHospital_CICD_Sprint_Rastreabilidade_FINAL_2026-10-26.zip` e manifesto SHA-256 |
+| Projeto Java Spring ESG e código-fonte completo em ZIP novo | ☑ | `EcoHospital_CICD_Sprint_Rastreabilidade_ENTREGA_FINAL_2026-10-26.zip` e manifesto SHA-256 |
 | Dockerfile, Compose, redes, volumes e `.env.example` | ☑ | Arquivos na raiz do pacote; `docker compose config --quiet` passou |
 | Build e testes automatizados, inclusive seis cenários Gherkin | ☑ | 55 testes sem falhas; `docs/evidence/local/`, captura Cucumber |
 | APIs testadas por status, JSON e JSON Schema | ☑ | `ApiContractTest.java` e `api-contracts.json` |

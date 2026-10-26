@@ -23,7 +23,8 @@ health = json.loads((EVIDENCE / "isolated-health.json").read_text(encoding="utf-
 observed = json.loads((EVIDENCE / "inventory-summary-observed.json").read_text(encoding="utf-8"))
 assert health["status"] == "UP" and health["environment"] == "sprint-validation", health
 assert "0 lançamentos declarados e 1 simulações didáticas excluídas" in observed["summary"]
-for name in ("cucumber-6-scenarios.png", "inventory-simulation-excluded.png"):
+for name in ("cucumber-6-scenarios.png", "inventory-simulation-excluded.png",
+             "github-actions-run-current.png"):
     assert (EVIDENCE / name).exists(), name
 deployed = json.loads((EVIDENCE / "deployed-health-summary.json").read_text(encoding="utf-8"))
 deployed_version = "871a9b66da3fea41eeb85bcef4d012a64e52a399"
@@ -95,6 +96,9 @@ story = [Spacer(1, 45), p("EcoHospital Smart", "CoverESG"),
                [[suite.get("name").split(".")[-1], suite.get("tests"), suite.get("failures"), suite.get("errors")]
                 for suite in suites], [250, 85, 85, 80]),
          Spacer(1, 14), p(f"Resultado local real: {totals['tests']} testes, {totals['failures']} falhas, {totals['errors']} erros; 6 cenários BDD. Comando: .\\scripts\\verify.ps1. O build Docker também concluiu mvn verify com 55 testes no Java 17."),
+         PageBreak(), p("Evidência: pipeline e aprovação", "SectionESG"),
+         picture("github-actions-run-current.png", max_height=500),
+         p("Captura real do GitHub Actions run 40319759255: verify, image, staging-pc e production-pc concluídos; o Environment de produção registra a aprovação humana. Os jobs SSH remotos ficaram skipped porque os ambientes desta demonstração são locais."),
          PageBreak(), p("Evidência: execução BDD", "SectionESG"),
          picture("cucumber-6-scenarios.png", max_height=550),
          p("Captura do relatório HTML realmente produzido pelo Maven/Cucumber em 26/10/2026. Inclui cenários positivos e negativos para inventário, telemetria, indicadores e cadeia de custódia."),
