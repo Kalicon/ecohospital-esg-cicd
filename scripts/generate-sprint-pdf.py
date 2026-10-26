@@ -23,8 +23,19 @@ health = json.loads((EVIDENCE / "isolated-health.json").read_text(encoding="utf-
 observed = json.loads((EVIDENCE / "inventory-summary-observed.json").read_text(encoding="utf-8"))
 assert health["status"] == "UP" and health["environment"] == "sprint-validation", health
 assert "0 lançamentos declarados e 1 simulações didáticas excluídas" in observed["summary"]
-for name in ("cucumber-6-scenarios.png", "inventory-simulation-excluded.png"):
+for name in ("cucumber-6-scenarios.png", "inventory-simulation-excluded.png",
+             "github-actions-run-current.png"):
     assert (EVIDENCE / name).exists(), name
+deployed = json.loads((EVIDENCE / "deployed-health-summary.json").read_text(encoding="utf-8"))
+deployed_version = "871a9b66da3fea41eeb85bcef4d012a64e52a399"
+assert deployed["run"] == 40319759255
+for environment, readings in (("staging", 11), ("production", 10)):
+    current = deployed["environments"][environment]
+    assert current["health"] == {"status": "UP", "environment": environment, "version": deployed_version}
+    assert current["totalLeiturasIot"] == readings
+    artifact = json.loads((EVIDENCE / f"{environment}-artifact/{environment}-health.json").read_text(encoding="utf-8-sig"))
+    assert artifact["version"] == deployed_version and artifact["status"] == "UP"
+    assert (EVIDENCE / f"{environment}-inventory-current.png").exists()
 
 styles = getSampleStyleSheet()
 green = colors.HexColor("#075847")
@@ -85,6 +96,9 @@ story = [Spacer(1, 45), p("EcoHospital Smart", "CoverESG"),
                [[suite.get("name").split(".")[-1], suite.get("tests"), suite.get("failures"), suite.get("errors")]
                 for suite in suites], [250, 85, 85, 80]),
          Spacer(1, 14), p(f"Resultado local real: {totals['tests']} testes, {totals['failures']} falhas, {totals['errors']} erros; 6 cenários BDD. Comando: .\\scripts\\verify.ps1. O build Docker também concluiu mvn verify com 55 testes no Java 17."),
+         PageBreak(), p("Evidência: pipeline e aprovação", "SectionESG"),
+         picture("github-actions-run-current.png", max_height=500),
+         p("Captura real do GitHub Actions run 40319759255: verify, image, staging-pc e production-pc concluídos; o Environment de produção registra a aprovação humana. Os jobs SSH remotos ficaram skipped porque os ambientes desta demonstração são locais."),
          PageBreak(), p("Evidência: execução BDD", "SectionESG"),
          picture("cucumber-6-scenarios.png", max_height=550),
          p("Captura do relatório HTML realmente produzido pelo Maven/Cucumber em 26/10/2026. Inclui cenários positivos e negativos para inventário, telemetria, indicadores e cadeia de custódia."),
@@ -93,18 +107,26 @@ story = [Spacer(1, 45), p("EcoHospital Smart", "CoverESG"),
          p("Foi criado um lançamento sintético com dataOrigin=SIMULATED e verification=SIMULADO_NAO_VERIFICADO apenas no volume de teste da porta 18084. A captura mostra zero lançamentos declarados, uma simulação excluída e ambos os métodos do escopo 2 separados."),
          picture("inventory-simulation-excluded.png", max_height=490),
          p("A captura é da interface no container isolado, não de staging ou produção. O JSON correspondente está na pasta de evidências desta sprint."),
-         PageBreak(), p("Estado de deploy, desafios e checklist", "SectionESG"),
-         p("Revisão anterior: o run GitHub Actions 37620162391 registrou verify, image, staging-pc e production-pc aprovados, com aprovação humana de produção; screenshots históricos estão rotulados no README principal. Esta sprint ainda exige novo run e promoção para afirmar deploy do código atual."),
+         PageBreak(), p("Deploy atual: staging", "SectionESG"),
+         p("Run 40319759255: verify, image e staging-pc aprovados. O job de staging publicou o commit 871a9b6 no Docker deste PC; health UP e 11 leituras preservadas. Captura real da interface após a promoção:"),
+         picture("staging-inventory-current.png", max_height=440),
+         p("Evidência adicional: staging-artifact/staging-health.json e staging-containers.json."),
+         PageBreak(), p("Deploy atual: produção", "SectionESG"),
+         p("No mesmo run, produção aguardou a aprovação obrigatória do Environment. Após a aprovação humana, production-pc foi aprovado. Health UP no mesmo commit 871a9b6; 10 leituras preservadas e mesma imagem Docker observada nos dois containers."),
+         picture("production-inventory-current.png", max_height=440),
+         p("Evidência adicional: production-artifact/production-health.json e production-containers.json. Os serviços são locais a este PC (portas 8081/8082), não hospedagem pública."),
+         PageBreak(), p("Desafios, limites e checklist", "SectionESG"),
+         p("Run verificável: https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/40319759255. Os jobs remotos por SSH ficaram skipped porque não há servidores externos; os jobs staging-pc e production-pc foram aprovados. As flags de deploy local voltaram a false após agendamento para evitar novas promoções automáticas."),
          p("Desafios resolvidos: dados sintéticos antes podiam ser confundidos com consumo real; a origem agora é explícita e testada no backend, contrato, BDD e resumo da UI. Registros legados continuam legíveis como declarações não verificadas. Os dois métodos do escopo 2 não são somados. Os testes e capturas usam volume isolado para não alterar staging/produção."),
          table([["Item", "Status", "Evidência"] ,
                 ["Código Java Spring, Dockerfile e Compose", "OK", "Fontes e configs do ZIP"],
                 ["Build e 55 testes; 6 cenários BDD", "OK", "XML, logs e captura Cucumber"],
                 ["Imagem/container local da sprint", "OK", "Health e screenshot isolados"],
-                ["Deploy staging/produção da sprint", "Pendente", "Novo run e aprovação necessários"],
-                ["Deploy staging/produção anterior", "OK", "Run 37620162391; histórico"],
+                ["Deploy staging/produção da sprint", "OK", "Run 40319759255; health/prints atuais"],
+                ["Mesmo digest nos dois ambientes", "OK", "Artefatos e Docker inspect local"],
                 ["Inventário ambiental oficial", "Não", "Dados didáticos não certificados"]],
                [250, 70, 180]),
-         Spacer(1, 12), p("Arquivos: docs/evidence/sprint-2026-10-26/; documentação reproduzível: docs/sprint-2026-10-26/README.md. Não enviar capturas históricas como se fossem desta revisão.")]
+         Spacer(1, 12), p("Arquivos: docs/evidence/sprint-2026-10-26/; documentação reproduzível: docs/sprint-2026-10-26/README.md. Dados ambientais permanecem didáticos; deploy não equivale a certificação.")]
 
 def footer(canvas, doc):
     canvas.saveState()

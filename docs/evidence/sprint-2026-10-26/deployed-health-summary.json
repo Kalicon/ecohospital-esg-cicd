@@ -1,0 +1,24 @@
+{
+  "capturedAtUtc": "2026-10-26T12:13:30.732Z",
+  "run": 40319759255,
+  "environments": {
+    "staging": {
+      "health": {
+        "status": "UP",
+        "environment": "staging",
+        "version": "871a9b66da3fea41eeb85bcef4d012a64e52a399"
+      },
+      "totalLeiturasIot": 11,
+      "base": "http://127.0.0.1:8081"
+    },
+    "production": {
+      "health": {
+        "environment": "production",
+        "version": "871a9b66da3fea41eeb85bcef4d012a64e52a399",
+        "status": "UP"
+      },
+      "totalLeiturasIot": 10,
+      "base": "http://127.0.0.1:8082"
+    }
+  }
+}

@@ -8,7 +8,7 @@ Atividade acadêmica: build, testes e deploy separado em staging e produção.
 
 **Nova atividade de Testes Automatizados (22/10/2026):** os cenários BDD em Gherkin, contratos JSON Schema, instruções e evidências específicas estão em [docs/testing/README.md](docs/testing/README.md). Execute `.\mvnw.cmd -B -ntp verify`; o pacote e o PDF próprios desta atividade ficam em `delivery/` e `docs/testing/`. Esta seção não altera as evidências históricas da atividade CI/CD abaixo.
 
-**Sprint de rastreabilidade (26/10/2026):** a revisão local reforça o contrato JSON de erros, bloqueia por padrão o reset em `APP_ENV=production`, escapa dados renderizados e separa `DECLARED` de `SIMULATED` no inventário. Simulações e anulações ficam fora do resumo parcial, com os métodos do escopo 2 separados. `POST /api/reset` exige ADMIN e retorna HTTP 403 em produção; `APP_ALLOW_PRODUCTION_RESET=true` é apenas exceção de manutenção controlada com backup. `scripts/verify.ps1` passou com **55 testes JUnit/Cucumber, seis cenários BDD e verificações Node**; o build da imagem executou os mesmos 55 testes no JDK 17. Há [documentação da sprint](docs/sprint-2026-10-26/README.md), [PDF novo](docs/sprint-2026-10-26/EcoHospital_Sprint_Rastreabilidade.pdf) e [evidências reais do container isolado](docs/evidence/sprint-2026-10-26/). As [decisões de arquitetura](docs/architecture/ADR-001-modular-monolith.md) e de [migração de dados](docs/architecture/ADR-002-postgres-relational-migration.md) são propostas, não funcionalidades implantadas. **O run e os deploys citados abaixo são da revisão anterior; esta sprint ainda não foi promovida a staging/produção. Os ZIPs anteriores permanecem históricos.**
+**Sprint de rastreabilidade (26/10/2026):** a revisão reforça o contrato JSON de erros, bloqueia por padrão o reset em `APP_ENV=production`, escapa dados renderizados e separa `DECLARED` de `SIMULATED` no inventário. Simulações e anulações ficam fora do resumo parcial, com os métodos do escopo 2 separados. `POST /api/reset` exige ADMIN e retorna HTTP 403 em produção; `APP_ALLOW_PRODUCTION_RESET=true` é apenas exceção de manutenção controlada com backup. `scripts/verify.ps1` passou com **55 testes JUnit/Cucumber, seis cenários BDD e verificações Node**; o build da imagem executou os mesmos 55 testes no JDK 17. O [run 40319759255](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/40319759255) concluiu `verify`, `image`, `staging-pc` e `production-pc` após aprovação obrigatória. Ambos os containers locais responderam `UP` na revisão `871a9b6`, preservando 11 e 10 leituras. Há [documentação da sprint](docs/sprint-2026-10-26/README.md), [PDF novo](docs/sprint-2026-10-26/EcoHospital_Sprint_Rastreabilidade.pdf) e [prints reais desta revisão](docs/evidence/sprint-2026-10-26/). As [decisões de arquitetura](docs/architecture/ADR-001-modular-monolith.md) e de [migração de dados](docs/architecture/ADR-002-postgres-relational-migration.md) são propostas, não funcionalidades implantadas. Os ZIPs anteriores permanecem históricos.
 
 Integrante identificado nos arquivos originais: **Kalicon Amorim da Cruz Souza — RM 563172**. Outros integrantes: não informados; preencher antes da entrega, se houver.
 
@@ -320,13 +320,23 @@ Não reutilizar os prints MongoDB anteriores como prova do pipeline. Os JSON loc
 
 O [run final da revisão implantada](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37620162391) mostra build, testes e os dois jobs de deploy aprovados. Seus artefatos de [staging](docs/evidence/v5/staging-artifact/staging-health.json) e [produção](docs/evidence/v5/production-artifact/production-health.json) registram `UP`, ambiente e commit `3a2cbf4`. Os JSON dos containers registram o mesmo digest em ambos. Em 13/10/2026, `mvnw.cmd -B -ntp verify` terminou em `BUILD SUCCESS` com 43 testes (0 falhas/erros) e as consultas HTTP locais voltaram a confirmar `UP` nos dois ambientes; essa conferência não substitui print.
 
-Os prints abaixo são **reais, mas históricos**: mostram os painéis Docker de staging e produção da revisão anterior `f240024`, não a interface da revisão `3a2cbf4`. Foram mantidos como evidência visual do funcionamento; para a revisão final, prevalecem o run e os artefatos acima. Nenhum print foi gerado artificialmente.
+Os prints **atuais** abaixo foram capturados após o deploy do [run 40319759255](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/40319759255), na revisão `871a9b6`:
+
+![Pipeline atual com build, testes, deploys e aprovação de produção](docs/evidence/sprint-2026-10-26/github-actions-run-current.png)
+
+![Inventário atual em staging, revisão 871a9b6](docs/evidence/sprint-2026-10-26/staging-inventory-current.png)
+
+![Inventário atual em produção, revisão 871a9b6](docs/evidence/sprint-2026-10-26/production-inventory-current.png)
+
+Os prints seguintes são **históricos**: mostram os painéis Docker da revisão anterior `f240024`. Foram mantidos como evidência histórica, não como prova visual da sprint atual. Nenhum print foi gerado artificialmente.
 
 ![Painel histórico de staging no Docker, revisão f240024](docs/evidence/v4/staging-dashboard.png)
 
 ![Painel histórico de produção no Docker, revisão f240024](docs/evidence/v4/production-dashboard.png)
 
 ## Entrega ZIP
+
+**Pacote atualizado desta sprint (26/10/2026):** `delivery/EcoHospital_CICD_Sprint_Rastreabilidade_ENTREGA_FINAL_2026-10-26.zip`. Contém a pasta raiz `EcoHospital-ESG/` com código, testes BDD/contratos, Dockerfile, Compose, workflows, scripts, `.env.example`, este README, os dois PDFs acadêmicos e evidências atuais do [run 40319759255](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/40319759255), inclusive print do pipeline aprovado. O PDF específico da sprint é `docs/sprint-2026-10-26/EcoHospital_Sprint_Rastreabilidade.pdf`; os prints de staging/produção desta versão estão em `docs/evidence/sprint-2026-10-26/`. O ZIP não contém tokens ou volumes. **Confira com `python scripts/verify-delivery.py delivery/EcoHospital_CICD_Sprint_Rastreabilidade_ENTREGA_FINAL_2026-10-26.zip` antes do upload.** Os arquivos de 13/10 e 22/10 permanecem preservados para as respectivas atividades.
 
 **Arquivo final para upload (13/10/2026):** `delivery/EcoHospital_CICD_Entrega_FINAL_2026-10-13.zip`. Ele contém uma única pasta `EcoHospital-ESG/` com código-fonte, Dockerfile, Compose, workflows, scripts, `.env.example`, README, PDF e evidências. Gerar com `.\scripts\package-delivery.ps1 -OutputName EcoHospital_CICD_Entrega_FINAL_2026-10-13.zip -RootFolder EcoHospital-ESG` e verificar com `python scripts/verify-delivery.py delivery/EcoHospital_CICD_Entrega_FINAL_2026-10-13.zip`. Não inclui tokens nem estado privado. Pacotes anteriores são preservados. O PDF pode ser regenerado com Python e `reportlab` 4.x. Os prints dos painéis permanecem históricos e rotulados; não há captura visual da revisão `3a2cbf4` neste pacote.
 
@@ -378,7 +388,7 @@ O checklist acadêmico abaixo também permanece comprovado pelas evidências da 
 
 ## Checklist obrigatório da entrega final
 
-Este checklist é da atividade DevOps (não equivale a certificação ambiental). Os prints visuais dos painéis são históricos, identificados acima; o deploy da revisão atual é comprovado pelo run e pelos artefatos de health.
+Este checklist registra a atividade DevOps histórica (não equivale a certificação ambiental). Os prints daquela entrega são identificados como históricos; a sprint atual possui capturas próprias acima, além do run e dos artefatos de health.
 
 | Item do enunciado | OK | Evidência |
 |---|:---:|---|
@@ -389,3 +399,17 @@ Este checklist é da atividade DevOps (não equivale a certificação ambiental)
 | README com instruções e prints | ☑ | Seções de execução, pipeline, Dockerfile e prints históricos identificados |
 | Documentação técnica com evidências (PDF ou PPT) | ☑ | `docs/EcoHospital_CICD.pdf`, links do run e capturas históricas identificadas |
 | Deploy realizado em staging e produção | ☑ | Jobs `staging-pc` e `production-pc`, health `UP` e mesmo digest |
+
+## Checklist da sprint atual — 26/10/2026
+
+| Item | Status | Evidência |
+|---|:---:|---|
+| Projeto Java Spring ESG e código-fonte completo em ZIP novo | ☑ | `EcoHospital_CICD_Sprint_Rastreabilidade_ENTREGA_FINAL_2026-10-26.zip` e manifesto SHA-256 |
+| Dockerfile, Compose, redes, volumes e `.env.example` | ☑ | Arquivos na raiz do pacote; `docker compose config --quiet` passou |
+| Build e testes automatizados, inclusive seis cenários Gherkin | ☑ | 55 testes sem falhas; `docs/evidence/local/`, captura Cucumber |
+| APIs testadas por status, JSON e JSON Schema | ☑ | `ApiContractTest.java` e `api-contracts.json` |
+| Imagem Java 17 e container testados | ☑ | Build Docker, smoke e health da instância isolada |
+| Pipeline e deploy da mesma revisão em staging e produção | ☑ | [Run 40319759255](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/40319759255), health e screenshots atuais |
+| Aprovação obrigatória antes de produção | ☑ | Job `production-pc` aguardou revisão e terminou aprovado |
+| PDF técnico e prints reais de ambos os ambientes | ☑ | `docs/sprint-2026-10-26/EcoHospital_Sprint_Rastreabilidade.pdf` e `docs/evidence/sprint-2026-10-26/` |
+| Inventário real certificado e comprovantes ambientais validados | ☐ | Fora do escopo acadêmico; dados sintéticos não representam certificação |
