@@ -32,6 +32,21 @@ class EnvironmentalJournalTest {
             var body=inventory();body.put(pair[0],pair[1]);assertThrows(ResponseStatusException.class,()->j.create("inventory",body));
         }assertEquals(0,j.list("inventory").size());
     }
+    @Test void simulatedInventoryIsExplicitAndLegacyEntryDefaultsToUnverifiedDeclaration() throws Exception {
+        EnvironmentalJournal journal=new EnvironmentalJournal(new EsgStore(new ObjectMapper(),""));
+        var simulated=inventory();simulated.put("dataOrigin","SIMULATED");
+        var entry=journal.create("inventory",simulated);
+        assertEquals("SIMULATED",entry.path("dataOrigin").asText());
+        assertEquals("SIMULADO_NAO_VERIFICADO",entry.path("verification").asText());
+        var invalid=inventory();invalid.put("reference","BAD-ORIGIN");invalid.put("dataOrigin","OFFICIAL");
+        assertThrows(ResponseStatusException.class,()->journal.create("inventory",invalid));
+        assertEquals(1,journal.list("inventory").size());
+        var declared=inventory();declared.put("reference","DECLARED-LEGACY");
+        var legacy=journal.create("inventory",declared);
+        assertEquals("DECLARED",legacy.path("dataOrigin").asText());
+        assertEquals("DECLARADO_NAO_VERIFICADO",legacy.path("verification").asText());
+        assertEquals(2,journal.list("inventory").size());
+    }
     @Test void wasteRecordsPendingProofWithoutInventedTreatmentBenefits() throws Exception {
         EnvironmentalJournal j=new EnvironmentalJournal(new EsgStore(new ObjectMapper(),""));
         var body=new HashMap<>(Map.of("unit","UNID-HOSP-001","reference","TEST-LOT","responsible","Equipe","date","2026-09-28","group","A","kg","12.5","sector","Laboratório fictício","handling","Avaliação técnica pendente","provider","Prestador fictício","destination","Destino fictício"));

@@ -1,0 +1,5 @@
+[
+  {"id":"bdd-operator","role":"OPERATOR","token":"bdd-operator-only-0123456789abcdef0123456789abcdef"},
+  {"id":"bdd-reviewer","role":"REVIEWER","token":"bdd-reviewer-only-0123456789abcdef0123456789abcdef"},
+  {"id":"bdd-admin","role":"ADMIN","token":"bdd-admin-only-0123456789abcdef0123456789abcdef"}
+]

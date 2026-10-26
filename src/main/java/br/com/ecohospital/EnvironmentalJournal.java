@@ -56,6 +56,10 @@ public class EnvironmentalJournal {
         entry.put("reference", required(body,"reference",200));
         entry.put("responsible", required(body,"responsible",100));
         if (kind.equals("inventory")) {
+            // Legacy clients are declarations; simulations must be identified explicitly.
+            String origin=Optional.ofNullable(body.get("dataOrigin")).orElse("DECLARED").trim().toUpperCase(Locale.ROOT);
+            if(!List.of("DECLARED","SIMULATED").contains(origin)) throw bad("Origem do dado inválida");
+            entry.put("dataOrigin",origin);
             String period = required(body,"period",7);
             try { if (!period.matches("\\d{4}-\\d{2}")) throw new IllegalArgumentException(); YearMonth.parse(period); } catch(Exception e) { throw bad("Período inválido: use AAAA-MM"); }
             entry.put("period",period);
@@ -110,7 +114,9 @@ public class EnvironmentalJournal {
             ArrayNode records = array(db,name);
             for(JsonNode record:records) if(!record.has("voidedAt") && record.path("unit").equals(entry.path("unit")) && record.path("reference").equals(entry.path("reference"))
                     && (!kind.equals("inventory") || record.path("method").equals(entry.path("method")))) throw bad("Referência já registrada nesta unidade e método; evite dupla contagem");
-            entry.put("id",UUID.randomUUID().toString()); entry.put("createdAt",Instant.now().toString()); entry.put("createdBy",actor.id());entry.put("verification","DECLARADO_NAO_VERIFICADO");
+            entry.put("id",UUID.randomUUID().toString()); entry.put("createdAt",Instant.now().toString()); entry.put("createdBy",actor.id());
+            entry.put("verification",kind.equals("inventory") && entry.path("dataOrigin").asText().equals("SIMULATED")
+                    ? "SIMULADO_NAO_VERIFICADO" : "DECLARADO_NAO_VERIFICADO");
             records.add(entry); return entry.deepCopy();
         });
     }

@@ -1,0 +1,23 @@
+{
+  "unit": "UNID-HOSP-001",
+  "reference": "SPRINT-SIM-1793015396667",
+  "responsible": "Equipe de teste",
+  "dataOrigin": "SIMULATED",
+  "period": "2026-10",
+  "scope": "2",
+  "method": "LOCATION",
+  "activity": "Eletricidade de ensaio",
+  "activityUnit": "kWh",
+  "quantity": 100,
+  "factor": 0.1,
+  "kgCO2e": 10,
+  "factorSource": "Fator sintético de ensaio",
+  "factorVersion": "Teste v1",
+  "factorStatus": "FATOR_LIVRE_NAO_REVISADO",
+  "boundary": "Container isolado; valor didático, não é consumo hospitalar",
+  "factorBasis": "kgCO2e por unidade de atividade; GWP já incorporado no fator informado",
+  "id": "91ac5643-c57f-46eb-84b0-76ce93501291",
+  "createdAt": "2026-10-26T11:49:56.726949597Z",
+  "createdBy": "shared-lab-token",
+  "verification": "SIMULADO_NAO_VERIFICADO"
+}

@@ -1,0 +1,87 @@
+{
+  "generatedAtUtc": "2026-10-22T13:30:11.114885+00:00",
+  "command": "mvnw.cmd -B -ntp verify",
+  "source": "target/surefire-reports/TEST-*.xml and target/cucumber-report.json",
+  "totals": {
+    "tests": 50,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "name": "br.com.ecohospital.ApiContractTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 8.405
+    },
+    {
+      "name": "br.com.ecohospital.BddTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 1.662
+    },
+    {
+      "name": "br.com.ecohospital.EnvironmentalJournalTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.236
+    },
+    {
+      "name": "br.com.ecohospital.EsgApiTest",
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 2.617
+    },
+    {
+      "name": "br.com.ecohospital.EsgOperationsTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.098
+    },
+    {
+      "name": "br.com.ecohospital.EsgStoreTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.268
+    },
+    {
+      "name": "br.com.ecohospital.WriteAccessTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.046
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "Consultar indicadores iniciais do hospital",
+      "status": "passed"
+    },
+    {
+      "name": "Bloquear simulação sem credencial de operador",
+      "status": "passed"
+    },
+    {
+      "name": "Registrar uma leitura simulada com operador autorizado",
+      "status": "passed"
+    },
+    {
+      "name": "Impedir salto de etapa na custódia de resíduos",
+      "status": "passed"
+    }
+  ]
+}

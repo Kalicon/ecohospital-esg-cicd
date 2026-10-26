@@ -1,12 +1,14 @@
 param([string]$OutputName = 'EcoHospital_CICD.zip', [string]$RootFolder = '')
 $ErrorActionPreference = 'Stop'
-if ($OutputName -notmatch '^EcoHospital_CICD([a-zA-Z0-9_-]*)?\.zip$') { throw 'Nome de ZIP inválido' }
+if ($OutputName -notmatch '^EcoHospital_(CICD|Testes)([a-zA-Z0-9_-]*)?\.zip$') { throw 'Nome de ZIP inválido' }
 if ($RootFolder -and $RootFolder -notmatch '^[A-Za-z0-9][A-Za-z0-9._-]*$') { throw 'Nome da pasta raiz inválido' }
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $deliveryDir = Join-Path $projectRoot 'delivery'
 New-Item -ItemType Directory -Force -Path $deliveryDir | Out-Null
 $zipPath = Join-Path $deliveryDir $OutputName
 if (Test-Path -LiteralPath $zipPath) { throw 'O ZIP já existe. Renomeie/mova a versão anterior antes de gerar outra.' }
+$manifestPath = Join-Path $deliveryDir ($OutputName -replace '\.zip$', '.manifest.sha256')
+if (Test-Path -LiteralPath $manifestPath) { throw 'O manifesto externo já existe; escolha outro nome de ZIP.' }
 $requiredFiles = @('pom.xml','Dockerfile','.dockerignore','docker-compose.yml','docker-compose.postgres.yml','deploy/compose-pc.yml','.env.example',
     'README.md','mvnw','mvnw.cmd','.gitignore','.gitattributes','docs/EcoHospital_CICD.pdf')
 foreach ($relative in $requiredFiles) {
@@ -42,7 +44,7 @@ try {
     $writer = [System.IO.StreamWriter]::new($manifestEntry.Open(), [System.Text.UTF8Encoding]::new($false))
     try { foreach ($line in $manifest) { $writer.WriteLine($line) } } finally { $writer.Dispose() }
 } finally { $archive.Dispose(); $stream.Dispose() }
-$manifest | Set-Content -Encoding utf8 (Join-Path $deliveryDir 'MANIFEST-SHA256.txt')
+$manifest | Set-Content -Encoding utf8 $manifestPath
 $zipHash = (Get-FileHash -LiteralPath $zipPath -Algorithm SHA256).Hash.ToLowerInvariant()
 "$zipHash  $OutputName" | Set-Content -Encoding utf8 (Join-Path $deliveryDir "$OutputName.sha256")
 Write-Output "ZIP criado: $zipPath"

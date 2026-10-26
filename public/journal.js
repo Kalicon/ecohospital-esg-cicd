@@ -3,7 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const el = (tag, text, cls) => { const n = document.createElement(tag); if (text != null) n.textContent = text; if (cls) n.className = cls; return n; };
     const fields = {
         inventory: [
-            ['period','Período do consumo','month'], ['scope','Escopo',['1','2','3']],
+            ['period','Período do consumo','month'],
+            ['dataOrigin','Origem do dado', [['','Selecione a origem'],['DECLARED','Consumo declarado (não verificado)'],['SIMULATED','Simulação didática (fora dos totais)']]],
+            ['scope','Escopo',['1','2','3']],
             ['method','Método do escopo 2',['LOCATION','MARKET']], ['activity','Atividade / categoria','text',180],
             ['activityUnit','Unidade do consumo',['L','kWh','kg','km','unidade']], ['quantity','Consumo','number'],
             ['factor','Fator (kgCO₂e por unidade selecionada)','number'], ['factorSource','Fonte / referência do fator','text',500],
@@ -32,12 +34,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const yearLabel = el('label','Ano do registro','field-label'), year = el('input'); year.type='number'; year.min='1'; year.max='9999'; year.value=new Date().getFullYear(); yearLabel.append(year); filters.append(yearLabel);
             const summary = el('p'); summary.setAttribute('role','status');
             const exportButton=el('button','Exportar registros deste recorte (JSON)','btn btn-outline');exportButton.type='button';filters.append(exportButton);
-            exportButton.addEventListener('click',()=>{const selected=records.filter(r=>(!unit.value||r.unit===unit.value)&&(r.period||r.date).slice(0,4)===year.value);const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),kind,year:year.value,unit:unit.value,verification:'DECLARADO_NAO_VERIFICADO',records:selected},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),link=el('a');link.href=url;link.download=`ecohospital-${kind}-${year.value}.json`;link.click();URL.revokeObjectURL(url);});
+            exportButton.addEventListener('click',()=>{const selected=records.filter(r=>(!unit.value||r.unit===unit.value)&&(r.period||r.date).slice(0,4)===year.value);const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),kind,year:year.value,unit:unit.value,interpretation:'Registros declarados e simulados são rotulados individualmente; simulações não integram os totais apresentados no painel. Referências e revisões internas não equivalem a verificação externa.',records:selected},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),link=el('a');link.href=url;link.download=`ecohospital-${kind}-${year.value}.json`;link.click();URL.revokeObjectURL(url);});
             const grid = el('div',null,'grid-2-cols'), form = el('form',null,'glass-card action-form');
             form.append(el('h3',kind==='inventory'?'Registrar consumo e fator':'Registrar lote de resíduos'));
             const factorField = ['factorId','Fator do catálogo (opcional; congela os dados no lançamento)',[['','Fator livre / ainda não catalogado'],...factorCatalog.filter(f=>f.status!=='REJEITADO').map(f=>[f.id,`${f.name} · ${f.year} · ${f.activityUnit} · ${f.status}`])]];
             const dataFields = kind==='inventory' ? fields[kind].flatMap(f=>f[0]==='factor'?[factorField,f]:[f]) : fields[kind];
-            const formFields = [['unit','Unidade',hospitals.map(h=>[h.codigo_unidade,h.nome_unidade])],...dataFields,['reference',kind==='inventory'?'Identificador único da evidência de consumo':'Identificador único / manifesto de transporte','text',200],['responsible','Equipe responsável pelo lançamento','text',100]];
+            const formFields = [['unit','Unidade',hospitals.map(h=>[h.codigo_unidade,h.nome_unidade])],...dataFields,['reference',kind==='inventory'?'Referência única do consumo (não substitui comprovante)':'Identificador único / manifesto de transporte','text',200],['responsible','Equipe responsável pelo lançamento','text',100]];
             formFields.forEach(([name,title,type,max])=> {
                 const label=el('label',title,'field-label'); let input;
                 if(Array.isArray(type)) { input=el('select'); type.forEach(value=>input.append(Array.isArray(value)?new Option(value[1],value[0]):new Option(labels[value]||value,value))); }
@@ -55,7 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const save=el('button','Salvar registro','btn btn-emerald');save.type='submit';
             const result=el('p');result.setAttribute('role','status');result.setAttribute('aria-live','polite');
-            form.append(el('p','Referências são texto, não upload de documentos. Use apenas identificadores não sensíveis. Escrita exige token de operador. Corrija lançamentos por anulação e novo registro; o original fica preservado.','methodology-note'),save,result);
+            const formNote=kind==='inventory'
+                ? 'Selecione a origem do consumo: simulações ficam fora dos totais declarados. Referências são texto, não upload de documentos. Use apenas identificadores não sensíveis. Corrija lançamentos por anulação e novo registro; o original fica preservado.'
+                : 'Referências são texto, não upload de documentos. Use apenas identificadores não sensíveis. A cadeia de custódia e a destinação são declarações ainda não verificadas externamente. Corrija por anulação e novo registro.';
+            form.append(el('p',formNote,'methodology-note'),save,result);
             const list=el('div',null,'glass-card priority-queue');grid.append(form,list);mount.append(filters,summary,grid);
             if(kind==='inventory') {
                 const details=el('details',null,'glass-card');details.append(el('summary','Catálogo versionado de fatores de emissão'));
@@ -91,14 +96,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 const scoped=records.filter(r=>(!unit.value||r.unit===unit.value)&&(r.period||r.date).slice(0,4)===year.value);
                 const active=scoped.filter(r=>!r.voidedAt); list.replaceChildren();
                 if(kind==='inventory') {
-                    const buckets={'1':0,'2_LOCATION':0,'2_MARKET':0,'3':0};
-                    active.forEach(r=>buckets[r.scope==='2'?`2_${r.method}`:r.scope]+=Number(r.kgCO2e));
-                    summary.textContent=`Inventário parcial declarado (${year.value}) · ${active.length} lançamentos ativos. Escopo 1: ${number(buckets['1'])} kgCO₂e · Escopo 2 localização: ${number(buckets['2_LOCATION'])} kgCO₂e · Escopo 2 mercado: ${number(buckets['2_MARKET'])} kgCO₂e · Escopo 3: ${number(buckets['3'])} kgCO₂e. Métodos do escopo 2 são alternativas, não somados. Ausência de registro não significa emissão zero.`;
+                    const {buckets,declaredCount,simulatedCount}=window.EsgInventorySummary(active);
+                    summary.textContent=`Inventário parcial declarado (${year.value}) · ${declaredCount} lançamentos declarados e ${simulatedCount} simulações didáticas excluídas dos totais. Escopo 1: ${number(buckets['1'])} kgCO₂e · Escopo 2 localização: ${number(buckets['2_LOCATION'])} kgCO₂e · Escopo 2 mercado: ${number(buckets['2_MARKET'])} kgCO₂e · Escopo 3: ${number(buckets['3'])} kgCO₂e. Métodos do escopo 2 são alternativas, não somados. Registros anteriores sem origem explícita permanecem como declarações não verificadas; ausência de registro não significa emissão zero.`;
                 } else summary.textContent=`${active.length} lotes ativos (${year.value}) · ${number(active.reduce((sum,r)=>sum+Number(r.kg),0))} kg declarados · ${active.filter(r=>!r.destinationProof).length} sem referência de destinação. Não representa conformidade comprovada nem redução de impacto.`;
                 if(!scoped.length)list.append(el('p','Sem registros neste recorte. Registre um consumo ou lote no formulário ao lado.'));
                 scoped.slice().reverse().forEach(r=> {
                     const card=el('article',null,'priority-item');card.append(el('h4',r.reference),el('p',`${hospitals.find(h=>h.codigo_unidade===r.unit)?.nome_unidade||r.unit} · ${r.period||r.date}`));
-                    if(kind==='inventory') card.append(el('p',`Escopo ${r.scope}${r.scope==='2'?` · ${labels[r.method]}`:''} · ${r.activity}: ${number(r.quantity)} ${r.activityUnit} × ${number(r.factor)} kgCO₂e/${r.activityUnit} = ${number(r.kgCO2e)} kgCO₂e`),el('p',`Fator preservado: ${r.factorSource} · ${r.factorVersion}`),el('p',`Limite / método: ${r.boundary}`));
+                    if(kind==='inventory') {
+                        const origin=r.dataOrigin==='SIMULATED'?'Simulação didática (fora dos totais)':r.dataOrigin==='DECLARED'?'Consumo declarado':'Declaração anterior sem origem explícita';
+                        const factorReview=r.factorStatus==='REVISADO_INTERNAMENTE'?'Fator revisado internamente':'Fator não revisado internamente';
+                        card.append(el('p',`Origem: ${origin} · Registro: ${r.verification||'DECLARADO_NAO_VERIFICADO'}`),
+                            el('p',`Escopo ${r.scope}${r.scope==='2'?` · ${labels[r.method]}`:''} · ${r.activity}: ${number(r.quantity)} ${r.activityUnit} × ${number(r.factor)} kgCO₂e/${r.activityUnit} = ${number(r.kgCO2e)} kgCO₂e`),
+                            el('p',`${factorReview} · snapshot: ${r.factorSource} · ${r.factorVersion}`),
+                            el('p',`Limite / método: ${r.boundary}`));
+                    }
                     else {
                         card.append(el('p',`Grupo ${r.group} · ${number(r.kg)} kg · origem: ${r.sector}`),el('p',`Manejo declarado: ${r.handling} · prestador: ${r.provider} · destino: ${r.destination}`),el('p',`Etapa atual: ${r.currentStage||'GERADO'} · ${r.destinationProof?'referência de destinação não validada: '+r.destinationProof:'pendente: referência do comprovante de destinação.'}`));
                         (r.events||[]).forEach(event=>card.append(el('p',`${event.stage} · ${new Date(event.at).toLocaleString('pt-BR')} · ${event.reference} · por ${event.actorId||event.responsible}`)));
@@ -124,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             async function reload(){records=await read(`/api/journal/${kind}`);render();feedback.textContent='';}
             unit.addEventListener('change',render);year.addEventListener('change',render);
-            form.addEventListener('submit',async event=>{event.preventDefault();save.disabled=true;try{await window.esgOperatorWrite(`/api/journal/${kind}`,'POST',Object.fromEntries(new FormData(form)));result.textContent='Registro salvo. Referências e fatores permanecem declarados, não verificados.';await reload();}catch(error){result.textContent=error.message;}finally{save.disabled=false;}});
+            form.addEventListener('submit',async event=>{event.preventDefault();save.disabled=true;try{await window.esgOperatorWrite(`/api/journal/${kind}`,'POST',Object.fromEntries(new FormData(form)));result.textContent='Registro salvo. Simulações não entram nos totais declarados; referências e fatores não constituem verificação externa.';await reload();}catch(error){result.textContent=error.message;}finally{save.disabled=false;}});
             document.addEventListener('esg:data-updated',()=>reload().catch(error=>{feedback.textContent=error.message;}));
             await reload();
         }catch(error){feedback.textContent=`Não foi possível carregar: ${error.message}. Recarregue para tentar novamente.`;}
