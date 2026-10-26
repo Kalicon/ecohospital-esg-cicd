@@ -3,6 +3,7 @@ package br.com.ecohospital;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import java.util.Map;
 
 @RestController
@@ -11,12 +12,15 @@ public class EsgController {
     private final WriteAccess writeAccess;
     private final String environment;
     private final String version;
+    private final boolean allowProductionReset;
     public EsgController(EsgService service, WriteAccess writeAccess, @Value("${app.environment}") String environment,
-                         @Value("${app.version}") String version) {
+                         @Value("${app.version}") String version,
+                         @Value("${app.allow-production-reset:false}") boolean allowProductionReset) {
         this.service = service;
         this.writeAccess = writeAccess;
         this.environment = environment;
         this.version = version;
+        this.allowProductionReset = allowProductionReset;
     }
     @GetMapping("/health")
     public Map<String, Object> health() {
@@ -51,6 +55,8 @@ public class EsgController {
     }
     @PostMapping("/api/reset") public Map<String, Object> reset(@RequestHeader(value = "X-Operator-Key", required = false) String key) {
         writeAccess.requireRole(key,"ADMIN");
+        if ("production".equalsIgnoreCase(environment.trim()) && !allowProductionReset)
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Reset de produção desabilitado por padrão");
         return service.reset();
     }
     @GetMapping("/api/test-runner") public Map<String, Object> validation() { return service.validationReport(); }

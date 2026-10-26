@@ -47,13 +47,13 @@ def footer(canvas, doc):
     canvas.line(42, 37, A4[0]-42, 37)
     canvas.setFont("Helvetica", 8)
     canvas.setFillColor(colors.HexColor("#47665d"))
-    canvas.drawString(42, 24, "EcoHospital | CI/CD acadêmico | Atualização: 09/10/2026")
+    canvas.drawString(42, 24, "EcoHospital | CI/CD acadêmico | Atualização: 13/10/2026")
     canvas.drawRightString(A4[0]-42, 24, str(doc.page))
     canvas.restoreState()
 
 story = [Spacer(1, 72), p("EcoHospital Smart", "CoverTitle"),
          p("Ciclo CI/CD com Java Spring Boot", "SectionTitle"),
-         p("Kalicon Amorim da Cruz Souza — RM 563172"), p("FIAP | Atividade acadêmica | 09/10/2026"),
+         p("Kalicon Amorim da Cruz Souza — RM 563172"), p("FIAP | Atividade acadêmica | 13/10/2026"),
          Spacer(1, 25), p("Código, testes, containerização e configuração de staging/produção."),
          p("Revisão 3a2cbf4: 43 testes JUnit, SBOM, restauração, atestado de imagem e dois deploys Docker neste PC comprovados no run 37620162391. Produção foi aprovada por humano. Fatores e documentos ambientais reais, auditoria externa e hospedagem pública continuam pendentes.", "Evidence"),
          p("Documento gerado a partir de docs/documentacao-tecnica.md. Outros integrantes: preencher se houver.", "SmallESG")]
@@ -175,7 +175,7 @@ for env in ("staging", "production"):
     health = json.loads((evidence_dir / f"{env}-health.json").read_text(encoding="utf-8-sig"))
     container = json.loads((evidence_dir / f"{env}-containers.json").read_text(encoding="utf-8-sig"))
     story.extend([p(f"{env.capitalize()}: health={health['status']}; versão={health['version']}; imagem={container['Image']}; estado={container['State']}; porta={container['Ports']}.", "BodyESG")])
-story.append(p("Em 09/10/2026, as duas URLs locais de health voltaram a responder UP com a versão 3a2cbf4. Esta conferência textual não é apresentada como screenshot. Os dados sintéticos de teste não foram promovidos como fatores oficiais.", "SmallESG"))
+story.append(p("Em 13/10/2026, o Maven terminou em BUILD SUCCESS com 43 testes, sem falhas/erros, e as duas URLs locais de health voltaram a responder UP com a versão 3a2cbf4. Esta conferência textual não é apresentada como screenshot. Os dados sintéticos de teste não foram promovidos como fatores oficiais.", "SmallESG"))
 story.extend([PageBreak(), p("Checklist obrigatório da entrega final", "SectionTitle")])
 story.append(p("Checklist da atividade DevOps. Os prints dos painéis incluídos são históricos e identificados; o deploy da revisão final é comprovado pelo run 37620162391 e por seus artefatos de health.", "SmallESG"))
 checklist = [

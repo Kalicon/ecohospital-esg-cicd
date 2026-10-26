@@ -72,12 +72,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function plural(count, singular, pluralForm) { return `${count} ${count === 1 ? singular : pluralForm}`; }
 
+    // Escape API data before inserting it into HTML templates. Dynamic classes use fixed
+    // branches or validated numbers; untrusted values must never become HTML attributes.
+    function escapeHtml(value) {
+        return String(value ?? '').replace(/[&<>"']/g, character => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[character]);
+    }
+
+    function setKpiWithSmall(element, value, smallValue, smallId) {
+        const detail = document.createElement('small');
+        if (smallId) detail.id = smallId;
+        detail.textContent = smallValue;
+        element.replaceChildren(document.createTextNode(value), detail);
+    }
+
     async function apiJson(path, options) {
         const response = await fetch(path, options);
         const data = await response.json();
         if (!response.ok) {
             if (response.status === 401) operatorKey = '';
-            throw new Error(data.message || data.error || `Falha HTTP ${response.status}`);
+            throw new Error(data.detail || data.message || data.error || `Falha HTTP ${response.status}`);
         }
         return data;
     }
@@ -90,6 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
             label.textContent = `Ambiente · ${health.environment}`;
             label.title = `Versão: ${health.version}`;
             storageLabel.textContent = status.storage;
+            if (btnResetDB && String(health.environment).trim().toLowerCase() === 'production') {
+                btnResetDB.disabled = true;
+                btnResetDB.title = 'A restauração do seed está desabilitada em produção.';
+            }
         } catch (error) {
             label.textContent = 'API indisponível';
             storageLabel.textContent = 'Sem conexão';
@@ -167,21 +186,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const kpiHospitais = document.getElementById('kpiHospitais');
         if (kpiHospitais) {
-            kpiHospitais.innerHTML = `${k.totalHospitais ?? 0} / <small id="kpiLeitos">${(k.totalLeitos || 0).toLocaleString('pt-BR')}</small>`;
+            setKpiWithSmall(kpiHospitais, `${k.totalHospitais ?? 0} / `,
+                (k.totalLeitos || 0).toLocaleString('pt-BR'), 'kpiLeitos');
         }
         
         const kpiFontes = document.getElementById('kpiFontes');
         if (kpiFontes) kpiFontes.textContent = k.totalFontes ?? 0;
 
         const kpiMediaCo2 = document.getElementById('kpiMediaCo2');
-        if (kpiMediaCo2) kpiMediaCo2.innerHTML = `${k.mediaCo2 || 0} <small>kg/h</small>`;
+        if (kpiMediaCo2) setKpiWithSmall(kpiMediaCo2, `${k.mediaCo2 || 0} `, 'kg/h');
 
         const kpiArvores = document.getElementById('kpiArvores');
-        if (kpiArvores) kpiArvores.innerHTML = `${(k.totalArvores || 0).toLocaleString('pt-BR')} <small>árvores</small>`;
+        if (kpiArvores) setKpiWithSmall(kpiArvores, `${(k.totalArvores || 0).toLocaleString('pt-BR')} `, 'árvores');
 
         const kpiAlertas = document.getElementById('kpiAlertas');
         if (kpiAlertas) {
-            kpiAlertas.innerHTML = `${k.alertasIot || 0} / <small id="kpiLicencasCriticas">${k.licencasCriticas || 0}</small>`;
+            setKpiWithSmall(kpiAlertas, `${k.alertasIot || 0} / `,
+                `${k.licencasCriticas || 0}`, 'kpiLicencasCriticas');
         }
     }
 
@@ -237,18 +258,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const metas = h.metas_esg_anuais || {};
                 return `
                     <tr>
-                        <td><strong>${h.nome_unidade}</strong><br><small class="card-code">${h.codigo_unidade}</small></td>
-                        <td>${h.endereco?.cidade || 'SP'}</td>
-                        <td><span class="badge badge-conforme">${metas.meta_reducao_carbono_pct == null ? '—' : `-${metas.meta_reducao_carbono_pct}%`}</span></td>
-                        <td><span class="badge badge-tag">${metas.meta_energia_renovavel_pct == null ? '—' : `${metas.meta_energia_renovavel_pct}%`}</span></td>
-                        <td><strong>${metas.meta_reflorestamento_arvores == null ? '—' : metas.meta_reflorestamento_arvores.toLocaleString('pt-BR')}</strong> mudas</td>
+                        <td><strong>${escapeHtml(h.nome_unidade)}</strong><br><small class="card-code">${escapeHtml(h.codigo_unidade)}</small></td>
+                        <td>${escapeHtml(h.endereco?.cidade || 'SP')}</td>
+                        <td><span class="badge badge-conforme">${escapeHtml(metas.meta_reducao_carbono_pct == null ? '—' : `-${metas.meta_reducao_carbono_pct}%`)}</span></td>
+                        <td><span class="badge badge-tag">${escapeHtml(metas.meta_energia_renovavel_pct == null ? '—' : `${metas.meta_energia_renovavel_pct}%`)}</span></td>
+                        <td><strong>${escapeHtml(metas.meta_reflorestamento_arvores == null ? '—' : metas.meta_reflorestamento_arvores.toLocaleString('pt-BR'))}</strong> mudas</td>
                     </tr>
                 `;
             }).join('');
         }
 
         // Agregação por fonte
-        const aggMap = {};
+        const aggMap = Object.create(null);
         state.telemetria.forEach(l => {
             const f = l.codigo_fonte;
             if (!aggMap[f]) aggMap[f] = { co2: 0, arvores: 0, count: 0 };
@@ -265,10 +286,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const media = (item.co2 / item.count).toFixed(1);
                 return `
                     <div class="agg-item">
-                        <div class="agg-fonte">${k}</div>
+                        <div class="agg-fonte">${escapeHtml(k)}</div>
                         <div class="agg-metrics">
-                            <span class="agg-co2">Média: <strong>${media} kg/h</strong></span>
-                <span class="agg-arvores">${plural(item.arvores, 'árvore sugerida', 'árvores sugeridas')}</span>
+                            <span class="agg-co2">Média: <strong>${escapeHtml(media)} kg/h</strong></span>
+                <span class="agg-arvores">${escapeHtml(plural(item.arvores, 'árvore sugerida', 'árvores sugeridas'))}</span>
                         </div>
                     </div>
                 `;
@@ -282,10 +303,10 @@ document.addEventListener('DOMContentLoaded', () => {
             govContainer.innerHTML = criticos.map(c => `
                 <div class="gov-card ${c.nivel_severidade === 'CRITICAL' ? 'critical' : ''}">
                     <div class="gov-header">
-                        <span>${c.categoria_evento}</span>
-                        <span class="badge ${c.nivel_severidade === 'CRITICAL' ? 'badge-violacao' : 'badge-conforme'}">${c.nivel_severidade}</span>
+                        <span>${escapeHtml(c.categoria_evento)}</span>
+                        <span class="badge ${c.nivel_severidade === 'CRITICAL' ? 'badge-violacao' : 'badge-conforme'}">${escapeHtml(c.nivel_severidade)}</span>
                     </div>
-                    <p class="gov-desc">${c.descricao_evento}</p>
+                    <p class="gov-desc">${escapeHtml(c.descricao_evento)}</p>
                 </div>
             `).join('');
         }
@@ -300,35 +321,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
         container.innerHTML = state.hospitais.map(h => {
             const coords = h.localizacao_geografica?.coordinates;
-            const certs = (h.certificacoes_esg || []).map(c => `<span class="cert-chip">${c}</span>`).join('');
+            const certs = (h.certificacoes_esg || []).map(c => `<span class="cert-chip">${escapeHtml(c)}</span>`).join('');
             const metas = h.metas_esg_anuais || {};
 
             return `
                 <div class="hospital-card">
                     <div>
                         <div class="card-top">
-                            <span class="card-code">${h.codigo_unidade}</span>
-                            <span class="badge badge-conforme">${h.status_operacional || 'Não informado'}</span>
+                            <span class="card-code">${escapeHtml(h.codigo_unidade)}</span>
+                            <span class="badge badge-conforme">${escapeHtml(h.status_operacional || 'Não informado')}</span>
                         </div>
-                        <h3 class="card-title-main">${h.nome_unidade}</h3>
-                        <p class="card-desc">${h.tipo_estabelecimento} | CNPJ: ${h.cnpj}</p>
+                        <h3 class="card-title-main">${escapeHtml(h.nome_unidade)}</h3>
+                        <p class="card-desc">${escapeHtml(h.tipo_estabelecimento)} | CNPJ: ${escapeHtml(h.cnpj)}</p>
                         
                         <div class="card-specs">
                             <div class="spec-item">
                                 <span class="label">Leitos Ativos:</span>
-                                <span class="val">${h.leitos_ativos} leitos</span>
+                                <span class="val">${escapeHtml(h.leitos_ativos)} leitos</span>
                             </div>
                             <div class="spec-item">
                                 <span class="label">Endereço:</span>
-                                <span class="val">${h.endereco?.logradouro}, ${h.endereco?.numero} - ${h.endereco?.cidade}/${h.endereco?.estado}</span>
+                                <span class="val">${escapeHtml(h.endereco?.logradouro)}, ${escapeHtml(h.endereco?.numero)} - ${escapeHtml(h.endereco?.cidade)}/${escapeHtml(h.endereco?.estado)}</span>
                             </div>
                             <div class="spec-item">
                                 <span class="label">Coordenadas:</span>
-                                <span class="val">${Array.isArray(coords) && coords.length >= 2 ? `[${coords[0]}, ${coords[1]}]` : 'Não informadas'}</span>
+                                <span class="val">${escapeHtml(Array.isArray(coords) && coords.length >= 2 ? `[${coords[0]}, ${coords[1]}]` : 'Não informadas')}</span>
                             </div>
                             <div class="spec-item">
                                 <span class="label">Meta Carbono 2026:</span>
-                                <span class="val text-emerald">-${metas.meta_reducao_carbono_pct}% CO2</span>
+                                <span class="val text-emerald">-${escapeHtml(metas.meta_reducao_carbono_pct)}% CO2</span>
                             </div>
                         </div>
                     </div>
@@ -361,33 +382,33 @@ document.addEventListener('DOMContentLoaded', () => {
             // Renderização polimórfica baseada no tipo da fonte
             if (f.tipo_fonte === 'CALDEIRA_VAPOR') {
                 specsHtml = `
-                    <div class="spec-item"><span class="label">Combustível:</span><span class="val">${specs.combustivel ?? 'Não informado'}</span></div>
-                    <div class="spec-item"><span class="label">Capacidade vapor:</span><span class="val">${specs.capacidade_vapor_kg_h ?? '—'} kg/h</span></div>
-                    <div class="spec-item"><span class="label">Pressão:</span><span class="val">${specs.pressao_trabalho_bar ?? '—'} bar</span></div>
+                    <div class="spec-item"><span class="label">Combustível:</span><span class="val">${escapeHtml(specs.combustivel ?? 'Não informado')}</span></div>
+                    <div class="spec-item"><span class="label">Capacidade vapor:</span><span class="val">${escapeHtml(specs.capacidade_vapor_kg_h ?? '—')} kg/h</span></div>
+                    <div class="spec-item"><span class="label">Pressão:</span><span class="val">${escapeHtml(specs.pressao_trabalho_bar ?? '—')} bar</span></div>
                 `;
             } else if (f.tipo_fonte === 'GRUPO_GERADOR_DIESEL') {
                 specsHtml = `
-                    <div class="spec-item"><span class="label">Potência elétrica:</span><span class="val">${specs.potencia_eletrica_kva ?? '—'} kVA</span></div>
-                    <div class="spec-item"><span class="label">Consumo:</span><span class="val">${specs.consumo_combustivel_l_h ?? '—'} L/h</span></div>
-                    <div class="spec-item"><span class="label">Combustível:</span><span class="val">${specs.combustivel ?? 'Não informado'}</span></div>
+                    <div class="spec-item"><span class="label">Potência elétrica:</span><span class="val">${escapeHtml(specs.potencia_eletrica_kva ?? '—')} kVA</span></div>
+                    <div class="spec-item"><span class="label">Consumo:</span><span class="val">${escapeHtml(specs.consumo_combustivel_l_h ?? '—')} L/h</span></div>
+                    <div class="spec-item"><span class="label">Combustível:</span><span class="val">${escapeHtml(specs.combustivel ?? 'Não informado')}</span></div>
                 `;
             } else if (f.tipo_fonte === 'FROTA_AMBULANCIA_HIBRIDA') {
                 specsHtml = `
-                    <div class="spec-item"><span class="label">Propulsão:</span><span class="val">${specs.tipo_propulsao}</span></div>
-                    <div class="spec-item"><span class="label">Placa:</span><span class="val">${specs.placa}</span></div>
-                    <div class="spec-item"><span class="label">Bateria / Autonomia:</span><span class="val">${specs.capacidade_bateria_kwh ?? '—'} kWh | ${specs.autonomia_urbana_km ?? specs.autonomia_modo_eletrico_km ?? '—'} km</span></div>
+                    <div class="spec-item"><span class="label">Propulsão:</span><span class="val">${escapeHtml(specs.tipo_propulsao)}</span></div>
+                    <div class="spec-item"><span class="label">Placa:</span><span class="val">${escapeHtml(specs.placa)}</span></div>
+                    <div class="spec-item"><span class="label">Bateria / Autonomia:</span><span class="val">${escapeHtml(specs.capacidade_bateria_kwh ?? '—')} kWh | ${escapeHtml(specs.autonomia_urbana_km ?? specs.autonomia_modo_eletrico_km ?? '—')} km</span></div>
                 `;
             } else if (f.tipo_fonte === 'INCINERADOR_RESIDUOS') {
                 specsHtml = `
-                    <div class="spec-item"><span class="label">Resíduo tratado:</span><span class="val">${specs.tipo_residuo_tratado ?? 'Não informado'}</span></div>
-                    <div class="spec-item"><span class="label">Temperatura:</span><span class="val">${specs.temperatura_pos_combustao_c ?? specs.temperatura_operacao_c ?? '—'} °C</span></div>
-                    <div class="spec-item"><span class="label">Capacidade / redução:</span><span class="val">${specs.capacidade_destruicao_kg_ciclo != null ? `${specs.capacidade_destruicao_kg_ciclo} kg/ciclo` : specs.reducao_volume_pct != null ? `${specs.reducao_volume_pct}% do volume` : 'Não informada'}</span></div>
+                    <div class="spec-item"><span class="label">Resíduo tratado:</span><span class="val">${escapeHtml(specs.tipo_residuo_tratado ?? 'Não informado')}</span></div>
+                    <div class="spec-item"><span class="label">Temperatura:</span><span class="val">${escapeHtml(specs.temperatura_pos_combustao_c ?? specs.temperatura_operacao_c ?? '—')} °C</span></div>
+                    <div class="spec-item"><span class="label">Capacidade / redução:</span><span class="val">${escapeHtml(specs.capacidade_destruicao_kg_ciclo != null ? `${specs.capacidade_destruicao_kg_ciclo} kg/ciclo` : specs.reducao_volume_pct != null ? `${specs.reducao_volume_pct}% do volume` : 'Não informada')}</span></div>
                 `;
             } else if (f.tipo_fonte === 'SISTEMA_CLIMATIZACAO_CHILLER') {
                 specsHtml = `
-                    <div class="spec-item"><span class="label">Capacidade térmica:</span><span class="val">${specs.capacidade_termica_tr ?? '—'} TR</span></div>
-                    <div class="spec-item"><span class="label">Fluido refrigerante:</span><span class="val">${specs.fluido_refrigerante ?? 'Não informado'}</span></div>
-                    <div class="spec-item"><span class="label">COP eficiência:</span><span class="val">${specs.coeficiente_performance_cop ?? '—'}</span></div>
+                    <div class="spec-item"><span class="label">Capacidade térmica:</span><span class="val">${escapeHtml(specs.capacidade_termica_tr ?? '—')} TR</span></div>
+                    <div class="spec-item"><span class="label">Fluido refrigerante:</span><span class="val">${escapeHtml(specs.fluido_refrigerante ?? 'Não informado')}</span></div>
+                    <div class="spec-item"><span class="label">COP eficiência:</span><span class="val">${escapeHtml(specs.coeficiente_performance_cop ?? '—')}</span></div>
                 `;
             } else {
                 specsHtml = '<div class="spec-item"><span class="label">Especificações:</span><span class="val">Tipo não mapeado nesta visualização.</span></div>';
@@ -397,23 +418,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="fonte-card">
                     <div>
                         <div class="card-top">
-                            <span class="card-code">${f.codigo_fonte}</span>
-                            <span class="badge badge-tag">${f.tipo_fonte}</span>
+                            <span class="card-code">${escapeHtml(f.codigo_fonte)}</span>
+                            <span class="badge badge-tag">${escapeHtml(f.tipo_fonte)}</span>
                         </div>
-                        <h3 class="card-title-main">${f.nome_equipamento}</h3>
-                        <p class="card-desc">Unidade: <strong>${f.codigo_unidade}</strong> | Status: ${f.status_operacional}</p>
+                        <h3 class="card-title-main">${escapeHtml(f.nome_equipamento)}</h3>
+                        <p class="card-desc">Unidade: <strong>${escapeHtml(f.codigo_unidade)}</strong> | Status: ${escapeHtml(f.status_operacional)}</p>
 
                         <div class="card-specs">
                             <div class="spec-item">
                                 <span class="label">Limite CO2 Regulamentar:</span>
-                                <span class="val text-emerald">${f.limite_max_co2_kg_hora} kg/h</span>
+                                <span class="val text-emerald">${escapeHtml(f.limite_max_co2_kg_hora)} kg/h</span>
                             </div>
                             ${specsHtml}
                         </div>
                     </div>
 
                     <div>
-                        <span class="kpi-label">Manutenção: ${f.frequencia_manutencao ?? 'Não informada'}</span>
+                        <span class="kpi-label">Manutenção: ${escapeHtml(f.frequencia_manutencao ?? 'Não informada')}</span>
                     </div>
                 </div>
             `;
@@ -453,13 +474,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             return `
                 <tr>
-                    <td><code class="card-code">${l.codigo_leitura}</code></td>
-                    <td><strong>${l.codigo_fonte}</strong></td>
-                    <td>${dataHora}</td>
-                    <td><strong>${l.medicoes?.co2_kg_hora}</strong> kg/h</td>
-                    <td>${l.limite_regulamentar_kg_hora} kg/h</td>
+                    <td><code class="card-code">${escapeHtml(l.codigo_leitura)}</code></td>
+                    <td><strong>${escapeHtml(l.codigo_fonte)}</strong></td>
+                    <td>${escapeHtml(dataHora)}</td>
+                    <td><strong>${escapeHtml(l.medicoes?.co2_kg_hora)}</strong> kg/h</td>
+                    <td>${escapeHtml(l.limite_regulamentar_kg_hora)} kg/h</td>
                     <td>${statusBadge}</td>
-                    <td><strong>${arvores}</strong> mudas${l.compensacao_ambiental?.bioma_prioritario ? ` (${l.compensacao_ambiental.bioma_prioritario})` : ''}</td>
+                    <td><strong>${escapeHtml(arvores)}</strong> mudas${l.compensacao_ambiental?.bioma_prioritario ? ` (${escapeHtml(l.compensacao_ambiental.bioma_prioritario)})` : ''}</td>
                 </tr>
             `;
         }).join('');
@@ -489,13 +510,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             return `
                 <tr>
-                    <td><strong>${lic.numero_processo}</strong></td>
-                    <td><span class="badge badge-tag">${lic.tipo_licenca}</span></td>
-                    <td>${lic.codigo_unidade}</td>
-                    <td><strong>${lic.orgao_emissor}</strong></td>
-                    <td>${venc}</td>
+                    <td><strong>${escapeHtml(lic.numero_processo)}</strong></td>
+                    <td><span class="badge badge-tag">${escapeHtml(lic.tipo_licenca)}</span></td>
+                    <td>${escapeHtml(lic.codigo_unidade)}</td>
+                    <td><strong>${escapeHtml(lic.orgao_emissor)}</strong></td>
+                    <td>${escapeHtml(venc)}</td>
                     <td>${badge}</td>
-                    <td>${condCount} condicionantes</td>
+                    <td>${escapeHtml(condCount)} condicionantes</td>
                 </tr>
             `;
         }).join('');
@@ -513,23 +534,25 @@ document.addEventListener('DOMContentLoaded', () => {
             if (log.nivel_severidade === 'CRITICAL') {
                 sevBadge = '<span class="badge badge-violacao">CRITICAL</span>';
             } else if (log.nivel_severidade === 'HIGH' || log.nivel_severidade === 'WARNING') {
-                sevBadge = '<span class="badge badge-alerta">' + log.nivel_severidade + '</span>';
+                sevBadge = '<span class="badge badge-alerta">' + escapeHtml(log.nivel_severidade) + '</span>';
             } else {
-                sevBadge = '<span class="badge badge-conforme">' + log.nivel_severidade + '</span>';
+                sevBadge = '<span class="badge badge-conforme">' + escapeHtml(log.nivel_severidade) + '</span>';
             }
 
             const dataHora = formatDateTime(log.data_hora || log.timestamp);
-            const odsPills = (log.ods_onu_impactado || []).map(o => `<span class="ods-pill ods-${o}">ODS ${o}</span>`).join(' ');
+            const odsPills = (log.ods_onu_impactado || [])
+                .filter(o => Number.isInteger(Number(o)) && Number(o) >= 1 && Number(o) <= 17)
+                .map(o => `<span class="ods-pill ods-${Number(o)}">ODS ${Number(o)}</span>`).join(' ');
 
             return `
                 <tr>
-                    <td><code class="card-code">${log.codigo_log}</code></td>
-                    <td>${dataHora}</td>
-                    <td><strong>${log.categoria_evento}</strong></td>
+                    <td><code class="card-code">${escapeHtml(log.codigo_log)}</code></td>
+                    <td>${escapeHtml(dataHora)}</td>
+                    <td><strong>${escapeHtml(log.categoria_evento)}</strong></td>
                     <td>${sevBadge}</td>
-                    <td>${log.descricao_evento}</td>
+                    <td>${escapeHtml(log.descricao_evento)}</td>
                     <td>${odsPills || '-'}</td>
-                    <td><span class="badge badge-tag">${log.status_resolucao || 'Não informado'}</span></td>
+                    <td><span class="badge badge-tag">${escapeHtml(log.status_resolucao || 'Não informado')}</span></td>
                 </tr>
             `;
         }).join('');

@@ -7,9 +7,12 @@ try {
     $evidenceDir = Join-Path $projectRoot 'docs/evidence/local'
     $commands = @(
         @{Name='legacy-runner.log'; Command={node src/test_mongodb_runner.js}},
+        @{Name='frontend-render.log'; Command={node src/test_frontend_render.js}},
+        @{Name='inventory-summary.log'; Command={node src/test_inventory_summary.js}},
         @{Name='frontend-syntax.log'; Command={node --check public/app.js}},
         @{Name='operations-syntax.log'; Command={node --check public/operations.js}},
         @{Name='journal-syntax.log'; Command={node --check public/journal.js}},
+        @{Name='inventory-summary-syntax.log'; Command={node --check public/inventory-summary.js}},
         @{Name='maven-verify.log'; Command={& .\mvnw.cmd -B -ntp verify}}
     )
     foreach ($entry in $commands) {
