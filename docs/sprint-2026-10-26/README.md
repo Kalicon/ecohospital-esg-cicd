@@ -24,6 +24,8 @@ Invoke-RestMethod http://127.0.0.1:18084/health
 
 O script de captura `scripts/capture-sprint-evidence.cjs` exige um token de **teste** no container isolado e a variável `SPRINT_TEST_TOKEN`; nunca deve apontar para staging/produção. Os JSON/PNG em `docs/evidence/sprint-2026-10-26/` são resultados de execução real, identificados como isolados, e não comprovam deploy desta revisão.
 
+Para reproduzir as capturas, inicie um volume de teste **novo** com um token sintético (`APP_WRITE_TOKEN` no `docker run`), atribua o mesmo valor a `SPRINT_TEST_TOKEN`, disponibilize Playwright e Edge no Node (`npm install --no-save playwright` quando necessário) e execute `node scripts/capture-sprint-evidence.cjs`. O script recusa um inventário já populado para não modificar dados existentes. A captura de BDD (`node scripts/capture-sprint-tests.cjs`) lê o relatório gerado por Maven.
+
 ## Estado de entrega
 
 As revisões anteriores têm [run de CI/CD e dois deploys locais aprovados](https://github.com/Kalicon/ecohospital-esg-cicd/actions/runs/37620162391) e capturas históricas rotuladas. Para afirmar que **esta sprint** está em staging e produção, ainda é preciso publicar esta revisão, obter um novo run verde e aprovar o environment de produção. Até lá, não reutilizar o run anterior como prova de deploy do código atual.

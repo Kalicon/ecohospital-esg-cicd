@@ -24,6 +24,8 @@ async function json(url, options) {
     assert.equal(health.status, 'UP');
     const status = await json('/api/status');
     assert.equal(status.storage, 'JSON');
+    const previous = await json('/api/journal/inventory');
+    assert.equal(previous.length, 0, 'Use um volume de teste novo; a captura não modifica um inventário existente.');
     const reference = `SPRINT-SIM-${Date.now()}`;
     const entry = await json('/api/journal/inventory', {
         method: 'POST',
